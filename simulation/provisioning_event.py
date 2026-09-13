@@ -107,10 +107,48 @@ class ProvisioningEvent:
         Draw is inverse-CDF from Exponential(rate), the same lambda_h
         model the poisson_natural scenario uses. A VM whose draw lands
         past the deadline simply survives the run.
+
+        TABLE 9 PARITY (2026-09-13). Under a Table 9 scenario every pool
+        spot VM is hibernated by one process, lambda_h = kh/D with resume
+        at lambda_r = kr/D, whatever its instance type (see the Table 9
+        loop in main.run_simulation). A spot VM launched mid-run was
+        instead drawn once, at its declared per-type rate, with no resume:
+        for the c5.xlarge template that is 0.04/hr, between 12x and 750x
+        below the kh/D faced by the identical c5.xlarge instances already
+        in the pool across the checkpoint grid. The machines R-BurstHADS
+        provisions were therefore safer than the same instance type in
+        the same market, an asymmetry between it and the baselines. They
+        now enter the identical process from the moment they are ready,
+        so spot_risk_mode governs only scenarios without a Table 9 rate.
         """
         risk = getattr(self.scheduler, "_spot_risk", None)
         vm   = self.new_vm
         if not risk or not vm.is_spot:
+            return
+
+        table9 = risk.get("table9")
+        if table9 is not None:
+            engine = self.scheduler.event_engine
+            if engine is None:
+                return
+            from simulation.events import HibernationEvent
+            kh, kr = table9
+            D      = risk["deadline"]
+            lam_h  = kh / D
+            lam_r  = (kr / D) if kr else 0.0
+            rng    = risk["rng"]
+            t = self.time + rng.expovariate(lam_h)
+            while t < D:
+                if lam_r > 0:
+                    back = t + rng.expovariate(lam_r)
+                    res  = back if back < D else None
+                else:
+                    res = None
+                engine.add_event(HibernationEvent(t, vm, self.scheduler,
+                                                  resume_time=res))
+                if res is None:
+                    break          # never resumes -> no further events
+                t = res + rng.expovariate(lam_h)
             return
 
         rate = (risk["inherit_rate"] if risk["mode"] == "inherit"

@@ -426,6 +426,10 @@ def run_simulation(scheduler_class, tasks, deadline,
             "mode":         spot_risk_mode,
             "inherit_rate": max((v.hibernation_rate for v in _orig_spot),
                                 default=0.0),
+            # Table 9 rates, so a spot VM launched mid-run joins the same
+            # hibernation/resume process as the pool rather than drawing
+            # at its declared rate (ProvisioningEvent._expose_to_spot_risk).
+            "table9":       (kh, kr) if kh is not None else None,
         }
 
     # ── TABLE 9 SCENARIOS: per-VM Poisson hibernation, with resume ───
