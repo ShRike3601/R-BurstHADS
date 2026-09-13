@@ -119,10 +119,15 @@ def gen_table6(job, seed):
 
 
 def run_unit(args):
-    job, sc, seed, key, copies, workload = args
+    job, sc, seed, key, copies, workload, variant = args
     if str(_PROJ) not in sys.path:
         sys.path.insert(0, str(_PROJ))
     from experiments import paper_reproduction as pr
+    if variant != "base":
+        from experiments import variants
+        s_ = pr.SCENARIOS.get(sc)
+        variants.apply(variant, kh=s_["kh"] if s_ else None,
+                       kr=s_["kr"] if s_ else None)
     from main import run_simulation
     from scheduler.hads import HADS
     from scheduler.burst_hads import BurstHADS
@@ -164,9 +169,11 @@ def main():
     ap.add_argument("--seeds", type=int, default=30)
     ap.add_argument("--copies", type=int, default=3)
     ap.add_argument("--workers", type=int, default=os.cpu_count() or 4)
+    ap.add_argument("--variant", default="base",
+                    help="counterfactual patch from experiments/variants.py")
     a = ap.parse_args()
 
-    units = [(j, sc, s, k, a.copies, a.workload) for j in JOB_ORDER
+    units = [(j, sc, s, k, a.copies, a.workload, a.variant) for j in JOB_ORDER
              for sc in SCENARIOS for s in range(a.seeds) for k in KEYS]
     print(f"baseline validation '{a.tag}': workload={a.workload}, {a.seeds} seeds, "
           f"{a.copies} copies per spot type, {len(units)} runs", flush=True)
@@ -277,7 +284,8 @@ def main():
     summary["mean_runtime"] = mr
 
     out = HERE / f"baseline_validation_{a.tag}.json"
-    json.dump(dict(tag=a.tag, workload=a.workload, seeds=a.seeds, copies=a.copies,
+    json.dump(dict(tag=a.tag, workload=a.workload, variant=a.variant,
+                   seeds=a.seeds, copies=a.copies,
                    summary=summary, cells=cells, rows=rows), open(out, "w"), indent=1)
     print(f"\nwrote {out}")
 

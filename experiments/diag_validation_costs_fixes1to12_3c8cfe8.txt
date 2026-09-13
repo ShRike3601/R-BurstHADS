@@ -1,0 +1,33 @@
+diag_validation_costs 'fixes1to12_3c8cfe8': 240 runs
+done in 9s; infeasible 0, errors 0
+
+means over feasible seeds. cost $ total and by market; billed VM count by market; makespan; misses; on-demand launches
+cell        sched |   cost  spot$ burst$    od$ | #spot #burst   #od | od billed h |     mk  miss |  od launched (by type)  ovr
+J60 none    hads  |  0.060  0.060  0.000  0.000 |   3.1    0.0   0.0 |       0.00 |   2330   0.0 |                      -  0.0
+J60 none    burst |  0.073  0.073  0.000  0.000 |   9.0    0.0   0.0 |       0.00 |    674   0.0 |           t3.large:2.5  0.0
+J60 sc1     hads  |  0.150  0.112  0.000  0.038 |   7.7    0.0   1.1 |       0.38 |   2383   0.0 | c4.large:1.0 c5.large:0.1  0.0
+J60 sc1     burst |  0.197  0.105  0.093  0.000 |   9.0    3.0   0.0 |       0.00 |   1372   0.0 |           t3.large:3.4  0.0
+J60 sc2     hads  |  0.153  0.046  0.000  0.107 |   7.7    0.0   1.8 |       1.07 |   2616   0.0 |           c4.large:1.8  0.0
+J60 sc2     burst |  0.242  0.052  0.162  0.029 |   9.0    3.5   0.8 |       0.29 |   2040   0.0 | t3.large:3.5 c4.large:0.8  0.0
+J60 sc5     hads  |  0.142  0.102  0.000  0.040 |   8.6    0.0   1.0 |       0.40 |   1964   0.0 |           c4.large:1.0  0.0
+J60 sc5     burst |  0.233  0.107  0.126  0.000 |   9.0    3.5   0.0 |       0.00 |   1674   0.0 |           t3.large:3.5  0.0
+
+J100 none   hads  |  0.100  0.100  0.000  0.000 |   4.0    0.0   0.0 |       0.00 |   2350   0.0 |                      -  0.0
+J100 none   burst |  0.174  0.121  0.053  0.000 |   9.0    2.0   0.0 |       0.00 |   1147   0.0 |           t3.large:2.0  0.0
+J100 sc1    hads  |  0.181  0.134  0.000  0.047 |   8.2    0.0   1.0 |       0.47 |   2426   0.0 |           c4.large:1.0  0.0
+J100 sc1    burst |  0.249  0.131  0.118  0.000 |   9.0    3.0   0.0 |       0.00 |   1767   0.0 |           t3.large:3.0  0.0
+J100 sc2    hads  |  0.246  0.048  0.000  0.198 |   8.2    0.0   3.6 |       1.98 |   2692   0.0 |           c4.large:3.6  0.0
+J100 sc2    burst |  0.358  0.053  0.175  0.130 |   9.0    3.0   2.6 |       1.30 |   2539   0.0 | t3.large:3.0 c4.large:2.6  0.0
+J100 sc5    hads  |  0.185  0.126  0.000  0.059 |   8.7    0.0   1.3 |       0.59 |   2179   0.0 |           c4.large:1.3  0.0
+J100 sc5    burst |  0.275  0.129  0.141  0.005 |   9.0    3.0   0.1 |       0.05 |   2063   0.0 | t3.large:3.0 c4.large:0.1  0.0
+
+ED200 none  hads  |  0.221  0.221  0.000  0.000 |   7.9    0.0   0.0 |       0.00 |   2361   0.0 |                      -  0.0
+ED200 none  burst |  0.364  0.255  0.109  0.000 |   9.0    2.0   0.0 |       0.00 |   2360   0.0 |           t3.large:2.0  0.0
+ED200 sc1   hads  |  0.354  0.172  0.000  0.182 |   8.9    0.0   3.8 |       1.82 |   2656   0.0 |           c4.large:3.8  0.0
+ED200 sc1   burst |  0.488  0.173  0.176  0.139 |   9.0    3.0   3.1 |       1.39 |   2601   0.0 | t3.large:3.0 c4.large:3.1  0.0
+ED200 sc2   hads  |  0.669  0.053  0.108  0.509 |   8.9    0.8   5.0 |       5.09 |   5879  45.0 |           c4.large:5.0  0.0
+ED200 sc2   burst |  0.963  0.053  0.415  0.495 |   9.0    3.0   5.0 |       4.95 |   5993  38.9 | t3.large:3.0 c4.large:5.0  0.0
+ED200 sc5   hads  |  0.438  0.158  0.000  0.281 |   9.0    0.0   4.4 |       2.81 |   2706   2.3 |           c4.large:4.4  0.0
+ED200 sc5   burst |  0.573  0.156  0.178  0.239 |   9.0    3.0   4.0 |       2.39 |   2605   0.0 | t3.large:3.0 c4.large:4.0  0.0
+
+wrote C:\my folder\projects\Improvement on Burst HADS\experiments\diag_validation_costs_fixes1to12_3c8cfe8.json

@@ -1,0 +1,9284 @@
+{
+ "tag": "fixes1to12_3c8cfe8",
+ "seeds": 10,
+ "copies": 3,
+ "cells": {
+  "J60 none hads": {
+   "n": 10,
+   "cost": 0.06001455555555556,
+   "spot_cost": 0.06001455555555556,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.0,
+   "spot_vms": 3.1,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 2330.46,
+   "misses": 0.0,
+   "od_launched": {},
+   "overrides": 0.0
+  },
+  "J60 none burst": {
+   "n": 10,
+   "cost": 0.072992975,
+   "spot_cost": 0.072992975,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.0,
+   "spot_vms": 9.0,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 674.3,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 2.4999999999999996
+   },
+   "overrides": 0.0
+  },
+  "J60 sc1 hads": {
+   "n": 10,
+   "cost": 0.15047929730030796,
+   "spot_cost": 0.11249767955066485,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.03798161774964313,
+   "spot_vms": 7.7,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 1.1,
+   "od_billed_h": 0.3809404847303629,
+   "mk": 2383.090619533004,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 0.9999999999999999,
+    "c5.large": 0.1
+   },
+   "overrides": 0.0
+  },
+  "J60 sc1 burst": {
+   "n": 10,
+   "cost": 0.19740839593760603,
+   "spot_cost": 0.1047597966859779,
+   "burstable_cost": 0.09264859925162812,
+   "ondemand_cost": 0.0,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 1371.8738544367227,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 3.4
+   },
+   "overrides": 0.0
+  },
+  "J60 sc2 hads": {
+   "n": 10,
+   "cost": 0.15263680089728948,
+   "spot_cost": 0.04552961520789887,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.10710718568939062,
+   "spot_vms": 7.7,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 1.8,
+   "od_billed_h": 1.0710718568939062,
+   "mk": 2616.3412434309994,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 1.7999999999999998
+   },
+   "overrides": 0.0
+  },
+  "J60 sc2 burst": {
+   "n": 10,
+   "cost": 0.24208536056897656,
+   "spot_cost": 0.05157786165475568,
+   "burstable_cost": 0.16181138093871103,
+   "ondemand_cost": 0.02869611797550986,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.5,
+   "ondemand_vms": 0.8,
+   "od_billed_h": 0.2869611797550986,
+   "mk": 2039.5633957739155,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 3.4999999999999996,
+    "c4.large": 0.7999999999999999
+   },
+   "overrides": 0.0
+  },
+  "J60 sc5 hads": {
+   "n": 10,
+   "cost": 0.14193540629356605,
+   "spot_cost": 0.10151209324146013,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.040423313052105884,
+   "spot_vms": 8.6,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 1.0,
+   "od_billed_h": 0.4042331305210588,
+   "mk": 1964.483201634436,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 0.9999999999999999
+   },
+   "overrides": 0.0
+  },
+  "J60 sc5 burst": {
+   "n": 10,
+   "cost": 0.23300427944400756,
+   "spot_cost": 0.10675212244108148,
+   "burstable_cost": 0.12625215700292608,
+   "ondemand_cost": 0.0,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.5,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 1674.3634011401439,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 3.4999999999999996
+   },
+   "overrides": 0.0
+  },
+  "J100 none hads": {
+   "n": 10,
+   "cost": 0.09992794472222222,
+   "spot_cost": 0.09992794472222222,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.0,
+   "spot_vms": 4.0,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 2349.71,
+   "misses": 0.0,
+   "od_launched": {},
+   "overrides": 0.0
+  },
+  "J100 none burst": {
+   "n": 10,
+   "cost": 0.1737322263888889,
+   "spot_cost": 0.12069638638888891,
+   "burstable_cost": 0.05303584,
+   "ondemand_cost": 0.0,
+   "spot_vms": 9.0,
+   "burstable_vms": 2.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 1147.4099999999999,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 1.9999999999999998
+   },
+   "overrides": 0.0
+  },
+  "J100 sc1 hads": {
+   "n": 10,
+   "cost": 0.1812417718777473,
+   "spot_cost": 0.1340818650619561,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.04715990681579117,
+   "spot_vms": 8.2,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 1.0,
+   "od_billed_h": 0.47159906815791175,
+   "mk": 2426.2020730027584,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 0.9999999999999999
+   },
+   "overrides": 0.0
+  },
+  "J100 sc1 burst": {
+   "n": 10,
+   "cost": 0.24928448502578146,
+   "spot_cost": 0.13112902791302627,
+   "burstable_cost": 0.11815545711275524,
+   "ondemand_cost": 0.0,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 1767.353787459543,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 2.9999999999999996
+   },
+   "overrides": 0.0
+  },
+  "J100 sc2 hads": {
+   "n": 10,
+   "cost": 0.24627246336898412,
+   "spot_cost": 0.0482791850781731,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.197993278290811,
+   "spot_vms": 8.2,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 3.6,
+   "od_billed_h": 1.9799327829081101,
+   "mk": 2691.5648037473047,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 3.599999999999999
+   },
+   "overrides": 0.0
+  },
+  "J100 sc2 burst": {
+   "n": 10,
+   "cost": 0.3580782792176128,
+   "spot_cost": 0.05261747883320829,
+   "burstable_cost": 0.17515688109442049,
+   "ondemand_cost": 0.13030391928998403,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 2.6,
+   "od_billed_h": 1.3030391928998404,
+   "mk": 2538.9388777592567,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 2.9999999999999996,
+    "c4.large": 2.6
+   },
+   "overrides": 0.0
+  },
+  "J100 sc5 hads": {
+   "n": 10,
+   "cost": 0.1852384647390616,
+   "spot_cost": 0.12600687982588712,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.059231584913174484,
+   "spot_vms": 8.7,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 1.3,
+   "od_billed_h": 0.5923158491317448,
+   "mk": 2178.6587182005796,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 1.2999999999999998
+   },
+   "overrides": 0.0
+  },
+  "J100 sc5 burst": {
+   "n": 10,
+   "cost": 0.2747521655272013,
+   "spot_cost": 0.12881141517608746,
+   "burstable_cost": 0.1406499528665702,
+   "ondemand_cost": 0.005290797484543542,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 0.1,
+   "od_billed_h": 0.052907974845435427,
+   "mk": 2062.946835600999,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 2.9999999999999996,
+    "c4.large": 0.1
+   },
+   "overrides": 0.0
+  },
+  "ED200 none hads": {
+   "n": 10,
+   "cost": 0.22090489333333335,
+   "spot_cost": 0.22090489333333335,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.0,
+   "spot_vms": 7.9,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 2361.04,
+   "misses": 0.0,
+   "od_launched": {},
+   "overrides": 0.0
+  },
+  "ED200 none burst": {
+   "n": 10,
+   "cost": 0.3644772083333333,
+   "spot_cost": 0.255415875,
+   "burstable_cost": 0.10906133333333332,
+   "ondemand_cost": 0.0,
+   "spot_vms": 9.0,
+   "burstable_vms": 2.0,
+   "ondemand_vms": 0.0,
+   "od_billed_h": 0.0,
+   "mk": 2359.5,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 1.9999999999999998
+   },
+   "overrides": 0.0
+  },
+  "ED200 sc1 hads": {
+   "n": 10,
+   "cost": 0.35410722345691575,
+   "spot_cost": 0.17227622281460925,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.18183100064230648,
+   "spot_vms": 8.9,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 3.8,
+   "od_billed_h": 1.818310006423065,
+   "mk": 2655.6216304688232,
+   "misses": 0.0,
+   "od_launched": {
+    "c4.large": 3.8
+   },
+   "overrides": 0.0
+  },
+  "ED200 sc1 burst": {
+   "n": 10,
+   "cost": 0.4876827363299343,
+   "spot_cost": 0.1725831575150364,
+   "burstable_cost": 0.17595669520233645,
+   "ondemand_cost": 0.13914288361256147,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 3.1,
+   "od_billed_h": 1.3914288361256144,
+   "mk": 2601.0254906746563,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 2.9999999999999996,
+    "c4.large": 3.1
+   },
+   "overrides": 0.0
+  },
+  "ED200 sc2 hads": {
+   "n": 10,
+   "cost": 0.6691823932174633,
+   "spot_cost": 0.052699285110686465,
+   "burstable_cost": 0.10763488772895369,
+   "ondemand_cost": 0.5088482203778233,
+   "spot_vms": 8.9,
+   "burstable_vms": 0.8,
+   "ondemand_vms": 5.0,
+   "od_billed_h": 5.0884822037782325,
+   "mk": 5879.06690156495,
+   "misses": 45.0,
+   "od_launched": {
+    "c4.large": 5.0
+   },
+   "overrides": 0.0
+  },
+  "ED200 sc2 burst": {
+   "n": 10,
+   "cost": 0.9627935988615759,
+   "spot_cost": 0.053278525445347905,
+   "burstable_cost": 0.4146595485842969,
+   "ondemand_cost": 0.4948555248319308,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 5.0,
+   "od_billed_h": 4.948555248319308,
+   "mk": 5993.304274247859,
+   "misses": 38.9,
+   "od_launched": {
+    "t3.large": 2.9999999999999996,
+    "c4.large": 5.0
+   },
+   "overrides": 0.0
+  },
+  "ED200 sc5 hads": {
+   "n": 10,
+   "cost": 0.43846946875240206,
+   "spot_cost": 0.1575968513195785,
+   "burstable_cost": 0.0,
+   "ondemand_cost": 0.28087261743282355,
+   "spot_vms": 9.0,
+   "burstable_vms": 0.0,
+   "ondemand_vms": 4.4,
+   "od_billed_h": 2.8087261743282346,
+   "mk": 2705.7800861434785,
+   "misses": 2.3,
+   "od_launched": {
+    "c4.large": 4.4
+   },
+   "overrides": 0.0
+  },
+  "ED200 sc5 burst": {
+   "n": 10,
+   "cost": 0.573305881005436,
+   "spot_cost": 0.15632561830800687,
+   "burstable_cost": 0.17824913681658336,
+   "ondemand_cost": 0.23873112588084586,
+   "spot_vms": 9.0,
+   "burstable_vms": 3.0,
+   "ondemand_vms": 4.0,
+   "od_billed_h": 2.3873112588084586,
+   "mk": 2605.242757956958,
+   "misses": 0.0,
+   "od_launched": {
+    "t3.large": 2.9999999999999996,
+    "c4.large": 4.0
+   },
+   "overrides": 0.0
+  }
+ },
+ "rows": [
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2391.4000000000005,
+   "misses": 0,
+   "cost": 0.17727142301147047,
+   "by_market": {
+    "spot": {
+     "cost": 0.12113455753390198,
+     "billed_s": 10931.24388629039,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05613686547756849,
+     "billed_s": 2061.4022176140084,
+     "vms": 2
+    }
+   },
+   "sim_end": 2391.4000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1,
+    "ondemand:c5.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1463.637898822511,
+   "misses": 0,
+   "cost": 0.2341627220717914,
+   "by_market": {
+    "spot": {
+     "cost": 0.10216609202517118,
+     "billed_s": 8806.284304127108,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.13199663004662018,
+     "billed_s": 5711.392646247989,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1463.637898822511,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2421.4417586713234,
+   "misses": 0,
+   "cost": 0.14436689717703094,
+   "by_market": {
+    "spot": {
+     "cost": 0.10428538551529268,
+     "billed_s": 8656.784348037507,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.04008151166173825,
+     "billed_s": 1442.934419822577,
+     "vms": 1
+    }
+   },
+   "sim_end": 2421.4417586713234,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 1,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1096.8157684598227,
+   "misses": 0,
+   "cost": 0.15606215453211683,
+   "by_market": {
+    "spot": {
+     "cost": 0.09290132845342544,
+     "billed_s": 7145.52733540573,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0631608260786914,
+     "billed_s": 2732.9203591741475,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1096.8157684598227,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2309.0644366587157,
+   "misses": 0,
+   "cost": 0.1681669345020711,
+   "by_market": {
+    "spot": {
+     "cost": 0.10850742042936823,
+     "billed_s": 8578.448814562613,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05965951407270287,
+     "billed_s": 2147.742506617303,
+     "vms": 1
+    }
+   },
+   "sim_end": 2309.0644366587157,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1682.581490427399,
+   "misses": 0,
+   "cost": 0.24568492879242032,
+   "by_market": {
+    "spot": {
+     "cost": 0.09967850652669204,
+     "billed_s": 7940.273427599293,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1460064222657283,
+     "billed_s": 6317.585578805551,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1682.581490427399,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2423.3000000000006,
+   "misses": 0,
+   "cost": 0.11488826738790538,
+   "by_market": {
+    "spot": {
+     "cost": 0.08447993405457205,
+     "billed_s": 8455.586204072784,
+     "vms": 6
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03040833333333333,
+     "billed_s": 1094.6999999999998,
+     "vms": 1
+    }
+   },
+   "sim_end": 2423.3000000000006,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 1,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1887.7608975029073,
+   "misses": 0,
+   "cost": 0.25088616833508065,
+   "by_market": {
+    "spot": {
+     "cost": 0.10146761522774601,
+     "billed_s": 8651.403232529883,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1494185531073346,
+     "billed_s": 6465.225855605826,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1887.7608975029073,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2359.5,
+   "misses": 0,
+   "cost": 0.17505979189271761,
+   "by_market": {
+    "spot": {
+     "cost": 0.1447125696704954,
+     "billed_s": 12641.633207754645,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.030347222222222223,
+     "billed_s": 1092.5,
+     "vms": 1
+    }
+   },
+   "sim_end": 2359.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1925.8527673128874,
+   "misses": 0,
+   "cost": 0.27861060569658597,
+   "by_market": {
+    "spot": {
+     "cost": 0.15059489515929075,
+     "billed_s": 11978.67232687113,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1280157105372952,
+     "billed_s": 5539.1413213252745,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1925.8527673128874,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2367.2,
+   "misses": 0,
+   "cost": 0.16738962042926944,
+   "by_market": {
+    "spot": {
+     "cost": 0.12438146663337246,
+     "billed_s": 10961.585516194225,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.043008153795896974,
+     "billed_s": 1548.293536652291,
+     "vms": 1
+    }
+   },
+   "sim_end": 2367.2,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 2,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1173.5780094264771,
+   "misses": 0,
+   "cost": 0.16636409802912971,
+   "by_market": {
+    "spot": {
+     "cost": 0.1121751012362898,
+     "billed_s": 9035.172435068278,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0541889967928399,
+     "billed_s": 2344.716207382496,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1173.5780094264771,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2274.8,
+   "misses": 0,
+   "cost": 0.07615303888888889,
+   "by_market": {
+    "spot": {
+     "cost": 0.07615303888888889,
+     "billed_s": 7930.1,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2274.8,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 709.5,
+   "misses": 0,
+   "cost": 0.076803375,
+   "by_market": {
+    "spot": {
+     "cost": 0.076803375,
+     "billed_s": 6385.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 709.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2389.2000000000003,
+   "misses": 0,
+   "cost": 0.08588082264779134,
+   "by_market": {
+    "spot": {
+     "cost": 0.06614697245145658,
+     "billed_s": 7167.8971212691495,
+     "vms": 5
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.01973385019633476,
+     "billed_s": 710.4186070680514,
+     "vms": 1
+    }
+   },
+   "sim_end": 2389.2000000000003,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1165.8307904034612,
+   "misses": 0,
+   "cost": 0.17116807697003297,
+   "by_market": {
+    "spot": {
+     "cost": 0.09154567697003296,
+     "billed_s": 7642.577874968622,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0796224,
+     "billed_s": 3445.2000000000003,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1165.8307904034612,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2274.8,
+   "misses": 0,
+   "cost": 0.056680433333333335,
+   "by_market": {
+    "spot": {
+     "cost": 0.056680433333333335,
+     "billed_s": 6824.400000000001,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2274.8,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 678.7,
+   "misses": 0,
+   "cost": 0.073469275,
+   "by_market": {
+    "spot": {
+     "cost": 0.073469275,
+     "billed_s": 6108.299999999999,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 678.7,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2338.6,
+   "misses": 0,
+   "cost": 0.05827011666666666,
+   "by_market": {
+    "spot": {
+     "cost": 0.05827011666666666,
+     "billed_s": 7015.799999999999,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2338.6,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 679.8,
+   "misses": 0,
+   "cost": 0.07358835,
+   "by_market": {
+    "spot": {
+     "cost": 0.07358835,
+     "billed_s": 6118.200000000001,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 679.8,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 2,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2354.0,
+   "misses": 0,
+   "cost": 0.05865383333333332,
+   "by_market": {
+    "spot": {
+     "cost": 0.05865383333333332,
+     "billed_s": 7062.0,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2354.0,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 656.7,
+   "misses": 0,
+   "cost": 0.071087775,
+   "by_market": {
+    "spot": {
+     "cost": 0.071087775,
+     "billed_s": 5910.299999999999,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 656.7,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2329.8,
+   "misses": 0,
+   "cost": 0.05805085,
+   "by_market": {
+    "spot": {
+     "cost": 0.05805085,
+     "billed_s": 6989.400000000001,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2329.8,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 693.0,
+   "misses": 0,
+   "cost": 0.07501725000000001,
+   "by_market": {
+    "spot": {
+     "cost": 0.07501725000000001,
+     "billed_s": 6237.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 693.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2369.4,
+   "misses": 0,
+   "cost": 0.059037549999999994,
+   "by_market": {
+    "spot": {
+     "cost": 0.059037549999999994,
+     "billed_s": 7108.200000000001,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2369.4,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 661.1000000000001,
+   "misses": 0,
+   "cost": 0.07156407500000002,
+   "by_market": {
+    "spot": {
+     "cost": 0.07156407500000002,
+     "billed_s": 5949.900000000002,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 661.1000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 2,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2334.2000000000003,
+   "misses": 0,
+   "cost": 0.05816048333333333,
+   "by_market": {
+    "spot": {
+     "cost": 0.05816048333333333,
+     "billed_s": 7002.6,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2334.2000000000003,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 687.5,
+   "misses": 0,
+   "cost": 0.074421875,
+   "by_market": {
+    "spot": {
+     "cost": 0.074421875,
+     "billed_s": 6187.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 687.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2366.1000000000004,
+   "misses": 0,
+   "cost": 0.058955325,
+   "by_market": {
+    "spot": {
+     "cost": 0.058955325,
+     "billed_s": 7098.300000000001,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2366.1000000000004,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 664.4000000000001,
+   "misses": 0,
+   "cost": 0.0719213,
+   "by_market": {
+    "spot": {
+     "cost": 0.0719213,
+     "billed_s": 5979.6,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 664.4000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 2,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2367.2,
+   "misses": 0,
+   "cost": 0.05898273333333333,
+   "by_market": {
+    "spot": {
+     "cost": 0.05898273333333333,
+     "billed_s": 7101.599999999999,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2367.2,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 631.4000000000001,
+   "misses": 0,
+   "cost": 0.06834905000000001,
+   "by_market": {
+    "spot": {
+     "cost": 0.06834905000000001,
+     "billed_s": 5682.6,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 631.4000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2295.7000000000003,
+   "misses": 0,
+   "cost": 0.057201191666666665,
+   "by_market": {
+    "spot": {
+     "cost": 0.057201191666666665,
+     "billed_s": 6887.1,
+     "vms": 3
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2295.7000000000003,
+   "launched": {
+    "spot:c3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "none",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 680.9000000000001,
+   "misses": 0,
+   "cost": 0.07370742500000001,
+   "by_market": {
+    "spot": {
+     "cost": 0.07370742500000001,
+     "billed_s": 6128.1,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 680.9000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2412.3,
+   "misses": 0,
+   "cost": 0.15857034915775842,
+   "by_market": {
+    "spot": {
+     "cost": 0.12874257137998063,
+     "billed_s": 11494.209404306666,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.029827777777777783,
+     "billed_s": 1073.8000000000002,
+     "vms": 1
+    }
+   },
+   "sim_end": 2412.3,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 709.5,
+   "misses": 0,
+   "cost": 0.076803375,
+   "by_market": {
+    "spot": {
+     "cost": 0.076803375,
+     "billed_s": 6385.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 709.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2365.0,
+   "misses": 0,
+   "cost": 0.166740402830863,
+   "by_market": {
+    "spot": {
+     "cost": 0.125558009427562,
+     "billed_s": 11030.592819767013,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.041182393403300974,
+     "billed_s": 1482.566162518835,
+     "vms": 1
+    }
+   },
+   "sim_end": 2365.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1228.5985290652181,
+   "misses": 0,
+   "cost": 0.19445235256692145,
+   "by_market": {
+    "spot": {
+     "cost": 0.1054760705663797,
+     "billed_s": 8822.343792449312,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0889762820005417,
+     "billed_s": 3849.9352788695933,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1228.5985290652181,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2392.5,
+   "misses": 0,
+   "cost": 0.14645846396620188,
+   "by_market": {
+    "spot": {
+     "cost": 0.11702790841064634,
+     "billed_s": 10875.076404169955,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.029430555555555557,
+     "billed_s": 1059.5,
+     "vms": 1
+    }
+   },
+   "sim_end": 2392.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc1",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1384.5823929465428,
+   "misses": 0,
+   "cost": 0.1998894773819811,
+   "by_market": {
+    "spot": {
+     "cost": 0.11478930569475111,
+     "billed_s": 9698.726659251912,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.08510017168723,
+     "billed_s": 3682.2189672359136,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1384.5823929465428,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2653.5695200799682,
+   "misses": 0,
+   "cost": 0.1606411469080148,
+   "by_market": {
+    "spot": {
+     "cost": 0.043587327957635244,
+     "billed_s": 3742.3977798853543,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.11705381895037956,
+     "billed_s": 4213.937482213663,
+     "vms": 2
+    }
+   },
+   "sim_end": 2653.5695200799682,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1403.7777058130437,
+   "misses": 0,
+   "cost": 0.18528829899052365,
+   "by_market": {
+    "spot": {
+     "cost": 0.049645532965806816,
+     "billed_s": 4185.206594850593,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.12485128484455277,
+     "billed_s": 5402.219055773919,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.010791481180164056,
+     "billed_s": 388.493322485906,
+     "vms": 1
+    }
+   },
+   "sim_end": 1403.7777058130437,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2350.5133686259974,
+   "misses": 0,
+   "cost": 0.16578716705979746,
+   "by_market": {
+    "spot": {
+     "cost": 0.10093664196947046,
+     "billed_s": 7572.087994167771,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.06485052509032699,
+     "billed_s": 2334.6189032517714,
+     "vms": 1
+    }
+   },
+   "sim_end": 2350.5133686259974,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1929.894465374226,
+   "misses": 0,
+   "cost": 0.23455024642532446,
+   "by_market": {
+    "spot": {
+     "cost": 0.10184624642532444,
+     "billed_s": 7622.68383100029,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.132704,
+     "billed_s": 5742.000000000001,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1929.894465374226,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2672.064678540737,
+   "misses": 0,
+   "cost": 0.14816973623880578,
+   "by_market": {
+    "spot": {
+     "cost": 0.03975480499417633,
+     "billed_s": 3425.1678174236813,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.10841493124462945,
+     "billed_s": 3902.93752480666,
+     "vms": 2
+    }
+   },
+   "sim_end": 2672.064678540737,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 1,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1821.9270717040004,
+   "misses": 0,
+   "cost": 0.18330397656962888,
+   "by_market": {
+    "spot": {
+     "cost": 0.0464589466171825,
+     "billed_s": 3884.8473355490178,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.12374326353123942,
+     "billed_s": 5354.275825870936,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.013101766421206959,
+     "billed_s": 471.6635911634505,
+     "vms": 1
+    }
+   },
+   "sim_end": 1821.9270717040004,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2694.8473338535564,
+   "misses": 0,
+   "cost": 0.1566077528962894,
+   "by_market": {
+    "spot": {
+     "cost": 0.023577679342385787,
+     "billed_s": 1822.2245093390795,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.13303007355390362,
+     "billed_s": 4789.08264794053,
+     "vms": 2
+    }
+   },
+   "sim_end": 2694.8473338535564,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2578.53629808548,
+   "misses": 0,
+   "cost": 0.3742023331313096,
+   "by_market": {
+    "spot": {
+     "cost": 0.02606160732665397,
+     "billed_s": 2004.1834585256945,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.23646357778647897,
+     "billed_s": 10231.597115761111,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.11167714801817664,
+     "billed_s": 4020.377328654359,
+     "vms": 2
+    }
+   },
+   "sim_end": 2578.53629808548,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2667.959875809871,
+   "misses": 0,
+   "cost": 0.16592061291645838,
+   "by_market": {
+    "spot": {
+     "cost": 0.06589616255540548,
+     "billed_s": 6084.063700338262,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.1000244503610529,
+     "billed_s": 3600.880212997904,
+     "vms": 2
+    }
+   },
+   "sim_end": 2667.959875809871,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1276.1564785893088,
+   "misses": 0,
+   "cost": 0.14924579531497353,
+   "by_market": {
+    "spot": {
+     "cost": 0.06294512097752754,
+     "billed_s": 5625.404506877749,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.08630067433744601,
+     "billed_s": 3734.1637934471833,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1276.1564785893088,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2100.0449738693665,
+   "misses": 0,
+   "cost": 0.1761250409240479,
+   "by_market": {
+    "spot": {
+     "cost": 0.14217169254817533,
+     "billed_s": 12073.18053371831,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.033953348375872563,
+     "billed_s": 1222.3205415314121,
+     "vms": 1
+    }
+   },
+   "sim_end": 2100.0449738693665,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 2,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1514.4548386726642,
+   "misses": 0,
+   "cost": 0.22051864906038554,
+   "by_market": {
+    "spot": {
+     "cost": 0.12661981575157882,
+     "billed_s": 10620.850588424666,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.09389883330880673,
+     "billed_s": 4062.930287400292,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1514.4548386726642,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2144.480571585656,
+   "misses": 0,
+   "cost": 0.15489588242867883,
+   "by_market": {
+    "spot": {
+     "cost": 0.09611454752702739,
+     "billed_s": 8284.680538106384,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05878133490165144,
+     "billed_s": 2116.1280564594517,
+     "vms": 1
+    }
+   },
+   "sim_end": 2144.480571585656,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1868.6525151262044,
+   "misses": 0,
+   "cost": 0.26074971416930226,
+   "by_market": {
+    "spot": {
+     "cost": 0.09062420305819119,
+     "billed_s": 7860.256896852531,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17012551111111113,
+     "billed_s": 7361.200000000002,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1868.6525151262044,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2691.2287790356118,
+   "misses": 0,
+   "cost": 0.15795436828198992,
+   "by_market": {
+    "spot": {
+     "cost": 0.03590946573269449,
+     "billed_s": 3456.963930876241,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.12204490254929543,
+     "billed_s": 4393.6164917746355,
+     "vms": 2
+    }
+   },
+   "sim_end": 2691.2287790356118,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2485.231010567146,
+   "misses": 0,
+   "cost": 0.24875960136186426,
+   "by_market": {
+    "spot": {
+     "cost": 0.04654377139316275,
+     "billed_s": 4265.99817385354,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.16109074189670355,
+     "billed_s": 6970.2724859150585,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.041125088071997926,
+     "billed_s": 1480.5031705919253,
+     "vms": 1
+    }
+   },
+   "sim_end": 2485.231010567146,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1848.7386463402154,
+   "misses": 0,
+   "cost": 0.12623637586827396,
+   "by_market": {
+    "spot": {
+     "cost": 0.08466539568691586,
+     "billed_s": 7578.63104035878,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.041570980181358096,
+     "billed_s": 1496.5552865288914,
+     "vms": 1
+    }
+   },
+   "sim_end": 1848.7386463402154,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 1,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1419.1067686583676,
+   "misses": 0,
+   "cost": 0.2072876325179217,
+   "by_market": {
+    "spot": {
+     "cost": 0.08006794954443498,
+     "billed_s": 6632.012048031029,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1272196829734867,
+     "billed_s": 5504.697820968176,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1419.1067686583676,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2684.93313989524,
+   "misses": 0,
+   "cost": 0.16663528163113164,
+   "by_market": {
+    "spot": {
+     "cost": 0.03241243995474284,
+     "billed_s": 2995.3798677769164,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.13422284167638882,
+     "billed_s": 4832.022300349996,
+     "vms": 2
+    }
+   },
+   "sim_end": 2684.93313989524,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2499.2183510906834,
+   "misses": 0,
+   "cost": 0.3180675284205152,
+   "by_market": {
+    "spot": {
+     "cost": 0.0330089355757514,
+     "billed_s": 3038.3275524895325,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.23037713953636654,
+     "billed_s": 9968.241614554323,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0546814533083973,
+     "billed_s": 1968.5323191023026,
+     "vms": 1
+    }
+   },
+   "sim_end": 2499.2183510906834,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2642.730644334165,
+   "misses": 0,
+   "cost": 0.1563113073547467,
+   "by_market": {
+    "spot": {
+     "cost": 0.03769262987961439,
+     "billed_s": 3438.9395567173847,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.1186186774751323,
+     "billed_s": 4270.272389104763,
+     "vms": 2
+    }
+   },
+   "sim_end": 2642.730644334165,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 2,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1706.221870733046,
+   "misses": 0,
+   "cost": 0.22133691025686827,
+   "by_market": {
+    "spot": {
+     "cost": 0.049678441601597484,
+     "billed_s": 4258.09000121214,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.15014912028246596,
+     "billed_s": 6496.8369352990085,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.021509348372804833,
+     "billed_s": 774.336541420974,
+     "vms": 1
+    }
+   },
+   "sim_end": 1706.221870733046,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2427.7000000000003,
+   "misses": 0,
+   "cost": 0.11453201676748362,
+   "by_market": {
+    "spot": {
+     "cost": 0.05095234242399688,
+     "billed_s": 5287.033579243658,
+     "vms": 6
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.06357967434348674,
+     "billed_s": 2288.8682763655224,
+     "vms": 1
+    }
+   },
+   "sim_end": 2427.7000000000003,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 1,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2233.6921795005815,
+   "misses": 0,
+   "cost": 0.2607533727501885,
+   "by_market": {
+    "spot": {
+     "cost": 0.058705503106930595,
+     "billed_s": 5757.4065382470635,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.20204786964325788,
+     "billed_s": 8742.455898025582,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2233.6921795005815,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2677.8650941348474,
+   "misses": 0,
+   "cost": 0.13380861891817714,
+   "by_market": {
+    "spot": {
+     "cost": 0.024576657268866785,
+     "billed_s": 2799.80504307897,
+     "vms": 5
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.10923196164931036,
+     "billed_s": 3932.3506193751728,
+     "vms": 2
+    }
+   },
+   "sim_end": 2677.8650941348474,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc2",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2460.97852628164,
+   "misses": 0,
+   "cost": 0.24534554246856938,
+   "by_market": {
+    "spot": {
+     "cost": 0.04088451055761946,
+     "billed_s": 3853.1816613666456,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17038613752859902,
+     "billed_s": 7372.477104602843,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.03407489438235088,
+     "billed_s": 1226.6961977646317,
+     "vms": 1
+    }
+   },
+   "sim_end": 2460.97852628164,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2040.5498603658702,
+   "misses": 0,
+   "cost": 0.15525549283173576,
+   "by_market": {
+    "spot": {
+     "cost": 0.12273882616506909,
+     "billed_s": 11020.758011067735,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03251666666666667,
+     "billed_s": 1170.6000000000001,
+     "vms": 1
+    }
+   },
+   "sim_end": 2040.5498603658702,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1679.9957204089296,
+   "misses": 0,
+   "cost": 0.23040931770504702,
+   "by_market": {
+    "spot": {
+     "cost": 0.12958804827316997,
+     "billed_s": 10947.503109363777,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10082126943187703,
+     "billed_s": 4362.45877349468,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1679.9957204089296,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1911.957074269105,
+   "misses": 0,
+   "cost": 0.13395680348182698,
+   "by_market": {
+    "spot": {
+     "cost": 0.09841101230011293,
+     "billed_s": 8426.341510387305,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03554579118171406,
+     "billed_s": 1279.648482541706,
+     "vms": 1
+    }
+   },
+   "sim_end": 1911.957074269105,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1,
+    "spot:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1884.8823220995935,
+   "misses": 0,
+   "cost": 0.2364639962783776,
+   "by_market": {
+    "spot": {
+     "cost": 0.12529199849382058,
+     "billed_s": 10355.219041860308,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.11117199778455703,
+     "billed_s": 4810.3268272164105,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1884.8823220995935,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1709.210255321985,
+   "misses": 0,
+   "cost": 0.1720594857941447,
+   "by_market": {
+    "spot": {
+     "cost": 0.12463413000131601,
+     "billed_s": 9607.246042463525,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.04742535579282871,
+     "billed_s": 1707.3128085418334,
+     "vms": 1
+    }
+   },
+   "sim_end": 1709.210255321985,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1493.4974467801517,
+   "misses": 0,
+   "cost": 0.2473096924937564,
+   "by_market": {
+    "spot": {
+     "cost": 0.10941955916042306,
+     "billed_s": 8358.431168245756,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.13789013333333333,
+     "billed_s": 5966.400000000001,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1493.4974467801517,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2057.7294891824477,
+   "misses": 0,
+   "cost": 0.12983753773539927,
+   "by_market": {
+    "spot": {
+     "cost": 0.10037453507619604,
+     "billed_s": 9725.4035177603,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.029463002659203225,
+     "billed_s": 1060.668095731316,
+     "vms": 1
+    }
+   },
+   "sim_end": 2057.7294891824477,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 1,
+    "spot:c3.xlarge": 1,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1584.8177805259027,
+   "misses": 0,
+   "cost": 0.21974675173014221,
+   "by_market": {
+    "spot": {
+     "cost": 0.11540039111572045,
+     "billed_s": 10431.268814657928,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10434636061442176,
+     "billed_s": 4514.986757354789,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1584.8177805259027,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2273.98306526739,
+   "misses": 0,
+   "cost": 0.1056450796101252,
+   "by_market": {
+    "spot": {
+     "cost": 0.07519600240960218,
+     "billed_s": 7700.320557048246,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03044907720052302,
+     "billed_s": 1096.1667792188287,
+     "vms": 1
+    }
+   },
+   "sim_end": 2273.98306526739,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 2,
+    "spot:c3.xlarge": 1,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1426.3057180451015,
+   "misses": 0,
+   "cost": 0.20623050014940114,
+   "by_market": {
+    "spot": {
+     "cost": 0.0976130372482197,
+     "billed_s": 8758.74969294666,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10861746290118143,
+     "billed_s": 4699.794067839583,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1426.3057180451015,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1779.135717708263,
+   "misses": 0,
+   "cost": 0.12346994894171033,
+   "by_market": {
+    "spot": {
+     "cost": 0.07567867844990521,
+     "billed_s": 5434.449062712965,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.04779127049180512,
+     "billed_s": 1720.4857377049843,
+     "vms": 1
+    }
+   },
+   "sim_end": 1779.135717708263,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1981.8106376167036,
+   "misses": 0,
+   "cost": 0.2656793634937191,
+   "by_market": {
+    "spot": {
+     "cost": 0.08789384492323361,
+     "billed_s": 6344.428146527068,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1777855185704855,
+     "billed_s": 7692.6426304537,
+     "vms": 4
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1981.8106376167036,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 4,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1779.002362434062,
+   "misses": 0,
+   "cost": 0.14187241531971745,
+   "by_market": {
+    "spot": {
+     "cost": 0.0951361122502815,
+     "billed_s": 8192.075962136667,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.04673630306943596,
+     "billed_s": 1682.5069104996944,
+     "vms": 1
+    }
+   },
+   "sim_end": 1779.002362434062,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c4.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J60",
+   "sc": "sc5",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1890.1102634678205,
+   "misses": 0,
+   "cost": 0.2356471768420224,
+   "by_market": {
+    "spot": {
+     "cost": 0.10500237684202239,
+     "billed_s": 8896.769227706776,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1306448,
+     "billed_s": 5652.900000000001,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1890.1102634678205,
+   "launched": {
+    "spot:c3.large": 3,
+    "ondemand:t3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2360.6000000000004,
+   "misses": 0,
+   "cost": 0.10039107222222222,
+   "by_market": {
+    "spot": {
+     "cost": 0.10039107222222222,
+     "billed_s": 9442.400000000001,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2360.6000000000004,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1017.5000000000001,
+   "misses": 0,
+   "cost": 0.15717548611111115,
+   "by_market": {
+    "spot": {
+     "cost": 0.11014437500000002,
+     "billed_s": 9157.500000000002,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.047031111111111114,
+     "billed_s": 2035.0000000000002,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1017.5000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2330.9,
+   "misses": 0,
+   "cost": 0.09912799722222221,
+   "by_market": {
+    "spot": {
+     "cost": 0.09912799722222221,
+     "billed_s": 9323.6,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2330.9,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 977.9000000000001,
+   "misses": 0,
+   "cost": 0.1510583861111111,
+   "by_market": {
+    "spot": {
+     "cost": 0.105857675,
+     "billed_s": 8801.099999999999,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.04520071111111111,
+     "billed_s": 1955.8000000000002,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 977.9000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2372.7000000000003,
+   "misses": 0,
+   "cost": 0.10090565833333334,
+   "by_market": {
+    "spot": {
+     "cost": 0.10090565833333334,
+     "billed_s": 9490.800000000001,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2372.7000000000003,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1105.5,
+   "misses": 0,
+   "cost": 0.17076904166666668,
+   "by_market": {
+    "spot": {
+     "cost": 0.119670375,
+     "billed_s": 9949.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.05109866666666666,
+     "billed_s": 2211.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1105.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2372.7,
+   "misses": 0,
+   "cost": 0.10090565833333331,
+   "by_market": {
+    "spot": {
+     "cost": 0.10090565833333331,
+     "billed_s": 9490.8,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2372.7,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1149.5,
+   "misses": 0,
+   "cost": 0.17756581944444444,
+   "by_market": {
+    "spot": {
+     "cost": 0.124433375,
+     "billed_s": 10345.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.05313244444444444,
+     "billed_s": 2299.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1149.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2349.6,
+   "misses": 0,
+   "cost": 0.09992326666666668,
+   "by_market": {
+    "spot": {
+     "cost": 0.09992326666666668,
+     "billed_s": 9398.4,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2349.6,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1051.6000000000001,
+   "misses": 0,
+   "cost": 0.1624429888888889,
+   "by_market": {
+    "spot": {
+     "cost": 0.11383570000000001,
+     "billed_s": 9464.400000000001,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.04860728888888889,
+     "billed_s": 2103.2000000000003,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1051.6000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2322.1000000000004,
+   "misses": 0,
+   "cost": 0.09875375277777779,
+   "by_market": {
+    "spot": {
+     "cost": 0.09875375277777779,
+     "billed_s": 9288.400000000001,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2322.1000000000004,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1072.5,
+   "misses": 0,
+   "cost": 0.16567145833333335,
+   "by_market": {
+    "spot": {
+     "cost": 0.11609812500000001,
+     "billed_s": 9652.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.04957333333333333,
+     "billed_s": 2145.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1072.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2351.8,
+   "misses": 0,
+   "cost": 0.10001682777777778,
+   "by_market": {
+    "spot": {
+     "cost": 0.10001682777777778,
+     "billed_s": 9407.2,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2351.8,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2095.5,
+   "misses": 0,
+   "cost": 0.28858908055555554,
+   "by_market": {
+    "spot": {
+     "cost": 0.1917304138888889,
+     "billed_s": 16043.1,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.09685866666666666,
+     "billed_s": 4191.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2095.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2372.7,
+   "misses": 0,
+   "cost": 0.1979394026930998,
+   "by_market": {
+    "spot": {
+     "cost": 0.13302522872811406,
+     "billed_s": 12071.18818521339,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.06491417396498574,
+     "billed_s": 2336.9102627394864,
+     "vms": 1
+    }
+   },
+   "sim_end": 2372.7,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1925.9470783634497,
+   "misses": 0,
+   "cost": 0.25329929762964465,
+   "by_market": {
+    "spot": {
+     "cost": 0.12059410745757737,
+     "billed_s": 10714.258921113373,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.13270519017206728,
+     "billed_s": 5742.051497829835,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1925.9470783634497,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2347.4,
+   "misses": 0,
+   "cost": 0.09982970555555556,
+   "by_market": {
+    "spot": {
+     "cost": 0.09982970555555556,
+     "billed_s": 9389.6,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2347.4,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 983.4000000000001,
+   "misses": 0,
+   "cost": 0.15190798333333333,
+   "by_market": {
+    "spot": {
+     "cost": 0.10645305,
+     "billed_s": 8850.599999999999,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.04545493333333333,
+     "billed_s": 1966.8000000000002,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 983.4000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2370.5,
+   "misses": 0,
+   "cost": 0.1008120972222222,
+   "by_market": {
+    "spot": {
+     "cost": 0.1008120972222222,
+     "billed_s": 9482.0,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2370.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1005.4000000000001,
+   "misses": 0,
+   "cost": 0.15530637222222224,
+   "by_market": {
+    "spot": {
+     "cost": 0.10883455,
+     "billed_s": 9048.599999999999,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.04647182222222222,
+     "billed_s": 2010.8000000000002,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1005.4000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2318.8,
+   "misses": 0,
+   "cost": 0.09861341111111112,
+   "by_market": {
+    "spot": {
+     "cost": 0.09861341111111112,
+     "billed_s": 9275.2,
+     "vms": 4
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2318.8,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "none",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1015.3000000000002,
+   "misses": 0,
+   "cost": 0.15683564722222226,
+   "by_market": {
+    "spot": {
+     "cost": 0.10990622500000002,
+     "billed_s": 9137.7,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.046929422222222225,
+     "billed_s": 2030.6000000000004,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1015.3000000000002,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 2,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2427.7000000000003,
+   "misses": 0,
+   "cost": 0.17450829954763536,
+   "by_market": {
+    "spot": {
+     "cost": 0.1295453618525603,
+     "billed_s": 11578.810652975702,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.04496293769507506,
+     "billed_s": 1618.665757022702,
+     "vms": 1
+    }
+   },
+   "sim_end": 2427.7000000000003,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1017.5000000000001,
+   "misses": 0,
+   "cost": 0.15983829588443235,
+   "by_market": {
+    "spot": {
+     "cost": 0.10798930949990768,
+     "billed_s": 8907.364579989495,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.05184898638452466,
+     "billed_s": 2243.465757022702,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1017.5000000000001,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2466.2,
+   "misses": 0,
+   "cost": 0.18888798959547876,
+   "by_market": {
+    "spot": {
+     "cost": 0.14565837396995557,
+     "billed_s": 12294.670565890548,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0432296156255232,
+     "billed_s": 1556.2661625188352,
+     "vms": 1
+    }
+   },
+   "sim_end": 2466.2,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1459.3785290652181,
+   "misses": 0,
+   "cost": 0.2175935725210852,
+   "by_market": {
+    "spot": {
+     "cost": 0.12256020112193525,
+     "billed_s": 10207.023792449312,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.09503337139914994,
+     "billed_s": 4112.0208778478345,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1459.3785290652181,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2409.976070534572,
+   "misses": 0,
+   "cost": 0.16721807791414262,
+   "by_market": {
+    "spot": {
+     "cost": 0.1366569668030315,
+     "billed_s": 12691.614694519203,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.030561111111111115,
+     "billed_s": 1100.2,
+     "vms": 1
+    }
+   },
+   "sim_end": 2409.976070534572,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1908.5,
+   "misses": 0,
+   "cost": 0.28128884604030996,
+   "by_market": {
+    "spot": {
+     "cost": 0.15259869300377563,
+     "billed_s": 12842.232301572658,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.12869015303653433,
+     "billed_s": 5568.323929465429,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1908.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2415.6,
+   "misses": 0,
+   "cost": 0.1773857107315184,
+   "by_market": {
+    "spot": {
+     "cost": 0.12473561871522884,
+     "billed_s": 9812.440207215574,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05265009201628956,
+     "billed_s": 1895.4033125864241,
+     "vms": 1
+    }
+   },
+   "sim_end": 2415.6,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 1,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1969.0,
+   "misses": 0,
+   "cost": 0.2659878511712214,
+   "by_market": {
+    "spot": {
+     "cost": 0.13376554023828469,
+     "billed_s": 10277.318974577354,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.13222231093293677,
+     "billed_s": 5721.157684598226,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1969.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2415.6,
+   "misses": 0,
+   "cost": 0.1974320943139255,
+   "by_market": {
+    "spot": {
+     "cost": 0.16653487209170326,
+     "billed_s": 13925.18044044176,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03089722222222223,
+     "billed_s": 1112.3000000000002,
+     "vms": 1
+    }
+   },
+   "sim_end": 2415.6,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1471.552767312887,
+   "misses": 0,
+   "cost": 0.247924550382845,
+   "by_market": {
+    "spot": {
+     "cost": 0.14773358562572875,
+     "billed_s": 11851.894465374226,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10019096475711628,
+     "billed_s": 4335.185975067532,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1471.552767312887,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2491.5,
+   "misses": 0,
+   "cost": 0.19101312592267075,
+   "by_market": {
+    "spot": {
+     "cost": 0.144552194348996,
+     "billed_s": 12277.691979541936,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.04646093157367476,
+     "billed_s": 1672.5935366522913,
+     "vms": 1
+    }
+   },
+   "sim_end": 2491.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1529.978009426477,
+   "misses": 0,
+   "cost": 0.24548648971051584,
+   "by_market": {
+    "spot": {
+     "cost": 0.13943620776727209,
+     "billed_s": 11261.068704966325,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10605028194324377,
+     "billed_s": 4588.714122544202,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1529.978009426477,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2420.5446594930154,
+   "misses": 0,
+   "cost": 0.15842443575144977,
+   "by_market": {
+    "spot": {
+     "cost": 0.1193413946767346,
+     "billed_s": 10684.340458443588,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03908304107471517,
+     "billed_s": 1406.989478689746,
+     "vms": 1
+    }
+   },
+   "sim_end": 2420.5446594930154,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2167.0,
+   "misses": 0,
+   "cost": 0.2743017554528092,
+   "by_market": {
+    "spot": {
+     "cost": 0.12961212580769294,
+     "billed_s": 11227.453397992942,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.14468962964511628,
+     "billed_s": 6260.60897502907,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2167.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2424.3999999999996,
+   "misses": 0,
+   "cost": 0.1836652029680942,
+   "by_market": {
+    "spot": {
+     "cost": 0.1275052064815178,
+     "billed_s": 11052.306827193168,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.056159996486576366,
+     "billed_s": 2021.7598735167492,
+     "vms": 1
+    }
+   },
+   "sim_end": 2424.3999999999996,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 1,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2238.5000000000005,
+   "misses": 0,
+   "cost": 0.29743782405225805,
+   "by_market": {
+    "spot": {
+     "cost": 0.14263800231936025,
+     "billed_s": 11826.965775480265,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.15479982173289783,
+     "billed_s": 6698.0692095965405,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2238.5000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2417.8000000000006,
+   "misses": 0,
+   "cost": 0.17594337933945764,
+   "by_market": {
+    "spot": {
+     "cost": 0.11326343295171906,
+     "billed_s": 8848.50630794531,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.06267994638773856,
+     "billed_s": 2256.478069958588,
+     "vms": 1
+    }
+   },
+   "sim_end": 2417.8000000000006,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc1",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1986.1814904273988,
+   "misses": 0,
+   "cost": 0.24968636741269323,
+   "by_market": {
+    "spot": {
+     "cost": 0.1143625062887281,
+     "billed_s": 9078.977668033052,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.13532386112396516,
+     "billed_s": 5855.359375556185,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1986.1814904273988,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2670.159742604752,
+   "misses": 0,
+   "cost": 0.26647764626805387,
+   "by_market": {
+    "spot": {
+     "cost": 0.03590946573269449,
+     "billed_s": 3456.963930876241,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.23056818053535938,
+     "billed_s": 8300.454499272937,
+     "vms": 4
+    }
+   },
+   "sim_end": 2670.159742604752,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2616.021415673868,
+   "misses": 0,
+   "cost": 0.38056190416987234,
+   "by_market": {
+    "spot": {
+     "cost": 0.04654377139316275,
+     "billed_s": 4265.99817385354,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17763794876362643,
+     "billed_s": 7686.2573984261435,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.15638018401308315,
+     "billed_s": 5629.686624470993,
+     "vms": 3
+    }
+   },
+   "sim_end": 2616.021415673868,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2696.285683793928,
+   "misses": 0,
+   "cost": 0.2225223067015187,
+   "by_market": {
+    "spot": {
+     "cost": 0.044959535977316674,
+     "billed_s": 3820.3149545044894,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.17756277072420204,
+     "billed_s": 6392.259746071273,
+     "vms": 3
+    }
+   },
+   "sim_end": 2696.285683793928,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2401.282291720412,
+   "misses": 0,
+   "cost": 0.34184557390029,
+   "by_market": {
+    "spot": {
+     "cost": 0.049645532965806816,
+     "billed_s": 4185.206594850593,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1652588642360742,
+     "billed_s": 7150.623933291672,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.12694117669840896,
+     "billed_s": 4569.882361142723,
+     "vms": 3
+    }
+   },
+   "sim_end": 2401.282291720412,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2695.4512837938437,
+   "misses": 0,
+   "cost": 0.21990861385785515,
+   "by_market": {
+    "spot": {
+     "cost": 0.0675314346893252,
+     "billed_s": 6197.789428133525,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.15237717916852994,
+     "billed_s": 5485.578450067077,
+     "vms": 3
+    }
+   },
+   "sim_end": 2695.4512837938437,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2542.5732615580655,
+   "misses": 0,
+   "cost": 0.31247233248410256,
+   "by_market": {
+    "spot": {
+     "cost": 0.06959742681646294,
+     "billed_s": 6354.965498668095,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1755585767419994,
+     "billed_s": 7596.284570567283,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.06731632892564025,
+     "billed_s": 2423.3878413230486,
+     "vms": 2
+    }
+   },
+   "sim_end": 2542.5732615580655,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2695.969596572156,
+   "misses": 0,
+   "cost": 0.27811078150656865,
+   "by_market": {
+    "spot": {
+     "cost": 0.03253849936264932,
+     "billed_s": 3002.537815229019,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.24557228214391932,
+     "billed_s": 8840.602157181096,
+     "vms": 4
+    }
+   },
+   "sim_end": 2695.969596572156,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2672.2938375671893,
+   "misses": 0,
+   "cost": 0.4052508693763674,
+   "by_market": {
+    "spot": {
+     "cost": 0.0330089355757514,
+     "billed_s": 3038.3275524895325,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1851136112857654,
+     "billed_s": 8009.7235652494655,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.18712832251485062,
+     "billed_s": 6736.619610534622,
+     "vms": 3
+    }
+   },
+   "sim_end": 2672.2938375671893,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2699.8756427777375,
+   "misses": 0,
+   "cost": 0.24697543011707052,
+   "by_market": {
+    "spot": {
+     "cost": 0.04135615429971866,
+     "billed_s": 3516.096169157946,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.20561927581735184,
+     "billed_s": 7402.293929424667,
+     "vms": 4
+    }
+   },
+   "sim_end": 2699.8756427777375,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 1,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2684.6343290346754,
+   "misses": 0,
+   "cost": 0.37448093956930606,
+   "by_market": {
+    "spot": {
+     "cost": 0.0464589466171825,
+     "billed_s": 3884.8473355490178,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18527564233299149,
+     "billed_s": 8016.734524023672,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.1427463506191321,
+     "billed_s": 5138.8686222887545,
+     "vms": 3
+    }
+   },
+   "sim_end": 2684.6343290346754,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2698.65236520103,
+   "misses": 0,
+   "cost": 0.2508361975106504,
+   "by_market": {
+    "spot": {
+     "cost": 0.040577000422739096,
+     "billed_s": 3602.720849386926,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.2102591970879113,
+     "billed_s": 7569.331095164807,
+     "vms": 4
+    }
+   },
+   "sim_end": 2698.65236520103,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2440.2837639681575,
+   "misses": 0,
+   "cost": 0.3512969565286485,
+   "by_market": {
+    "spot": {
+     "cost": 0.049678441601597484,
+     "billed_s": 4258.09000121214,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1691873689597272,
+     "billed_s": 7320.607310757427,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.13243114596732386,
+     "billed_s": 4767.521254823659,
+     "vms": 3
+    }
+   },
+   "sim_end": 2440.2837639681575,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2694.247485523097,
+   "misses": 0,
+   "cost": 0.27742971184794735,
+   "by_market": {
+    "spot": {
+     "cost": 0.02414589102930943,
+     "billed_s": 1854.4888953473621,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.25328382081863793,
+     "billed_s": 9118.217549470965,
+     "vms": 4
+    }
+   },
+   "sim_end": 2694.247485523097,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2546.5000000000005,
+   "misses": 0,
+   "cost": 0.4313753702110521,
+   "by_market": {
+    "spot": {
+     "cost": 0.02606160732665397,
+     "billed_s": 2004.1834585256945,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17608038889086644,
+     "billed_s": 7618.862980854799,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.22923337399353172,
+     "billed_s": 8252.401463767143,
+     "vms": 4
+    }
+   },
+   "sim_end": 2546.5000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2695.8414055363764,
+   "misses": 0,
+   "cost": 0.23739873162671274,
+   "by_market": {
+    "spot": {
+     "cost": 0.10121656116522766,
+     "billed_s": 7587.982459541998,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.13618217046148506,
+     "billed_s": 4902.558136613463,
+     "vms": 3
+    }
+   },
+   "sim_end": 2695.8414055363764,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2370.5,
+   "misses": 0,
+   "cost": 0.26624850866200717,
+   "by_market": {
+    "spot": {
+     "cost": 0.10226118075065595,
+     "billed_s": 7667.4547864131255,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1639873279113512,
+     "billed_s": 7095.605534625774,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2370.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2263.317058167096,
+   "misses": 0,
+   "cost": 0.1847244660006604,
+   "by_market": {
+    "spot": {
+     "cost": 0.10168832281655368,
+     "billed_s": 8737.601961681543,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.08303614318410671,
+     "billed_s": 2989.3011546278417,
+     "vms": 2
+    }
+   },
+   "sim_end": 2263.317058167096,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2340.406463443351,
+   "misses": 0,
+   "cost": 0.26806573858821037,
+   "by_market": {
+    "spot": {
+     "cost": 0.1064528152501659,
+     "billed_s": 9122.382860703037,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1616129233380445,
+     "billed_s": 6992.866875203848,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2340.406463443351,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2674.4628817713265,
+   "misses": 0,
+   "cost": 0.21120020391428138,
+   "by_market": {
+    "spot": {
+     "cost": 0.05782594625009377,
+     "billed_s": 5858.383307929211,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.1533742576641876,
+     "billed_s": 5521.473275910754,
+     "vms": 3
+    }
+   },
+   "sim_end": 2674.4628817713265,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2634.5,
+   "misses": 0,
+   "cost": 0.35623785614241,
+   "by_market": {
+    "spot": {
+     "cost": 0.06203443472718964,
+     "billed_s": 6158.2143587464825,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18154752592902323,
+     "billed_s": 7855.421795005814,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.1126558954861971,
+     "billed_s": 4055.6122375030955,
+     "vms": 2
+    }
+   },
+   "sim_end": 2634.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2694.701949898797,
+   "misses": 0,
+   "cost": 0.25186501033918246,
+   "by_market": {
+    "spot": {
+     "cost": 0.0367313618526568,
+     "billed_s": 3562.6069842637735,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.21513364848652564,
+     "billed_s": 7744.811345514922,
+     "vms": 4
+    }
+   },
+   "sim_end": 2694.701949898797,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 1,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc2",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2480.7998780701987,
+   "misses": 0,
+   "cost": 0.36101248113207207,
+   "by_market": {
+    "spot": {
+     "cost": 0.04088451055761946,
+     "billed_s": 3853.1816613666456,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17192155589278,
+     "billed_s": 7438.913476129903,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.14820641468167264,
+     "billed_s": 5335.430928540215,
+     "vms": 3
+    }
+   },
+   "sim_end": 2480.7998780701987,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2195.146104055338,
+   "misses": 0,
+   "cost": 0.17494452919004008,
+   "by_market": {
+    "spot": {
+     "cost": 0.1230037146052825,
+     "billed_s": 10240.131773718902,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.051940814584757584,
+     "billed_s": 1869.8693250512729,
+     "vms": 1
+    }
+   },
+   "sim_end": 2195.146104055338,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1413.2699295691161,
+   "misses": 0,
+   "cost": 0.19707057583752616,
+   "by_market": {
+    "spot": {
+     "cost": 0.1050816951038612,
+     "billed_s": 8729.702941854488,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.09198888073366496,
+     "billed_s": 3980.2881086681964,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1413.2699295691161,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2291.8641107315107,
+   "misses": 0,
+   "cost": 0.1684062181514327,
+   "by_market": {
+    "spot": {
+     "cost": 0.09924981506153084,
+     "billed_s": 9378.937165912397,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.06915640308990186,
+     "billed_s": 2489.630511236467,
+     "vms": 2
+    }
+   },
+   "sim_end": 2291.8641107315107,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2057.4715826214265,
+   "misses": 0,
+   "cost": 0.248761892098726,
+   "by_market": {
+    "spot": {
+     "cost": 0.11057031672422453,
+     "billed_s": 10070.436922988016,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1381915753745015,
+     "billed_s": 5979.443165242854,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2057.4715826214265,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2110.743438886188,
+   "misses": 0,
+   "cost": 0.20312889501552545,
+   "by_market": {
+    "spot": {
+     "cost": 0.14454983967924664,
+     "billed_s": 11130.735677725017,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05857905533627879,
+     "billed_s": 2108.845992106036,
+     "vms": 1
+    }
+   },
+   "sim_end": 2110.743438886188,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1666.5000000000002,
+   "misses": 0,
+   "cost": 0.23756487410226396,
+   "by_market": {
+    "spot": {
+     "cost": 0.12206472620562746,
+     "billed_s": 9405.07944653451,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.11550014789663651,
+     "billed_s": 4997.602553219849,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 1666.5000000000002,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2297.1349762220343,
+   "misses": 0,
+   "cost": 0.23338893050650475,
+   "by_market": {
+    "spot": {
+     "cost": 0.1717969087986975,
+     "billed_s": 15326.814624249713,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.061592021707807254,
+     "billed_s": 2217.312781481061,
+     "vms": 1
+    }
+   },
+   "sim_end": 2297.1349762220343,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2134.0,
+   "misses": 0,
+   "cost": 0.30598718053834073,
+   "by_market": {
+    "spot": {
+     "cost": 0.15987462681679884,
+     "billed_s": 14203.288700457719,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.14611255372154192,
+     "billed_s": 6322.177805259027,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2134.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2149.9940407743215,
+   "misses": 0,
+   "cost": 0.17664111810897482,
+   "by_market": {
+    "spot": {
+     "cost": 0.14479667366453036,
+     "billed_s": 12409.8149807498,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.031844444444444446,
+     "billed_s": 1146.4,
+     "vms": 1
+    }
+   },
+   "sim_end": 2149.9940407743215,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2095.5,
+   "misses": 0,
+   "cost": 0.2950853839101452,
+   "by_market": {
+    "spot": {
+     "cost": 0.15501686186008148,
+     "billed_s": 13218.952797206028,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.14006852205006373,
+     "billed_s": 6060.657204089297,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2095.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 1954.8092201676236,
+   "misses": 0,
+   "cost": 0.15357621939502902,
+   "by_market": {
+    "spot": {
+     "cost": 0.10258004182548999,
+     "billed_s": 8907.436232924054,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05099617756953902,
+     "billed_s": 1835.8623925034044,
+     "vms": 1
+    }
+   },
+   "sim_end": 1954.8092201676236,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 1,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2261.820380376095,
+   "misses": 0,
+   "cost": 0.27985944890452386,
+   "by_market": {
+    "spot": {
+     "cost": 0.12403211599740296,
+     "billed_s": 10778.105900708675,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.15582733290712086,
+     "billed_s": 6742.528827711962,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2261.820380376095,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2190.1,
+   "misses": 0,
+   "cost": 0.2006580867549254,
+   "by_market": {
+    "spot": {
+     "cost": 0.16420320987542414,
+     "billed_s": 13495.4849269273,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.03645487687950127,
+     "billed_s": 1312.3755676620456,
+     "vms": 1
+    }
+   },
+   "sim_end": 2190.1,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 2,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2167.0,
+   "misses": 0,
+   "cost": 0.33269569875716415,
+   "by_market": {
+    "spot": {
+     "cost": 0.1855576915972596,
+     "billed_s": 15315.218205819698,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.14713800715990458,
+     "billed_s": 6366.548386726641,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2167.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2120.8444241538127,
+   "misses": 0,
+   "cost": 0.17243803301320362,
+   "by_market": {
+    "spot": {
+     "cost": 0.11563237507986757,
+     "billed_s": 9743.673164621636,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.05680565793333606,
+     "billed_s": 2045.003685600098,
+     "vms": 1
+    }
+   },
+   "sim_end": 2120.8444241538127,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2117.5,
+   "misses": 0,
+   "cost": 0.2663980708027509,
+   "by_market": {
+    "spot": {
+     "cost": 0.11971901911400722,
+     "billed_s": 10039.468685689062,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1466790516887437,
+     "billed_s": 6346.68973653218,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2117.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2212.633808847872,
+   "misses": 0,
+   "cost": 0.18447815125431988,
+   "by_market": {
+    "spot": {
+     "cost": 0.09256789685224806,
+     "billed_s": 6775.221983169095,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.09191025440207184,
+     "billed_s": 3308.769158474586,
+     "vms": 2
+    }
+   },
+   "sim_end": 2212.633808847872,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "J100",
+   "sc": "sc5",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2376.0000000000005,
+   "misses": 0,
+   "cost": 0.31603279173236093,
+   "by_market": {
+    "spot": {
+     "cost": 0.0997442830914457,
+     "billed_s": 7395.204265489746,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1633805337954798,
+     "billed_s": 7069.350019996722,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.052907974845435427,
+     "billed_s": 1904.6870944356754,
+     "vms": 1
+    }
+   },
+   "sim_end": 2376.0000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "ondemand:t3.large": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2371.6,
+   "misses": 0,
+   "cost": 0.22003521666666664,
+   "by_market": {
+    "spot": {
+     "cost": 0.22003521666666664,
+     "billed_s": 17735.5,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2371.6,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2277.0,
+   "misses": 0,
+   "cost": 0.35173325,
+   "by_market": {
+    "spot": {
+     "cost": 0.24648525,
+     "billed_s": 20493.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.105248,
+     "billed_s": 4554.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2277.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2378.2000000000003,
+   "misses": 0,
+   "cost": 0.22045890000000004,
+   "by_market": {
+    "spot": {
+     "cost": 0.22045890000000004,
+     "billed_s": 17766.300000000003,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2378.2000000000003,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2189.0,
+   "misses": 0,
+   "cost": 0.3381396944444444,
+   "by_market": {
+    "spot": {
+     "cost": 0.23695925,
+     "billed_s": 19701.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10118044444444443,
+     "billed_s": 4378.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2189.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2373.7999999999997,
+   "misses": 0,
+   "cost": 0.20869658333333332,
+   "by_market": {
+    "spot": {
+     "cost": 0.20869658333333332,
+     "billed_s": 16616.6,
+     "vms": 7
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2373.7999999999997,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2178.0,
+   "misses": 0,
+   "cost": 0.3364405,
+   "by_market": {
+    "spot": {
+     "cost": 0.2357685,
+     "billed_s": 19602.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10067199999999998,
+     "billed_s": 4356.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2178.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2355.1000000000004,
+   "misses": 0,
+   "cost": 0.22098900833333338,
+   "by_market": {
+    "spot": {
+     "cost": 0.22098900833333338,
+     "billed_s": 17856.5,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2355.1000000000004,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2398.0,
+   "misses": 0,
+   "cost": 0.37042438888888884,
+   "by_market": {
+    "spot": {
+     "cost": 0.25958349999999997,
+     "billed_s": 21582.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.11084088888888888,
+     "billed_s": 4796.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2398.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2343.0,
+   "misses": 0,
+   "cost": 0.22275459999999997,
+   "by_market": {
+    "spot": {
+     "cost": 0.22275459999999997,
+     "billed_s": 18050.1,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2343.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2370.5,
+   "misses": 0,
+   "cost": 0.36617640277777774,
+   "by_market": {
+    "spot": {
+     "cost": 0.256606625,
+     "billed_s": 21334.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10956977777777777,
+     "billed_s": 4741.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2370.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2348.5000000000005,
+   "misses": 0,
+   "cost": 0.2232716916666667,
+   "by_market": {
+    "spot": {
+     "cost": 0.2232716916666667,
+     "billed_s": 18091.9,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2348.5000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2667.5,
+   "misses": 0,
+   "cost": 0.4120546527777777,
+   "by_market": {
+    "spot": {
+     "cost": 0.28875687499999997,
+     "billed_s": 24007.5,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.12329777777777777,
+     "billed_s": 5335.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2667.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2368.3,
+   "misses": 0,
+   "cost": 0.22419605833333334,
+   "by_market": {
+    "spot": {
+     "cost": 0.22419605833333334,
+     "billed_s": 18150.2,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2368.3,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2530.0,
+   "misses": 0,
+   "cost": 0.39081472222222213,
+   "by_market": {
+    "spot": {
+     "cost": 0.27387249999999996,
+     "billed_s": 22770.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.11694222222222221,
+     "billed_s": 5060.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2530.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2359.5000000000005,
+   "misses": 0,
+   "cost": 0.22111862500000004,
+   "by_market": {
+    "spot": {
+     "cost": 0.22111862500000004,
+     "billed_s": 17862.000000000004,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2359.5000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2288.0,
+   "misses": 0,
+   "cost": 0.35343244444444444,
+   "by_market": {
+    "spot": {
+     "cost": 0.247676,
+     "billed_s": 20592.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10575644444444443,
+     "billed_s": 4576.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2288.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2636.013671058779,
+   "misses": 0,
+   "cost": 0.30960964978642863,
+   "by_market": {
+    "spot": {
+     "cost": 0.20136138310520063,
+     "billed_s": 16928.533790602505,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.108248266681228,
+     "billed_s": 3896.9376005242075,
+     "vms": 2
+    }
+   },
+   "sim_end": 2636.013671058779,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2624.282392946543,
+   "misses": 0,
+   "cost": 0.4468819492839965,
+   "by_market": {
+    "spot": {
+     "cost": 0.20231933342751235,
+     "billed_s": 17027.053470575895,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17831773228082798,
+     "billed_s": 7715.671108305058,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.06624488357565621,
+     "billed_s": 2384.8158087236234,
+     "vms": 1
+    }
+   },
+   "sim_end": 2624.282392946543,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2348.5,
+   "misses": 0,
+   "cost": 0.22295855833333333,
+   "by_market": {
+    "spot": {
+     "cost": 0.22295855833333333,
+     "billed_s": 18061.1,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2348.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2497.0000000000005,
+   "misses": 0,
+   "cost": 0.385717138888889,
+   "by_market": {
+    "spot": {
+     "cost": 0.2703002500000001,
+     "billed_s": 22473.000000000004,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1154168888888889,
+     "billed_s": 4994.000000000001,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2497.0000000000005,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2671.3794084452397,
+   "misses": 0,
+   "cost": 0.34545980787630703,
+   "by_market": {
+    "spot": {
+     "cost": 0.18101690173299934,
+     "billed_s": 15545.985850220613,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.16444290614330764,
+     "billed_s": 5919.944621159076,
+     "vms": 5
+    }
+   },
+   "sim_end": 2671.3794084452397,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2694.593318676531,
+   "misses": 0,
+   "cost": 0.4393602474706169,
+   "by_market": {
+    "spot": {
+     "cost": 0.18986370013279535,
+     "billed_s": 16424.661823891787,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.16812745647943078,
+     "billed_s": 7274.745713052294,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.08136909085839081,
+     "billed_s": 2929.2872709020685,
+     "vms": 3
+    }
+   },
+   "sim_end": 2694.593318676531,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2697.283118410587,
+   "misses": 0,
+   "cost": 0.38695496240405114,
+   "by_market": {
+    "spot": {
+     "cost": 0.15553536883979258,
+     "billed_s": 12021.414838461304,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.2314195935642585,
+     "billed_s": 8331.105368313305,
+     "vms": 5
+    }
+   },
+   "sim_end": 2697.283118410587,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2614.657542506543,
+   "misses": 0,
+   "cost": 0.4981560176710496,
+   "by_market": {
+    "spot": {
+     "cost": 0.1574322399613258,
+     "billed_s": 12253.368666690563,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17698790054672375,
+     "billed_s": 7658.130312117855,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.16373587716300006,
+     "billed_s": 5894.4915778680015,
+     "vms": 4
+    }
+   },
+   "sim_end": 2614.657542506543,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2363.9,
+   "misses": 0,
+   "cost": 0.22456969166666668,
+   "by_market": {
+    "spot": {
+     "cost": 0.22456969166666668,
+     "billed_s": 18194.2,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2363.9,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "none",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2200.0,
+   "misses": 0,
+   "cost": 0.3398388888888889,
+   "by_market": {
+    "spot": {
+     "cost": 0.23815,
+     "billed_s": 19800.0,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10168888888888888,
+     "billed_s": 4400.0,
+     "vms": 2
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2200.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2428.8,
+   "misses": 0,
+   "cost": 0.2587062252049419,
+   "by_market": {
+    "spot": {
+     "cost": 0.22953454630378198,
+     "billed_s": 18145.552767312885,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.029171678901159948,
+     "billed_s": 1050.180440441758,
+     "vms": 1
+    }
+   },
+   "sim_end": 2428.8,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 1
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2380.152767312887,
+   "misses": 0,
+   "cost": 0.39473374568863195,
+   "by_market": {
+    "spot": {
+     "cost": 0.23154651426484896,
+     "billed_s": 18432.504932610096,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.16318723142378294,
+     "billed_s": 7060.985975067533,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    }
+   },
+   "sim_end": 2380.152767312887,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2665.6912433523644,
+   "misses": 0,
+   "cost": 0.4110848233073973,
+   "by_market": {
+    "spot": {
+     "cost": 0.14190846084848915,
+     "billed_s": 12915.944284060663,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.26917636245890814,
+     "billed_s": 9690.349048520693,
+     "vms": 5
+    }
+   },
+   "sim_end": 2665.6912433523644,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2636.421026273949,
+   "misses": 0,
+   "cost": 0.5726587741327117,
+   "by_market": {
+    "spot": {
+     "cost": 0.1418018164447163,
+     "billed_s": 12905.454670574805,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18196471722719523,
+     "billed_s": 7873.473341561334,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.24889224046080022,
+     "billed_s": 8960.120656588808,
+     "vms": 5
+    }
+   },
+   "sim_end": 2636.421026273949,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2681.0842099186066,
+   "misses": 0,
+   "cost": 0.3321593035553665,
+   "by_market": {
+    "spot": {
+     "cost": 0.18298088031231374,
+     "billed_s": 15367.596101509123,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.14917842324305272,
+     "billed_s": 5370.423236749898,
+     "vms": 3
+    }
+   },
+   "sim_end": 2681.0842099186066,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2666.1138041201957,
+   "misses": 0,
+   "cost": 0.48551185581373874,
+   "by_market": {
+    "spot": {
+     "cost": 0.18499399858917345,
+     "billed_s": 15573.8291876633,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1787003504696284,
+     "billed_s": 7732.226703012768,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.12181750675493688,
+     "billed_s": 4385.430243177727,
+     "vms": 3
+    }
+   },
+   "sim_end": 2666.1138041201957,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2699.132572067548,
+   "misses": 0,
+   "cost": 0.339739819856637,
+   "by_market": {
+    "spot": {
+     "cost": 0.19965000432643723,
+     "billed_s": 16383.848121202962,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.14008981553019975,
+     "billed_s": 5043.233359087191,
+     "vms": 3
+    }
+   },
+   "sim_end": 2699.132572067548,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2563.0,
+   "misses": 0,
+   "cost": 0.42862429155017867,
+   "by_market": {
+    "spot": {
+     "cost": 0.19336627524328795,
+     "billed_s": 15840.537738668001,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17767313995634137,
+     "billed_s": 7687.780094264771,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.05758487635054933,
+     "billed_s": 2073.055548619776,
+     "vms": 2
+    }
+   },
+   "sim_end": 2563.0,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 2
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2694.017508746117,
+   "misses": 0,
+   "cost": 0.35543229224670164,
+   "by_market": {
+    "spot": {
+     "cost": 0.15257238336584528,
+     "billed_s": 13026.984439796299,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.20285990888085634,
+     "billed_s": 7302.956719710828,
+     "vms": 5
+    }
+   },
+   "sim_end": 2694.017508746117,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2686.7525644825187,
+   "misses": 0,
+   "cost": 0.5074307135074818,
+   "by_market": {
+    "spot": {
+     "cost": 0.15262891760523514,
+     "billed_s": 13029.885341672561,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18587866620368573,
+     "billed_s": 8042.826903044095,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.1689231296985609,
+     "billed_s": 6081.232669148192,
+     "vms": 4
+    }
+   },
+   "sim_end": 2686.7525644825187,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2690.2153525858157,
+   "misses": 0,
+   "cost": 0.38558021892590366,
+   "by_market": {
+    "spot": {
+     "cost": 0.15156981374752138,
+     "billed_s": 13221.601868786849,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.23401040517838226,
+     "billed_s": 8424.374586421762,
+     "vms": 4
+    }
+   },
+   "sim_end": 2690.2153525858157,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2480.5,
+   "misses": 0,
+   "cost": 0.5146889172690676,
+   "by_market": {
+    "spot": {
+     "cost": 0.14470475768383323,
+     "billed_s": 12623.131483414516,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.16642562964511629,
+     "billed_s": 7201.10897502907,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.20355852994011814,
+     "billed_s": 7328.107077844253,
+     "vms": 4
+    }
+   },
+   "sim_end": 2480.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2692.599220103176,
+   "misses": 0,
+   "cost": 0.4163451314054227,
+   "by_market": {
+    "spot": {
+     "cost": 0.126632485563711,
+     "billed_s": 9768.593248214136,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.28971264584171164,
+     "billed_s": 10429.65525030162,
+     "vms": 5
+    }
+   },
+   "sim_end": 2692.599220103176,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc1",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2663.781490427399,
+   "misses": 0,
+   "cost": 0.5887808509118693,
+   "by_market": {
+    "spot": {
+     "cost": 0.1271740217976354,
+     "billed_s": 9842.96061426437,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18230412779063185,
+     "billed_s": 7888.159375556186,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.279302701323602,
+     "billed_s": 10054.897247649675,
+     "vms": 5
+    }
+   },
+   "sim_end": 2663.781490427399,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 6055.581379474214,
+   "misses": 53,
+   "cost": 0.7271384380852801,
+   "by_market": {
+    "spot": {
+     "cost": 0.04489873509910891,
+     "billed_s": 4104.19132525808,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1208375344054224,
+     "billed_s": 5228.5471617730855,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.5614021685807489,
+     "billed_s": 20210.47806890696,
+     "vms": 5
+    }
+   },
+   "sim_end": 6055.581379474214,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 5838.050652216283,
+   "misses": 48,
+   "cost": 0.9996559657919749,
+   "by_market": {
+    "spot": {
+     "cost": 0.04654377139316275,
+     "billed_s": 4265.99817385354,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.4010319758305672,
+     "billed_s": 17352.34510805339,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.552080218568245,
+     "billed_s": 19874.88786845682,
+     "vms": 5
+    }
+   },
+   "sim_end": 5838.050652216283,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3615.9359734879718,
+   "misses": 41,
+   "cost": 0.5205368967561267,
+   "by_market": {
+    "spot": {
+     "cost": 0.06927783547304266,
+     "billed_s": 6323.530284561181,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.451259061283084,
+     "billed_s": 16245.326206191025,
+     "vms": 5
+    }
+   },
+   "sim_end": 3615.9359734879718,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3454.9204568074565,
+   "misses": 32,
+   "cost": 0.7334930036423499,
+   "by_market": {
+    "spot": {
+     "cost": 0.06959742681646294,
+     "billed_s": 6354.965498668095,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.23881464894595716,
+     "billed_s": 10333.326156315456,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.4250809278799297,
+     "billed_s": 15302.913403677469,
+     "vms": 5
+    }
+   },
+   "sim_end": 3454.9204568074565,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 5395.292157898856,
+   "misses": 49,
+   "cost": 0.7207187348281288,
+   "by_market": {
+    "spot": {
+     "cost": 0.04910443305679958,
+     "billed_s": 4131.983652981029,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.10528995237267699,
+     "billed_s": 4555.815246894678,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.5663243493986522,
+     "billed_s": 20387.67657835148,
+     "vms": 5
+    }
+   },
+   "sim_end": 5395.292157898856,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 5362.523577675474,
+   "misses": 42,
+   "cost": 0.9743346238827467,
+   "by_market": {
+    "spot": {
+     "cost": 0.049645532965806816,
+     "billed_s": 4185.206594850593,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.3705715933956251,
+     "billed_s": 16034.347791156859,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.5541174975213148,
+     "billed_s": 19948.22991076733,
+     "vms": 5
+    }
+   },
+   "sim_end": 5362.523577675474,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 9555.396588538868,
+   "misses": 55,
+   "cost": 0.7985557703189088,
+   "by_market": {
+    "spot": {
+     "cost": 0.032936163109988356,
+     "billed_s": 3031.16960503743,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.21102948153773987,
+     "billed_s": 9131.083335767591,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.5545901256711806,
+     "billed_s": 19965.2445241625,
+     "vms": 5
+    }
+   },
+   "sim_end": 9555.396588538868,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 9229.972640730271,
+   "misses": 54,
+   "cost": 1.227408116593517,
+   "by_market": {
+    "spot": {
+     "cost": 0.0330089355757514,
+     "billed_s": 3038.3275524895325,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.6397793416384058,
+     "billed_s": 27682.759974738714,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.5546198393793595,
+     "billed_s": 19966.31421765694,
+     "vms": 5
+    }
+   },
+   "sim_end": 9229.972640730271,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3823.002844870441,
+   "misses": 46,
+   "cost": 0.6161931456587022,
+   "by_market": {
+    "spot": {
+     "cost": 0.045483291153434996,
+     "billed_s": 3788.8812243607395,
+     "vms": 8
+    },
+    "burstable": {
+     "cost": 0.06823979967615247,
+     "billed_s": 2952.683639833521,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.5024700548291148,
+     "billed_s": 18088.921973848133,
+     "vms": 5
+    }
+   },
+   "sim_end": 3823.002844870441,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 2,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3736.505740773249,
+   "misses": 38,
+   "cost": 0.7942283887678216,
+   "by_market": {
+    "spot": {
+     "cost": 0.0464589466171825,
+     "billed_s": 3884.8473355490178,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.2582053935468659,
+     "billed_s": 11172.348759239392,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.48956404860377306,
+     "billed_s": 17624.30574973583,
+     "vms": 5
+    }
+   },
+   "sim_end": 3736.505740773249,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 11314.099240537354,
+   "misses": 53,
+   "cost": 0.8022554712757669,
+   "by_market": {
+    "spot": {
+     "cost": 0.02585179763201108,
+     "billed_s": 1983.546439380492,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.2526439380781989,
+     "billed_s": 10931.708859152837,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.523759735565557,
+     "billed_s": 18855.35048036005,
+     "vms": 5
+    }
+   },
+   "sim_end": 11314.099240537354,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 12221.352702497596,
+   "misses": 51,
+   "cost": 1.3818257117872343,
+   "by_market": {
+    "spot": {
+     "cost": 0.02606160732665397,
+     "billed_s": 2004.1834585256945,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.8468701762640329,
+     "billed_s": 36643.42108834759,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.5088939281965471,
+     "billed_s": 18320.181415075698,
+     "vms": 5
+    }
+   },
+   "sim_end": 12221.352702497596,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 7100.507606894025,
+   "misses": 45,
+   "cost": 0.7357038292090606,
+   "by_market": {
+    "spot": {
+     "cost": 0.04967596112660252,
+     "billed_s": 4257.846020065093,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.14442364444444444,
+     "billed_s": 6249.1,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.5416042236380136,
+     "billed_s": 19497.75205096849,
+     "vms": 5
+    }
+   },
+   "sim_end": 7100.507606894025,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 7706.197567788365,
+   "misses": 42,
+   "cost": 1.0991162851513254,
+   "by_market": {
+    "spot": {
+     "cost": 0.049678441601597484,
+     "billed_s": 4258.09000121214,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.5342907260245948,
+     "billed_s": 23118.34872221805,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.5151471175251329,
+     "billed_s": 18545.29623090478,
+     "vms": 5
+    }
+   },
+   "sim_end": 7706.197567788365,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3311.774181211419,
+   "misses": 27,
+   "cost": 0.4735462007480324,
+   "by_market": {
+    "spot": {
+     "cost": 0.10209958701935132,
+     "billed_s": 7651.5603210389,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.37144661372868104,
+     "billed_s": 13372.078094232516,
+     "vms": 5
+    }
+   },
+   "sim_end": 3311.774181211419,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3195.1440223068207,
+   "misses": 15,
+   "cost": 0.6499416032885443,
+   "by_market": {
+    "spot": {
+     "cost": 0.10226118075065595,
+     "billed_s": 7667.4547864131255,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.22116264679129077,
+     "billed_s": 9569.537601546235,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.3265177757465976,
+     "billed_s": 11754.639926877513,
+     "vms": 5
+    }
+   },
+   "sim_end": 3195.1440223068207,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 0,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2641.6418309874334,
+   "misses": 0,
+   "cost": 0.4054647536391941,
+   "by_market": {
+    "spot": {
+     "cost": 0.1614733562316278,
+     "billed_s": 13082.768768898974,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.2439913974075663,
+     "billed_s": 8783.690306672386,
+     "vms": 4
+    }
+   },
+   "sim_end": 2641.6418309874334,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 0,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2499.6072999423977,
+   "misses": 0,
+   "cost": 0.4966168766601374,
+   "by_market": {
+    "spot": {
+     "cost": 0.1568895295378894,
+     "billed_s": 12839.907423722896,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1673082717462125,
+     "billed_s": 7239.3002197880405,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.17241907537603557,
+     "billed_s": 6207.08671353728,
+     "vms": 3
+    }
+   },
+   "sim_end": 2499.6072999423977,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3269.055967716352,
+   "misses": 29,
+   "cost": 0.5639308352561723,
+   "by_market": {
+    "spot": {
+     "cost": 0.06681597948605957,
+     "billed_s": 6744.692121468649,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.06032392495487867,
+     "billed_s": 2610.169829778404,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.436790930815234,
+     "billed_s": 15724.473509348427,
+     "vms": 5
+    }
+   },
+   "sim_end": 3269.055967716352,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 3430.408964449034,
+   "misses": 22,
+   "cost": 0.7638862195935038,
+   "by_market": {
+    "spot": {
+     "cost": 0.0686449008485858,
+     "billed_s": 6954.123323195517,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.23673054746415625,
+     "billed_s": 10243.148688352916,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.4585107712807617,
+     "billed_s": 16506.38776610742,
+     "vms": 5
+    }
+   },
+   "sim_end": 3430.408964449034,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 5350.023075019997,
+   "misses": 52,
+   "cost": 0.7332446100384556,
+   "by_market": {
+    "spot": {
+     "cost": 0.04084906795046576,
+     "billed_s": 3849.6955032859532,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.11356060182002316,
+     "billed_s": 4913.67988644331,
+     "vms": 1
+    },
+    "ondemand": {
+     "cost": 0.5788349402679667,
+     "billed_s": 20838.0578496468,
+     "vms": 5
+    }
+   },
+   "sim_end": 5350.023075019997,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc2",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 5757.966417234041,
+   "misses": 45,
+   "cost": 1.0040460701167393,
+   "by_market": {
+    "spot": {
+     "cost": 0.04088451055761946,
+     "billed_s": 3853.1816613666456,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.399138435941473,
+     "billed_s": 17270.41309362143,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.5640231236176468,
+     "billed_s": 20304.832450235284,
+     "vms": 5
+    }
+   },
+   "sim_end": 5757.966417234041,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 5,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2427.823654395932,
+   "misses": 0,
+   "cost": 0.3920871911322678,
+   "by_market": {
+    "spot": {
+     "cost": 0.20980056066814973,
+     "billed_s": 17417.241604016213,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.18228663046411803,
+     "billed_s": 6562.318696708249,
+     "vms": 3
+    }
+   },
+   "sim_end": 2427.823654395932,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 5,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2567.154838672664,
+   "misses": 0,
+   "cost": 0.5944929494510606,
+   "by_market": {
+    "spot": {
+     "cost": 0.2257133109893389,
+     "billed_s": 18775.194531897407,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1748820759745426,
+     "billed_s": 7567.012902744633,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.19389756248717901,
+     "billed_s": 6980.312249538444,
+     "vms": 3
+    }
+   },
+   "sim_end": 2567.154838672664,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 1,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2649.817345204837,
+   "misses": 0,
+   "cost": 0.43374831818468146,
+   "by_market": {
+    "spot": {
+     "cost": 0.1732348258987612,
+     "billed_s": 13668.450571909058,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.26051349228592025,
+     "billed_s": 9378.485722293128,
+     "vms": 4
+    }
+   },
+   "sim_end": 2649.817345204837,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 1,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2686.010255321985,
+   "misses": 0,
+   "cost": 0.5689465287616671,
+   "by_market": {
+    "spot": {
+     "cost": 0.17492426172427475,
+     "billed_s": 13821.373631370236,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1861861922656274,
+     "billed_s": 8056.133319185803,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.20783607477176486,
+     "billed_s": 7482.098691783535,
+     "vms": 3
+    }
+   },
+   "sim_end": 2686.010255321985,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 2,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2428.8,
+   "misses": 0,
+   "cost": 0.39628267458869987,
+   "by_market": {
+    "spot": {
+     "cost": 0.18769390136825834,
+     "billed_s": 16564.28822335095,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.20858877322044156,
+     "billed_s": 7509.195835935896,
+     "vms": 4
+    }
+   },
+   "sim_end": 2428.8,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 2,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2489.0177805259027,
+   "misses": 0,
+   "cost": 0.5169338543007986,
+   "by_market": {
+    "spot": {
+     "cost": 0.19391164553311702,
+     "billed_s": 17065.634881773243,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.1707271198380045,
+     "billed_s": 7387.231146836735,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.1522950889296771,
+     "billed_s": 5482.623201468376,
+     "vms": 3
+    }
+   },
+   "sim_end": 2489.0177805259027,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 4,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2686.322336047789,
+   "misses": 0,
+   "cost": 0.3563145976147882,
+   "by_market": {
+    "spot": {
+     "cost": 0.17930216209077934,
+     "billed_s": 15053.832911138856,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.17701243552400886,
+     "billed_s": 6372.447678864317,
+     "vms": 4
+    }
+   },
+   "sim_end": 2686.322336047789,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 4
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 4,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2647.5750355285054,
+   "misses": 0,
+   "cost": 0.4966768641672811,
+   "by_market": {
+    "spot": {
+     "cost": 0.18217434932346876,
+     "billed_s": 15350.529300883127,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17834572451337344,
+     "billed_s": 7716.882310674813,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.13615679033043895,
+     "billed_s": 4901.6444518958015,
+     "vms": 3
+    }
+   },
+   "sim_end": 2647.5750355285054,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 3
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 3,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2926.40317038374,
+   "misses": 3,
+   "cost": 0.47520873133387753,
+   "by_market": {
+    "spot": {
+     "cost": 0.12849121112711784,
+     "billed_s": 11139.574113452625,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.3467175202067597,
+     "billed_s": 12481.830727443348,
+     "vms": 5
+    }
+   },
+   "sim_end": 2926.40317038374,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 3,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2667.5,
+   "misses": 0,
+   "cost": 0.608839348403327,
+   "by_market": {
+    "spot": {
+     "cost": 0.11728703763442269,
+     "billed_s": 10132.31394704387,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18429140853930548,
+     "billed_s": 7974.147484873796,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.30726090222959895,
+     "billed_s": 11061.392480265562,
+     "vms": 5
+    }
+   },
+   "sim_end": 2667.5,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 6,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2905.9051733226306,
+   "misses": 8,
+   "cost": 0.4508103842187862,
+   "by_market": {
+    "spot": {
+     "cost": 0.13317757397625776,
+     "billed_s": 12208.362744845874,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.3176328102425285,
+     "billed_s": 11434.781168731024,
+     "vms": 5
+    }
+   },
+   "sim_end": 2905.9051733226306,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 6,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2666.5580931081754,
+   "misses": 0,
+   "cost": 0.570158322905631,
+   "by_market": {
+    "spot": {
+     "cost": 0.13265903512653054,
+     "billed_s": 12157.35892356123,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18042157343491605,
+     "billed_s": 7806.7026967031,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.25707771434418436,
+     "billed_s": 9254.797716390634,
+     "vms": 5
+    }
+   },
+   "sim_end": 2666.5580931081754,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 7,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2711.8482539380493,
+   "misses": 1,
+   "cost": 0.48045408715438803,
+   "by_market": {
+    "spot": {
+     "cost": 0.13653130241743425,
+     "billed_s": 12069.632002442262,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.34392278473695376,
+     "billed_s": 12381.220250530334,
+     "vms": 5
+    }
+   },
+   "sim_end": 2711.8482539380493,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 7,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2674.2140747628746,
+   "misses": 0,
+   "cost": 0.6311753317509754,
+   "by_market": {
+    "spot": {
+     "cost": 0.13595442610752317,
+     "billed_s": 11999.111436414196,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18441996238460426,
+     "billed_s": 7979.7099108723,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.3108009432588479,
+     "billed_s": 11188.833957318522,
+     "vms": 5
+    }
+   },
+   "sim_end": 2674.2140747628746,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 8,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2991.891089549466,
+   "misses": 11,
+   "cost": 0.5062993959891621,
+   "by_market": {
+    "spot": {
+     "cost": 0.12247717562485329,
+     "billed_s": 9346.769730360784,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.3838222203643088,
+     "billed_s": 13817.599933115114,
+     "vms": 5
+    }
+   },
+   "sim_end": 2991.891089549466,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 8,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2624.2712280538562,
+   "misses": 0,
+   "cost": 0.6163343127642548,
+   "by_market": {
+    "spot": {
+     "cost": 0.10668420870626198,
+     "billed_s": 8008.767580902371,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.18059400560721378,
+     "billed_s": 7814.16370415829,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.329056098450779,
+     "billed_s": 11846.019544228046,
+     "vms": 5
+    }
+   },
+   "sim_end": 2624.2712280538562,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 9,
+   "key": "hads",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2687.348007604911,
+   "misses": 0,
+   "cost": 0.48802455366817504,
+   "by_market": {
+    "spot": {
+     "cost": 0.14378644379254565,
+     "billed_s": 11784.88445907749,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.0,
+     "billed_s": 0.0,
+     "vms": 0
+    },
+    "ondemand": {
+     "cost": 0.3442381098756294,
+     "billed_s": 12392.571955522657,
+     "vms": 5
+    }
+   },
+   "sim_end": 2687.348007604911,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  },
+  {
+   "job": "ED200",
+   "sc": "sc5",
+   "seed": 9,
+   "key": "burst",
+   "ok": true,
+   "infeasible": false,
+   "error": null,
+   "mk": 2530.518973653218,
+   "misses": 0,
+   "cost": 0.6328844208892275,
+   "by_market": {
+    "spot": {
+     "cost": 0.13705837839724122,
+     "billed_s": 11339.011612514969,
+     "vms": 9
+    },
+    "burstable": {
+     "cost": 0.17531503386203348,
+     "billed_s": 7585.746657491833,
+     "vms": 3
+    },
+    "ondemand": {
+     "cost": 0.3205110086299528,
+     "billed_s": 11538.396310678301,
+     "vms": 5
+    }
+   },
+   "sim_end": 2530.518973653218,
+   "launched": {
+    "spot:c3.large": 3,
+    "spot:c3.xlarge": 3,
+    "spot:c4.large": 3,
+    "ondemand:t3.large": 3,
+    "ondemand:c4.large": 5
+   },
+   "overrides": 0
+  }
+ ]
+}

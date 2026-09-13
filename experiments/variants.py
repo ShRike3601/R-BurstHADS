@@ -401,8 +401,164 @@ def _limits(markets):
     return apply_patch
 
 
+def _nocap():
+    """Instance limits off (models/limits.py ENABLED = False)."""
+    def apply_patch():
+        import models.limits as lim
+        _patch(lim, "ENABLED", False)
+    return apply_patch
+
+
+def _migrate_to_launched(only_launched):
+    """Which VMs the baselines' migration may choose.
+
+    only_launched=False reproduces the code on disk: HADS.select_vm stages
+    1-2 and BurstHADS._attempt_paper_migration Attempts 1-2 accept any pool
+    VM that is not hibernated or terminated, including pool VMs the run
+    never launched. Exists to prove this copy is faithful.
+    only_launched=True restricts them to VMs the run has launched
+    (self._launches). Algorithm 4's inputs are "the sets of idle, busy, and
+    non-launched regular on-demand VMs (IR, BR and Mo)": running VMs, plus
+    not-yet-launched ON-DEMAND VMs for the last resort, which
+    _attempt_ondemand_fallback still draws from. CCScheduler's idle and
+    working dispatchers are likewise running instances.
+    """
+    from models.vm import VM
+    from scheduler.hads import HADS
+    from scheduler.burst_hads import BurstHADS
+
+    def ok(self, v):
+        return (not only_launched) or v.id in self._launches._ids
+
+    def hads_select_vm(self, task, job, current_time):
+        deadline = self.D
+        idle = [v for v in (self.spot_vms + self.ondemand_vms)
+                if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                and not v.tasks and ok(self, v)]
+        for vm in sorted(idle, key=lambda v: v.cost_rate):
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time, deadline)):
+                self._launches.commit(vm)
+                return vm
+        working = [v for v in (self.spot_vms + self.ondemand_vms)
+                   if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                   and v.tasks and ok(self, v)]
+        for vm in sorted(working, key=lambda v: v.cost_rate):
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time, deadline)):
+                self._launches.commit(vm)
+                return vm
+        return self._attempt_ondemand_fallback(task, current_time)
+
+    def burst_attempt(self, task, current_time):
+        deadline = self.D
+        idle_burstable = [v for v in self.burstable_vms
+                          if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                          and not v.tasks and ok(self, v)]
+        for vm in sorted(idle_burstable, key=lambda v: v.cost_rate):
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time,
+                                              deadline, burst_mode=True)):
+                self._launches.commit(vm)
+                return vm
+
+        def _k_sort_key(v):
+            market_rank = 0 if v.is_spot else 1
+            busy_rank = 1 if v.tasks else 0
+            return (market_rank, busy_rank, v.cost_rate)
+
+        active = [v for v in (self.spot_vms + self.ondemand_vms)
+                  if v.state not in (VM.HIBERNATED, VM.TERMINATED) and ok(self, v)]
+        for vm in sorted(active, key=_k_sort_key):
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time, deadline)):
+                self._launches.commit(vm)
+                return vm
+        return None
+
+    def apply_patch():
+        _patch(HADS, "select_vm", hads_select_vm)
+        _patch(BurstHADS, "_attempt_paper_migration", burst_attempt)
+    return apply_patch
+
+
+def _burst_fill(guard):
+    """Burst-HADS's proactive burstable allocation (Algorithm 1, Part 2).
+
+    guard=True reproduces the code on disk: a task moves to a burstable VM
+    only if its baseline-mode finish beats its planned finish, so a launched
+    burstable can stay idle (and, since billing starts at first dispatch,
+    unbilled). Exists to prove this copy is faithful.
+    guard=False follows the paper's text: Dspot violators move to the
+    burstable VMs, and "if a burstable VM remains idle, the task with the
+    latest finishing time in the scheduling map is moved to it".
+    """
+    import math
+    from scheduler.burst_hads import BurstHADS
+
+    def _allocate_burstable_vms(self, solution):
+        n = math.ceil(self.burst_rate * max(1, len(solution.selected_vms)))
+        if n <= 0:
+            return solution
+        burst_pool = self._launch_burstable_vms(n)
+        if not burst_pool:
+            return solution
+        vm_map = {vm.id: vm for vm in self.all_vms}
+        remaining_burst = list(burst_pool)
+
+        finish_times = self._solution_task_finish_times(solution)
+        violators = [(task, ft) for task, ft in finish_times.items()
+                     if ft > self.Dspot]
+        violators.sort(key=lambda pair: pair[1], reverse=True)
+        for task, ft in violators:
+            if not remaining_burst:
+                break
+            burst_vm = remaining_burst[0]
+            old_vm = vm_map.get(solution.allocation.get(task.task_id))
+            if old_vm is None or not burst_vm.can_fit_task(task):
+                continue
+            if guard and self._baseline_finish(task, burst_vm) >= ft:
+                continue
+            task.baseline_mode = True
+            solution.allocation[task.task_id] = burst_vm.id
+            if burst_vm not in solution.selected_vms:
+                solution.selected_vms.append(burst_vm)
+            remaining_burst.pop(0)
+
+        if remaining_burst:
+            finish_times = self._solution_task_finish_times(solution)
+            candidates = sorted(finish_times.items(),
+                                key=lambda pair: pair[1], reverse=True)
+            for task, ft in candidates:
+                if not remaining_burst:
+                    break
+                burst_vm = remaining_burst[0]
+                old_vm_id = solution.allocation.get(task.task_id)
+                if old_vm_id == burst_vm.id or not burst_vm.can_fit_task(task):
+                    continue
+                if guard and self._baseline_finish(task, burst_vm) >= ft:
+                    continue
+                task.baseline_mode = True
+                solution.allocation[task.task_id] = burst_vm.id
+                if burst_vm not in solution.selected_vms:
+                    solution.selected_vms.append(burst_vm)
+                remaining_burst.pop(0)
+        return solution
+
+    return lambda: _patch(BurstHADS, "_allocate_burstable_vms",
+                          _allocate_burstable_vms)
+
+
 VARIANTS = {
     "base":             [],
+    "nocap":                 [lambda: _nocap()()],
+    "nocap+mig_copy":        [lambda: _nocap()(), lambda: _migrate_to_launched(False)()],
+    "nocap+mig_launched":    [lambda: _nocap()(), lambda: _migrate_to_launched(True)()],
+    "nocap+fill_copy":       [lambda: _nocap()(), _burst_fill(True)],
+    "nocap+burst_fill":      [lambda: _nocap()(), _burst_fill(False)],
+    "nocap+mig_launched+burst_fill": [lambda: _nocap()(),
+                                      lambda: _migrate_to_launched(True)(),
+                                      _burst_fill(False)],
     "cap_od":           [lambda: _limits(("ondemand",))()],
     "cap_all":          [lambda: _limits(("ondemand", "spot"))()],
     "b_copy":           [lambda: _burst_primary("id", "disk")()],

@@ -329,6 +329,77 @@ old −52% / −74% figures (the speed artefact).
 
 ## Open items
 
+- **THE BASELINES ARE NOT A VALIDATED REPRODUCTION OF TEYLO ET AL. (IEEE
+  TCC 2023). Everything in "Where the result stands" is a comparison against
+  our variant of Burst-HADS until this is resolved.** Measured with
+  `experiments/baseline_validation.py` (30 seeds, 95% CIs, paired per seed),
+  at fixes 1–7, fix 8, fixes 1–11 and fixes 1–12
+  (`baseline_validation_compare.txt`, commit `a0b3dfc`):
+  - **What the old validation got wrong.** The per-job makespan reductions
+    44.37/42.09/28.82/11.82% are the paper's **Table 7, without
+    hibernation** (paired cost increases +66/+45/+58/+34%), not a
+    hibernation average. +1.92% is the hibernation-run average (Table 9).
+    The paper's Table 10 is a 20% runtime-fluctuation experiment on J60.
+    `paper_reproduction.py`'s table numbers are wrong (catalogue = Table 3,
+    jobs = Table 6, scenarios = Table 8), and its job generator draws
+    runtimes uniformly, so mean runtimes exceed Table 6's stated averages
+    by 6/6/14/22% (J60/J80/J100/ED200). The earlier "matched" result also
+    never covered Burst-HADS: `paper.tex` already showed its makespan
+    reduction short of published.
+  - **HADS reproduces**, without hibernation, after fix 8: makespan within
+    1–2% of Table 7 for J60/J80/J100 (2330/2350/2356 s vs 2290/2295/2332),
+    −8% for ED200; cost 10–18% below published.
+  - **Burst-HADS does not.** Without hibernation (Table 6 generator,
+    3 copies): makespan change vs HADS −71/−60/−51/−0% against published
+    −44/−42/−29/−12%; cost change +29/+47/+79/+66% against +66/+45/+58/+34%.
+    Highly sensitive to the unstated spot pool size (5–6 copies: J60 −78%)
+    and to the job generator (uniform draw: J80/J100 makespans within 1–7%
+    of published, J60 still −44%, ED200 +14%).
+  - **Under hibernation (sc1–sc5) neither matches the paper's aggregates.**
+    Average Burst-HADS makespan reduction vs HADS 10–16% against 25.87%
+    (J60 21–27% vs 40.10%, ED200 1–3% vs 10.24%); average cost increase
+    +38–44% against +1.92%. Both baselines get 50–190% dearer under
+    hibernation than without it; the paper's own J60 Burst-HADS numbers
+    (Table 7 vs Table 10) show +6/+82/+13/+27/+34% for sc1–sc5.
+  - **Not caused by fixes 8–12.** The hibernation aggregates move by under
+    two points across all four code states for a given workload; the gap
+    is present at fixes 1–7.
+  - **Cost decomposition** (`diag_validation_costs_*`, paper catalogue,
+    Table 6 workload, 10 seeds, fixes 1–11 uncapped and fixes 1–12):
+    - *Measured — fix 12 is stricter than the reference.* Both our
+      catalogues hold one on-demand type (paper: c4.large; sweep: c5.large),
+      so the per-type limit of 5 is a total of 5, while the paper's Table 3
+      prices three on-demand types and CCScheduler's fallback walks every
+      one. ED200 sc2 with limits on launches exactly 5 on-demand VMs and
+      reaches makespan ~5,900 s with ~40 misses per run; uncapped it uses
+      8.1–8.5 and finishes near D. The capped sweep's DF=0.5 misses and
+      DF=0.25 infeasibility are therefore at least partly this artefact.
+    - *Measured — a hardcoded on-demand fallback.* `_launch_new_ondemand_vm`
+      (HADS and Burst-HADS) falls back to c5.large, speed 2, $0.085 when
+      `ondemand_vms` has emptied (every on-demand VM terminated): the wrong
+      catalogue in the paper setting, and a type the per-type limit does not
+      count. Seen at 0.1 launches per run (HADS J60 sc1).
+    - *Hypothesis, not yet tested — the baselines migrate onto never-launched
+      pool VMs.* HADS bills 3.1 spot VMs on J60 without hibernation and 7.7
+      in sc1. `HADS.select_vm` stages 1–2 and Burst-HADS's Attempts 1–2 accept
+      any pool VM not hibernated or terminated, including ones the run never
+      launched. The paper's Algorithm 4 takes as input "the sets of idle, busy,
+      and non-launched regular on-demand VMs (IR, BR and Mo)" — running VMs,
+      plus not-yet-launched **on-demand** VMs for the last resort; CCScheduler's
+      idle and working dispatchers are running instances; and `hads.py`'s own
+      docstring says HADS never launches a fresh spot VM to recover.
+      Variant `nocap+mig_launched`.
+    - *Hypothesis, not yet tested — Burst-HADS leaves proactive burstables idle
+      (and so unbilled).* It launches 2.5 t3.large on J60 without hibernation
+      and bills none; in sc1 it bills 3.0, $0.093 of its $0.124 cost jump. The
+      cause is an improvement guard in `_allocate_burstable_vms` (move a task
+      only if its baseline-mode finish beats its planned finish), added by an
+      earlier session. The paper's text has no such test: Dspot violators move
+      to the burstables, and "if a burstable VM remains idle, the task with the
+      latest finishing time in the scheduling map is moved to it". Variant
+      `nocap+burst_fill`.
+  - Table 9's body is an image; the HADS values in
+    `paper_reproduction.PAPER` cannot be re-verified from the text.
 - **Declared per-type risk is untested in every Table 9 cell — a
   limitation to state, not a benefit to claim.** Table 9 hibernates every
   spot VM at kh/D, so the c5 / m5.xlarge risk differential R-BurstHADS
