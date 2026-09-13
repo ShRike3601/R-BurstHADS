@@ -1,0 +1,6 @@
+_fix_scratch/paper_figures.py.bak3:22:1: 'random' imported but unused
+_fix_scratch/paper_figures.py.bak3:22:1: 'contextlib' imported but unused
+_fix_scratch/paper_figures.py.bak3:54:5: redefinition of unused 'random' from line 22
+_fix_scratch/paper_figures.py.bak3:54:5: redefinition of unused 'contextlib' from line 22
+_fix_scratch/paper_figures.py.bak3:62:5: 'main.get_expected_makespan' imported but unused
+_fix_scratch/paper_figures.py.bak3:602:15: f-string is missing placeholders

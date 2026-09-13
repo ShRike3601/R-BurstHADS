@@ -1,0 +1,461 @@
+"""
+Main simulation entry point — P-BurstHADS experiments.
+
+VM POOL DESIGN (matches paper scale, modern instance types):
+  5 VMs total, matching Teylo et al. (2023) pool size.
+
+  HADS pool (3 VMs):
+    spot:     c5.large  (low-risk anchor, illustrative)
+              m5.xlarge (high-risk anchor, illustrative)
+    ondemand: c5.large
+
+  BurstHADS / P-BurstHADS pool (5 VMs):
+    spot:     c5.large  (low-risk anchor, illustrative)
+              c5.xlarge (low-risk anchor, illustrative)
+              m5.xlarge (high-risk anchor, illustrative)
+    burstable: t3.large (no risk,   0/hr)
+    ondemand:  c5.large (no risk,   0/hr)
+
+HIBERNATION RATE CALIBRATION -- read this before citing these numbers:
+  These hibernation_rate values are NOT derived from AWS Spot Advisor
+  data (an earlier version of this file claimed they were -- checked
+  against AWS's actual published interruption-frequency tables, that
+  claim does not hold; the numbers were off by 4-5 orders of
+  magnitude). They instead follow Teylo et al. (2023)'s own
+  methodology: the paper is explicit that its hibernation/resume
+  events are SYNTHETIC and Poisson-distributed (lambda = k/D, where k
+  is the expected event count over the deadline D), not measured from
+  AWS. Their Table 9 worst case (sc2) uses k=5 over D=2700s, i.e.
+  about 6.7 events/hr.
+
+  m5.xlarge's hibernation_rate below (5/2700 per second) matches
+  Teylo's sc2 exactly. c5.large/c5.xlarge's rate (0.03-0.04/hr) has no
+  equivalent in Teylo's paper -- the paper does not differentiate
+  hibernation risk by instance type at all. That differentiation is
+  this thesis's OWN extension on top of the paper: R-BurstHADS's WRR
+  weighting is risk-aware BY INSTANCE TYPE, which only produces a
+  measurable effect if some spot VMs are modeled as riskier than
+  others. The resulting gap between m5.xlarge and c5.large here is a
+  deliberately large, illustrative contrast chosen to make that
+  mechanism observable in a short simulated run -- it is not a claim
+  about real-world AWS interruption-frequency differences between
+  these two instance types.
+
+KEY DESIGN PRINCIPLE:
+  m5.xlarge is modeled with a much higher hibernation rate than
+  c5.large (illustrative contrast, see above -- not AWS-measured).
+  R-BurstHADS detects this via risk-adjusted WRR weights and
+  assigns long tasks preferentially to c5/c5.xlarge over m5.xlarge.
+  BurstHADS is blind to this difference.
+
+  When we inject explicit hibernation of m5.xlarge:
+  - BurstHADS is caught off-guard (assigned long tasks there)
+  - R-BurstHADS already moved long tasks away from it
+  This produces measurable cost/makespan differences -- but only
+  because the labeled risk was made real for this specific run; see
+  the "none" (no-hibernation) scenario for what happens when it isn't.
+
+HIBERNATION INJECTION:
+  We deterministically inject hibernation of the VM currently labeled
+  highest-risk (m5.xlarge) at a controlled time. This targeting is OUR
+  extension, not Teylo et al.'s -- their Poisson model does not single
+  out a specific instance type. It lets us test whether R-BurstHADS's
+  risk-aware WRR weighting actually pays off when the labeled risk
+  materializes, and what it costs when it doesn't.
+"""
+
+import random
+import copy
+from models.task  import Task
+from models.job   import Job
+from models.stage import Stage
+from models.vm    import VM
+from models.utils import flatten_and_assign_deadlines
+
+from simulation.event_engine     import EventEngine
+from simulation.execution_engine import start_execution
+from simulation.events           import HibernationEvent, TerminationEvent
+from metrics.metrics             import Metrics
+
+
+# ── VM POOLS ──────────────────────────────────────────────────────────────────
+
+def build_vms_burst():
+    """
+    BurstHADS / P-BurstHADS pool: 5 VMs total.
+    m5.xlarge is modeled with a much higher hibernation rate than
+    c5.large -- an illustrative contrast, not an AWS-measured
+    differential (see module docstring). R-BurstHADS exploits this
+    via WRR; BurstHADS is blind to it.
+    """
+    return [
+        # Spot — low hibernation risk
+        VM(0, "c5.large",  VM.SPOT,      speed=2, cost_rate=0.0306/3600,
+           memory_gb=4.0,  hibernation_rate=0.03/3600, vcpu_count=2),
+        # Spot — low hibernation risk, faster
+        VM(1, "c5.xlarge", VM.SPOT,      speed=4, cost_rate=0.0612/3600,
+           memory_gb=8.0,  hibernation_rate=0.04/3600, vcpu_count=4),
+        # Spot — HIGH hibernation risk (5.7x higher than c5.large)
+        VM(2, "m5.xlarge", VM.SPOT,      speed=4, cost_rate=0.0700/3600,
+           memory_gb=16.0, hibernation_rate=5.0/2700, vcpu_count=4),  # Teylo et al. sc2 (kh=5, D=2700s), illustrative high-risk anchor
+        # Second safe fast spot VM — gives P-BurstHADS same speed-4
+        # capacity as BurstHADS (which uses m5.xlarge as second speed-4)
+        VM(3, "c5.xlarge", VM.SPOT,      speed=4, cost_rate=0.0612/3600,
+           memory_gb=8.0,  hibernation_rate=0.04/3600, vcpu_count=4),
+        # Burstable — recovery buffer, zero hibernation risk
+        VM(4, "t3.large",  VM.BURSTABLE, speed=2, cost_rate=0.0832/3600,
+           memory_gb=8.0,  baseline_fraction=0.20, hibernation_rate=0.0, vcpu_count=2),
+        # On-demand — guaranteed fallback
+        VM(5, "c5.large",  VM.ONDEMAND,  speed=2, cost_rate=0.085/3600,
+           memory_gb=4.0,  hibernation_rate=0.0, vcpu_count=2),
+    ]
+
+
+def build_vms_hads():
+    """
+    HADS pool: 3 VMs, spot + on-demand only.
+    No burstable — HADS was designed without burstable VMs.
+    Same spot types as BurstHADS for fair comparison.
+    """
+    return [
+        VM(0, "c5.large",  VM.SPOT,     speed=2, cost_rate=0.0306/3600,
+           memory_gb=4.0,  hibernation_rate=0.03/3600, vcpu_count=2),
+        VM(1, "m5.xlarge", VM.SPOT,     speed=4, cost_rate=0.0700/3600,
+           memory_gb=16.0, hibernation_rate=5.0/2700, vcpu_count=4),  # Teylo et al. sc2 (kh=5, D=2700s), illustrative high-risk anchor
+        VM(2, "c5.large",  VM.ONDEMAND, speed=2, cost_rate=0.085/3600,
+           memory_gb=4.0,  hibernation_rate=0.0, vcpu_count=2),
+    ]
+
+
+def build_vms_dburst():
+    """
+    Shared base pool used by HADS, BurstHADS, and R-BurstHADS in every
+    comparison experiment.
+
+    Includes one burstable VM (t3.large). This is NOT a handicap
+    against HADS: Burst-HADS's entire contribution over HADS is
+    exploiting burstable instances (paper Section 3.2 / Algorithm 4),
+    so a pool that includes one is exercising exactly the capability
+    being studied. HADS's real algorithm (ported faithfully from
+    CCScheduler.py) has no concept of a burstable market at all --
+    scheduler/hads.py never places a task on one, structurally,
+    regardless of pool composition. Its presence here doesn't cost
+    HADS anything it could have used; it's simply the feature
+    BurstHADS/R-BurstHADS are being tested against a baseline that
+    predates it.
+
+    D-BurstHADS/R-BurstHADS additionally provisions spot replacements
+    reactively on top of this base pool (see scheduler/r_burst_hads.py,
+    Theorem 1/2).
+    """
+    return [
+        VM(0, "c5.large",  VM.SPOT,      speed=2, cost_rate=0.0306/3600,
+           memory_gb=4.0,  hibernation_rate=0.03/3600, vcpu_count=2),
+        VM(1, "m5.xlarge", VM.SPOT,      speed=4, cost_rate=0.0700/3600,
+           memory_gb=16.0, hibernation_rate=5.0/2700, vcpu_count=4),
+        VM(2, "t3.large",  VM.BURSTABLE, speed=2, cost_rate=0.0832/3600,
+           memory_gb=8.0,  baseline_fraction=0.20, hibernation_rate=0.0, vcpu_count=2),
+        VM(3, "c5.large",  VM.ONDEMAND,  speed=2, cost_rate=0.085/3600,
+           memory_gb=4.0,  hibernation_rate=0.0, vcpu_count=2),
+    ]
+
+
+def build_vms():
+    """Alias for backward compatibility."""
+    return build_vms_burst()
+
+# Alias for backward compatibility after rename
+build_vms_rburst = build_vms_dburst
+
+
+
+# ── TASK GENERATION ───────────────────────────────────────────────────────────
+
+def generate_tasks(n_tasks, exec_min=100, exec_max=350):
+    """
+    Tasks matching paper workload:
+      exec_time  : uniform [100, 350] seconds (paper: 102-354s)
+      memory_req : uniform [2.85, 13.19] MB   (paper Table 6)
+    """
+    return [
+        Task(i, job_id=0, stage_id=0,
+             exec_time=random.randint(exec_min, exec_max),
+             memory_req=random.uniform(2.85, 13.19))
+        for i in range(n_tasks)
+    ]
+
+
+# ── JOB BUILDERS ─────────────────────────────────────────────────────────────
+
+def build_single_stage_job(tasks, deadline):
+    tc = copy.deepcopy(tasks)
+    for t in tc:
+        t.assigned_vm = None; t.start_time = None
+        t.finish_time = None; t.completed = False
+        t.current_event = None
+        t.exec_start_on_current_vm = None
+        t.checkpointed_remaining   = None
+        t.remaining_time = t.exec_time
+        t.stage_id = 0
+    return Job(job_id=0,
+               stages=[Stage(stage_id=0, deadline=deadline, tasks=tc)])
+
+
+def build_multi_stage_job(tasks, stage_deadlines):
+    tc = copy.deepcopy(tasks)
+    for t in tc:
+        t.assigned_vm = None; t.start_time = None
+        t.finish_time = None; t.completed = False
+        t.current_event = None
+        t.exec_start_on_current_vm = None
+        t.checkpointed_remaining   = None
+        t.remaining_time = t.exec_time
+
+    n_stages        = len(stage_deadlines)
+    tasks_per_stage = len(tc) // n_stages
+    stages          = []
+    for s, dl in enumerate(stage_deadlines):
+        start = s * tasks_per_stage
+        end   = start + tasks_per_stage if s < n_stages-1 else len(tc)
+        for t in tc[start:end]:
+            t.stage_id = s
+        stages.append(Stage(stage_id=s, deadline=dl,
+                            tasks=tc[start:end]))
+    return Job(job_id=0, stages=stages)
+
+
+# ── SIMULATION RUNNER ─────────────────────────────────────────────────────────
+
+def run_simulation(scheduler_class, tasks, deadline,
+                   stage_deadlines=None,
+                   hibernation_time=None,
+                   resume_time=None,
+                   termination_time=None,
+                   vm_builder=None,
+                   hibernate_high_risk=True,
+                   hibernate_target=None):
+    """
+    Run one simulation.
+
+    hibernate_high_risk: if True AND hibernation_time is set,
+        hibernates the highest-risk spot VM (m5.xlarge, VM id=1).
+        This is the explicit injection approach matching the paper.
+        If False, hibernates spot_vms[0] (original behavior).
+        Ignored when hibernate_target="most_loaded" is set.
+
+    hibernate_target: overrides hibernate_high_risk entirely when set
+        to "most_loaded" -- hibernates whichever spot VM the
+        scheduler's own initial placement actually loaded the most
+        work onto (by total remaining_time queued), instead of a
+        fixed instance type. Use this whenever the comparison
+        includes schedulers whose placement logic might avoid a
+        fixed target VM. Confirmed need: HADS's WRR weighting always
+        prefers the cheaper spot type over the m5.xlarge that
+        hibernate_high_risk=True hard-codes as the target, so the old
+        default silently never disrupts HADS at all in scenarios with
+        only one hibernation event.
+
+    vm_builder: callable returning VM list.
+                Auto-selects based on scheduler_class if None.
+    """
+    from scheduler.hads         import HADS
+    from scheduler.r_burst_hads import RBurstHADS
+
+    if vm_builder is None:
+        # All schedulers use the same base pool by default
+        # D-BurstHADS augments it with preemptive provisioning
+        vms = build_vms_dburst()
+    else:
+        vms = vm_builder()
+
+    if stage_deadlines and len(stage_deadlines) > 1:
+        job = build_multi_stage_job(tasks, stage_deadlines)
+    else:
+        job = build_single_stage_job(tasks, deadline)
+
+    jobs      = [job]
+    all_tasks = flatten_and_assign_deadlines(jobs)
+
+    scheduler = scheduler_class(vms, all_tasks, jobs, deadline=deadline)
+    scheduler.schedule(0)
+
+    engine = EventEngine(scheduler)
+    scheduler.event_engine = engine
+    start_execution(vms, 0, engine)
+
+    # Start proactive migration checker for P-BurstHADS
+    if getattr(scheduler, "proactive_migration", False):
+        from simulation.proactive_migration_event import (
+            ProactiveMigrationEvent, CHECK_INTERVAL
+        )
+        engine.add_event(
+            ProactiveMigrationEvent(CHECK_INTERVAL, scheduler)
+        )
+
+    if hibernation_time is not None:
+        spot_vms = [v for v in vms if v.is_spot]
+        if spot_vms:
+            if hibernate_target == "most_loaded":
+                # Hibernate whichever spot VM this scheduler's initial
+                # placement actually loaded up, not a fixed instance
+                # type -- see the hibernate_target docstring above for
+                # why a fixed target silently fails to disrupt some
+                # schedulers (confirmed for HADS).
+                ranked = sorted(
+                    spot_vms,
+                    key=lambda v: sum(t.remaining_time for t in v.tasks),
+                    reverse=True,
+                )
+                target = ranked[0]
+            elif hibernate_high_risk:
+                target = max(spot_vms, key=lambda v: v.memory_gb)  # m5.xlarge: highest memory_gb in every pool
+            else:
+                target = spot_vms[0]
+            # Support list of hibernation times or single time
+            hib_times = (hibernation_time
+                         if isinstance(hibernation_time, list)
+                         else [hibernation_time])
+            for i, ht in enumerate(hib_times):
+                res = resume_time if i == len(hib_times)-1 else None
+                engine.add_event(HibernationEvent(
+                    ht, target, scheduler, resume_time=res
+                ))
+            # Second spot VM: hibernate for ALL schedulers symmetrically.
+            # Previously gated on isinstance(RBurstHADS) -- now removed.
+            others = [v for v in spot_vms if v.id != target.id]
+            if others and len(hib_times) > 1:
+                if hibernate_target == "most_loaded":
+                    second = sorted(
+                        others,
+                        key=lambda v: sum(t.remaining_time for t in v.tasks),
+                        reverse=True,
+                    )[0]
+                else:
+                    second = others[0]
+                for ht in hib_times:
+                    engine.add_event(HibernationEvent(
+                        ht + 15.0, second, scheduler
+                    ))
+
+    if termination_time is not None:
+        spot_vms = [v for v in vms if v.is_spot]
+        if len(spot_vms) > 1:
+            target = sorted(spot_vms,
+                            key=lambda v: v.memory_gb)[-1]  # m5.xlarge
+            engine.add_event(TerminationEvent(
+                termination_time, target, scheduler
+            ))
+
+    engine.run()
+    return Metrics(jobs, vms)
+
+
+# ── DEADLINE FORMULA ─────────────────────────────────────────────────────────
+
+def compute_deadlines(n_tasks, deadline_factor, n_stages=1):
+    """
+    D = (n_tasks x avg_runtime) / n_vms_parallel x deadline_factor
+    avg_runtime    = 225s  (midpoint of [100, 350])
+    n_vms_parallel = 3     (spot VMs in BurstHADS pool)
+    """
+    avg_runtime    = 225.0
+    n_vms_parallel = 3
+    base           = (n_tasks * avg_runtime) / n_vms_parallel
+    global_deadline = base * deadline_factor
+    stage_deadlines = [
+        global_deadline * (i+1) / n_stages
+        for i in range(n_stages)
+    ]
+    return global_deadline, stage_deadlines
+
+
+def get_expected_makespan(n_tasks):
+    """
+    Expected makespan for hibernation timing calibration.
+    avg_exec=225s on 3 spot VMs with avg speed=3.33 (mix of speed-2 and speed-4)
+    """
+    avg_exec  = 225.0
+    n_spot    = 3
+    avg_speed = (2 + 4 + 4) / 3.0   # c5.large + c5.xlarge + m5.xlarge
+    return (n_tasks * avg_exec) / (n_spot * avg_speed)
+
+
+# ── MAIN ─────────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    from scheduler.hads         import HADS
+    from scheduler.burst_hads   import BurstHADS
+    from scheduler.r_burst_hads import RBurstHADS
+
+    random.seed(42)
+    n_tasks = 50
+    df      = 1.0
+
+    tasks = generate_tasks(n_tasks)
+    global_deadline, _ = compute_deadlines(n_tasks, df)
+    expected_mk = get_expected_makespan(n_tasks)
+
+    # Inject hibernation of the HIGH-RISK VM at 20% of expected makespan
+    # This is the core experimental condition: m5.xlarge hibernates,
+    # P-BurstHADS already moved long tasks off it, BurstHADS didn't
+    # Multiple hibernations guarantee m5.xlarge is caught busy
+    # First at t=10% (early, VM definitely loaded)
+    # Second at t=35% (mid-execution, catches queued tasks)
+    # This matches paper's approach of testing under sustained pressure
+    avg_exec_on_m5 = 225.0 / 4  # speed=4
+    hib_time = [
+        max(1.0, avg_exec_on_m5 * 0.5),   # ~28s: first task still running
+        max(1.0, avg_exec_on_m5 * 2.5),   # ~141s: second wave
+    ]
+
+    print(f"Global deadline  : {global_deadline:.0f}s")
+    print(f"Expected makespan: {expected_mk:.0f}s")
+    hib_str = [f"{h:.0f}s" for h in hib_time]
+    print(f"Hibernation times: {hib_str}  (HIGH-RISK m5.xlarge VM)")
+    print(f"Avg exec_time    : "
+          f"{sum(t.exec_time for t in tasks)/len(tasks):.0f}s")
+    print()
+
+    print("VM pools:")
+    print("  HADS:               c5.large(spot) + m5.xlarge(spot) + c5.large(od)")
+    print("  BurstHADS/P-Burst:  c5.large(spot) + c5.xlarge(spot) + "
+          "m5.xlarge(spot) + t3.large(burs) + c5.large(od)")
+    print()
+
+    print("=== All schedulers (with hibernation) ===")
+    results = {}
+    for label, cls, vm_builder in [
+        ("HADS",        HADS,        build_vms_dburst),
+        ("BurstHADS",   BurstHADS,   build_vms_dburst),
+        ("D-BurstHADS", RBurstHADS,  build_vms_dburst),
+    ]:
+        random.seed(42)
+        m = run_simulation(cls, tasks, global_deadline,
+                           hibernation_time=hib_time,
+                           vm_builder=vm_builder,
+                           hibernate_high_risk=True)
+        s = m.summary()
+        results[label] = s
+        extra = ""
+        if hasattr(m.scheduler if hasattr(m,'scheduler') else None,
+                   'provisioning_summary'):
+            pass
+        print(f"  {label:12s}: cost=${s['total_cost']:.6f}  "
+              f"makespan={s['makespan']:.1f}s  "
+              f"misses={s['deadline_misses']}")
+
+    print()
+    print("=== Ordering check ===")
+    hc = results["HADS"]["total_cost"]
+    bc = results["BurstHADS"]["total_cost"]
+    dc = results["D-BurstHADS"]["total_cost"]
+
+    print(f"  HADS > BurstHADS:    "
+          f"{'PASS' if hc > bc else 'FAIL'}  "
+          f"({(hc-bc)/hc*100:+.1f}%)")
+    print(f"  BurstHADS > D-Burst: "
+          f"{'PASS' if bc > dc else 'FAIL'}  "
+          f"({(bc-dc)/bc*100:+.1f}%)")
+    print(f"  HADS > D-BurstHADS:  "
+          f"{'PASS' if hc > dc else 'FAIL'}  "
+          f"({(hc-dc)/hc*100:+.1f}%)")

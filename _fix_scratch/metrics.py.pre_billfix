@@ -1,0 +1,50 @@
+class Metrics:
+
+    def __init__(self, jobs, vms):
+        self.jobs = jobs
+        self.vms = vms
+
+    def makespan(self):
+        max_time = 0
+
+        for job in self.jobs:
+            for stage in job.stages:
+                for task in stage.tasks:
+                    if task.finish_time and task.finish_time > max_time:
+                        max_time = task.finish_time
+
+        return max_time
+
+    def deadline_misses(self):
+        misses = 0
+
+        for job in self.jobs:
+            for stage in job.stages:
+                for task in stage.tasks:
+                    if task.finish_time and task.finish_time > task.deadline:
+                        misses += 1
+
+        return misses
+
+    def total_cost(self):
+        """
+        Real-AWS-style billing: each VM is charged for every second it
+        was actually deployed -- from launch to hibernation/
+        termination, or to the end of the simulation if it was never
+        shut down -- not just the seconds it happened to be executing
+        a task. This replaces the old per-task-execution-time cost
+        model, which undercounted every VM that ever sat idle while
+        still deployed (exactly the situation Allocation-Cycle
+        idle-termination and CPU-credit accrual both depend on being
+        billed for).
+        """
+        sim_end = self.makespan()
+        return sum(vm.cost_rate * vm.billed_seconds(sim_end)
+                   for vm in self.vms)
+
+    def summary(self):
+        return {
+            "makespan": self.makespan(),
+            "deadline_misses": self.deadline_misses(),
+            "total_cost": round(self.total_cost(), 6),
+        }

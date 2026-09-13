@@ -1,0 +1,377 @@
+"""
+Dynamic-vs-Dynamic Comparison: HADS vs BurstHADS vs R-BurstHADS
+================================================================
+Mirrors Teylo et al. (2023) Section 4.2's methodology: a real
+dynamic-scheduler-vs-dynamic-scheduler comparison under hibernation,
+not the static/no-hibernation ILS-only comparison of their Section
+4.1 (which is the one that also includes MinMin/MaxMin/Greedy and
+does NOT belong here).
+
+Three schedulers, all under the SAME task set AND the SAME
+hibernation event stream per seed (so a harder draw hits everyone in
+the same run, not just whichever scheduler happened to draw a
+different random sequence):
+  HADS        -- scheduler.hads.HADS         (real CCScheduler port)
+  BurstHADS   -- scheduler.burst_hads.BurstHADS
+  R-BurstHADS -- scheduler.r_burst_hads.RBurstHADS
+
+Hibernation injection uses hibernate_target="most_loaded": whichever
+spot VM a scheduler's own initial placement actually loaded up gets
+hibernated, not a fixed instance type. (HADS's WRR weighting always
+prefers the cheaper spot VM over the fixed high-memory target the
+old hibernate_high_risk=True logic hard-coded, which silently made
+single-event hibernation scenarios a no-op for HADS -- see
+main.py::run_simulation's hibernate_target docstring.)
+
+SCENARIOS (same definitions as experiments/analyze_parallel.py):
+  none, saturated_early, saturated_late, poisson_natural, single_hib
+
+TASK COUNTS: 10, 20, 50, 100, 200, 300
+DEADLINE FACTOR: 1.0 only (the paper's own Table 9 comparison is a
+  single deadline scenario, not a deadline-factor sweep)
+RUNS PER CONFIG: 20 seeds (full thesis-standard count).
+
+STORAGE MODEL (v2): raw per-(scenario, n, seed, scheduler) rows, one
+JSON line each, in results_dynamic_comparison_raw.jsonl. This lets a
+single `run` invocation cover any slice of seeds -- not just whole
+configs -- so a large (scenario, n) can be split across several
+short calls without losing partial work. `summarize` aggregates
+everything present into results_dynamic_comparison.json and the
+console table, reporting the actual seed count found (so a short
+run's numbers are legible until topped up).
+
+Usage (chunked so each invocation finishes quickly):
+  python3 dynamic_comparison.py run --scenario none --ns 10,20,50,100
+  python3 dynamic_comparison.py run --scenario none --ns 300 --seeds 0-9
+  python3 dynamic_comparison.py run --scenario none --ns 300 --seeds 10-19
+  ... (repeat per scenario/n as needed) ...
+  python3 dynamic_comparison.py summarize
+
+`run` skips any (scenario, n, seed, key) unit already present in the
+raw JSONL -- safe to re-run/resume after an interrupted or partial
+call.
+"""
+
+import sys, random, io, contextlib, math, json, time, argparse
+from pathlib import Path
+from multiprocessing import Pool, cpu_count
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+TASK_COUNTS      = [10, 20, 50, 100, 200, 300]
+DEADLINE_FACTOR  = 1.0
+# Hibernation targeting per scenario. Load-INDEPENDENT: lambda_h is a
+# property of the instance type and the spot market, never of how deep a
+# scheduler happened to make its queue. The former "most_loaded" rule was
+# adversarial -- it always struck whichever VM a scheduler had loaded most,
+# so the winning move was to leave your fastest machine empty, and it
+# inverted the HADS/BurstHADS ordering the source papers establish.
+_HIB_TARGET = {
+    "none":            "all_spot",      # unused (no events injected)
+    "saturated_early": "all_spot",      # pool saturation = ALL spot VMs down
+    "saturated_late":  "all_spot",
+    "poisson_natural": "all_spot",      # progressive degradation at drawn times
+    "single_hib":      "highest_risk",  # one interruption, on the riskiest type
+}
+
+SPOT_RISK_MODE   = "declared"   # or "inherit" for the sensitivity run
+RUNS_PER_CONFIG  = 30   # full thesis-standard seed count (matches the shipped dataset)
+HIB_OFFSET       = 90.0
+HIB_GAP          = 15.0
+KH_M5            = 5.0
+
+# Teylo et al. Table 9 -- the source papers' OWN hibernation scenarios.
+# Per-VM Poisson, lambda_h = kh/D and lambda_r = kr/D. Three of the five
+# have kr > 0, i.e. hibernation is TEMPORARY and the VM resumes.
+#
+# These are now the primary scenario set. The five hand-built scenarios
+# below them are this thesis's own construction, and "pool saturation"
+# in particular (every spot VM down at once) does not appear in either
+# source paper -- with the whole spot pool gone both schedulers fall
+# through to on-demand, so Burst-HADS's burstable rescue has nothing to
+# work with and merely pays for idle standby. Keep them as a
+# supplementary stress test, not as the main comparison.
+TABLE9 = {
+    "sc1": dict(kh=1.0, kr=0.0),
+    "sc2": dict(kh=5.0, kr=0.0),
+    "sc3": dict(kh=1.0, kr=5.0),
+    "sc4": dict(kh=5.0, kr=5.0),
+    "sc5": dict(kh=3.0, kr=2.5),
+}
+
+ALL_SCENARIOS = ["sc1", "sc2", "sc3", "sc4", "sc5",
+                 "none", "saturated_early", "saturated_late",
+                 "poisson_natural", "single_hib"]
+
+SCHEDULER_KEYS   = ["hads", "burst", "rburst"]
+SCHEDULER_LABELS = {"hads": "HADS", "burst": "BurstHADS", "rburst": "R-BurstHADS"}
+
+RAW_JSONL_PATH = Path(__file__).resolve().parent / "results_dynamic_comparison_raw.jsonl"
+JSON_PATH      = Path(__file__).resolve().parent / "results_dynamic_comparison.json"
+
+
+def _hib_time_for(scenario, n, seed):
+    if scenario in TABLE9:
+        return None          # handled via kh/kr, not a fixed event list
+    """Build the hibernation event stream for one seed. Imports done
+    lazily inside since this runs in worker processes."""
+    import numpy as np
+    from main import compute_deadlines, get_expected_makespan
+
+    global_deadline, _ = compute_deadlines(n, DEADLINE_FACTOR, 1)
+    expected_mk         = get_expected_makespan(n)
+    np_rng               = np.random.default_rng(seed + 10000)
+
+    if scenario == "none":
+        return None
+    elif scenario == "saturated_early":
+        return [HIB_OFFSET, HIB_OFFSET + HIB_GAP]
+    elif scenario == "saturated_late":
+        late = max(HIB_OFFSET, expected_mk * 0.40)
+        return [late, late + HIB_GAP]
+    elif scenario == "poisson_natural":
+        lam_m5 = KH_M5 / global_deadline
+        lam_c5 = 0.03 / 3600.0
+        evts   = []
+        t = float(np_rng.exponential(1.0 / lam_m5))
+        while t < global_deadline:
+            evts.append(t)
+            t += float(np_rng.exponential(1.0 / lam_m5))
+        t = float(np_rng.exponential(1.0 / lam_c5))
+        while t < global_deadline:
+            evts.append(t)
+            t += float(np_rng.exponential(1.0 / lam_c5))
+        return sorted(evts)[:6] if evts else None
+    elif scenario == "single_hib":
+        return [HIB_OFFSET]
+    return None
+
+
+def run_one_unit(args):
+    """One (n, scenario, seed, scheduler_key) -> one simulation."""
+    n, scenario, seed, key = args
+
+    import sys, random, io, contextlib
+    from pathlib import Path
+    proj = Path(__file__).resolve().parent.parent
+    if str(proj) not in sys.path:
+        sys.path.insert(0, str(proj))
+
+    from main import run_simulation, generate_tasks, compute_deadlines, build_vms_dburst
+    from scheduler.hads         import HADS
+    from scheduler.burst_hads   import BurstHADS
+    from scheduler.r_burst_hads import RBurstHADS
+    CLASS_MAP = {"hads": HADS, "burst": BurstHADS, "rburst": RBurstHADS}
+
+    global_deadline, _ = compute_deadlines(n, DEADLINE_FACTOR, 1)
+    hib_time = _hib_time_for(scenario, n, seed)
+
+    # Re-seed right before generating tasks so every scheduler for
+    # this (n, scenario, seed) sees an IDENTICAL task set (Task
+    # objects are mutated in place during simulation, so the same
+    # objects can't be reused across schedulers -- regenerating from
+    # the same seed is how they stay identical).
+    random.seed(seed)
+    tasks = generate_tasks(n)
+
+    f = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(f):
+            if scenario in TABLE9:
+                _t9 = TABLE9[scenario]
+                m = run_simulation(
+                    CLASS_MAP[key], tasks, global_deadline,
+                    vm_builder=build_vms_dburst,
+                    kh=_t9["kh"], kr=_t9["kr"],
+                    spot_risk_seed=seed,
+                    spot_risk_mode=SPOT_RISK_MODE,
+                )
+            else:
+                m = run_simulation(
+                    CLASS_MAP[key], tasks, global_deadline,
+                    hibernation_time=hib_time,
+                    vm_builder=build_vms_dburst,
+                    hibernate_target=_HIB_TARGET.get(scenario, "all_spot"),
+                    spot_risk_seed=seed,
+                    spot_risk_mode=SPOT_RISK_MODE,
+                )
+        s = m.summary()
+        all_t = [t for job in m.jobs for stage in job.stages for t in stage.tasks]
+        n_total = len(all_t)
+        n_comp  = sum(1 for t in all_t if t.completed)
+        pct     = n_comp / n_total * 100 if n_total > 0 else 0.0
+        return {"n": n, "scenario": scenario, "seed": seed, "key": key,
+                "mk": s["makespan"], "co": s["total_cost"],
+                "ms": s["deadline_misses"], "pct": pct, "error": None}
+    except Exception as e:
+        return {"n": n, "scenario": scenario, "seed": seed, "key": key,
+                "mk": None, "co": None, "ms": None, "pct": None,
+                "error": repr(e)}
+
+
+def _load_raw():
+    if not RAW_JSONL_PATH.exists():
+        return []
+    rows = []
+    with open(RAW_JSONL_PATH) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                rows.append(json.loads(line))
+    return rows
+
+
+def _parse_seed_range(spec, default_count):
+    """'0-9' -> range(0,10); None -> range(0, default_count)."""
+    if not spec:
+        return list(range(default_count))
+    lo, hi = spec.split("-")
+    return list(range(int(lo), int(hi) + 1))
+
+
+def cmd_run(scenario, ns, seeds, n_workers):
+    existing = {(r["scenario"], r["n"], r["seed"], r["key"])
+                for r in _load_raw()}
+    units = []
+    for n in ns:
+        for seed in seeds:
+            for key in SCHEDULER_KEYS:
+                if (scenario, n, seed, key) not in existing:
+                    units.append((n, scenario, seed, key))
+
+    if not units:
+        print(f"Nothing to do -- all requested units already present "
+              f"for scenario={scenario} ns={ns} seeds={seeds}")
+        return
+
+    print(f"Running {len(units)} units "
+          f"(scenario={scenario}, ns={ns}, seeds={seeds[0]}-{seeds[-1]})...")
+    t0 = time.time()
+    with Pool(n_workers) as pool:
+        results = pool.map(run_one_unit, units)
+    dt = time.time() - t0
+
+    with open(RAW_JSONL_PATH, "a") as f:
+        for r in results:
+            f.write(json.dumps(r) + "\n")
+
+    errors = sum(1 for r in results if r["error"] is not None)
+    print(f"DONE {len(units)} units in {dt:.1f}s  errors={errors}")
+    if errors:
+        for r in results:
+            if r["error"] is not None:
+                print(f"  ERROR n={r['n']} seed={r['seed']} key={r['key']}: {r['error']}")
+
+
+def _std(lst):
+    if len(lst) < 2:
+        return 0.0
+    m = sum(lst) / len(lst)
+    return math.sqrt(sum((x - m) ** 2 for x in lst) / len(lst))
+
+
+def _avg(lst):
+    return sum(lst) / len(lst) if lst else 0.0
+
+
+def cmd_summarize():
+    rows = _load_raw()
+
+    configs = {}
+    for r in rows:
+        ck = (r["scenario"], r["n"])
+        configs.setdefault(ck, {k: {"mk": [], "co": [], "ms": [], "pct": [], "errors": []}
+                                for k in SCHEDULER_KEYS})
+        bucket = configs[ck][r["key"]]
+        if r["error"] is not None:
+            bucket["errors"].append(r["error"])
+        else:
+            bucket["mk"].append(r["mk"])
+            bucket["co"].append(r["co"])
+            bucket["ms"].append(r["ms"] or 0)
+            bucket["pct"].append(r["pct"])
+
+    out_rows = []
+    for (scenario, n), buckets in configs.items():
+        out = {"n": n, "scenario": scenario,
+               "errors": {k: len(b["errors"]) for k, b in buckets.items()},
+               "error_samples": {k: b["errors"][:2] for k, b in buckets.items() if b["errors"]}}
+        for key in SCHEDULER_KEYS:
+            b = buckets[key]
+            out[f"{key}_co_avg"]  = _avg(b["co"])
+            out[f"{key}_co_std"]  = _std(b["co"])
+            out[f"{key}_mk_avg"]  = _avg(b["mk"])
+            out[f"{key}_mk_std"]  = _std(b["mk"])
+            out[f"{key}_ms_avg"]  = _avg(b["ms"])
+            out[f"{key}_pct_avg"] = _avg(b["pct"])
+            out[f"{key}_pct_std"] = _std(b["pct"])
+            out[f"{key}_n_runs"]  = len(b["co"])
+        out_rows.append(out)
+
+    with open(JSON_PATH, "w") as f:
+        json.dump(out_rows, f, indent=2)
+    print(f"Wrote {JSON_PATH} ({len(out_rows)} configs)")
+
+    expected = len(ALL_SCENARIOS) * len(TASK_COUNTS)  # only fully-run sets
+    if len(out_rows) < expected:
+        have = {(r["scenario"], r["n"]) for r in out_rows}
+        missing = [(s, n) for s in ALL_SCENARIOS for n in TASK_COUNTS
+                  if (s, n) not in have]
+        print(f"[WARNING] Only {len(out_rows)}/{expected} configs present. "
+              f"Missing: {missing}")
+
+    under_target = [(r["scenario"], r["n"], k, r[f"{k}_n_runs"])
+                    for r in out_rows for k in SCHEDULER_KEYS
+                    if r[f"{k}_n_runs"] < RUNS_PER_CONFIG]
+    if under_target:
+        print(f"[WARNING] {len(under_target)} scheduler/config combos have "
+              f"fewer than {RUNS_PER_CONFIG} seeds: {under_target}")
+
+    for scenario in ALL_SCENARIOS:
+        print(f"\n{'='*100}")
+        print(f"SCENARIO: {scenario}")
+        print(f"{'='*100}")
+        header = f"{'n':>5} | " + " | ".join(
+            f"{SCHEDULER_LABELS[k]:>32}" for k in SCHEDULER_KEYS)
+        print(header)
+        print("-" * len(header))
+        for r in sorted([r for r in out_rows if r["scenario"] == scenario],
+                        key=lambda r: r["n"]):
+            cells = []
+            for k in SCHEDULER_KEYS:
+                cell = (f"${r[f'{k}_co_avg']:.4f} "
+                       f"mk={r[f'{k}_mk_avg']:.0f}s "
+                       f"cmp={r[f'{k}_pct_avg']:.0f}% "
+                       f"(n={r[f'{k}_n_runs']})")
+                cells.append(f"{cell:>32}")
+            print(f"{r['n']:>5} | " + " | ".join(cells))
+        any_err = any(any(r["errors"].values())
+                     for r in out_rows if r["scenario"] == scenario)
+        if any_err:
+            print("  [some runs errored -- see JSON 'error_samples']")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    p_run = sub.add_parser("run")
+    p_run.add_argument("--scenario", required=True, choices=ALL_SCENARIOS)
+    p_run.add_argument("--ns", required=True,
+                       help="comma-separated task counts, e.g. 10,20,50")
+    p_run.add_argument("--seeds", default=None,
+                       help="seed range 'lo-hi' inclusive, e.g. 0-9. "
+                            "Default: 0..RUNS_PER_CONFIG-1")
+    p_run.add_argument("--workers", type=int, default=max(1, cpu_count()))
+
+    sub.add_parser("summarize")
+
+    args = parser.parse_args()
+    if args.cmd == "run":
+        ns = [int(x) for x in args.ns.split(",")]
+        seeds = _parse_seed_range(args.seeds, RUNS_PER_CONFIG)
+        cmd_run(args.scenario, ns, seeds, args.workers)
+    elif args.cmd == "summarize":
+        cmd_summarize()

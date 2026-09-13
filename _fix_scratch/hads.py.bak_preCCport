@@ -1,0 +1,155 @@
+"""
+HADS: Hibernation-Aware Dynamic Scheduler.
+Predecessor to BurstHADS. Proposed in:
+  Teylo et al., "A dynamic task scheduler tolerant to multiple
+  hibernations in cloud environments", Cluster Computing, 2021.
+
+Key differences from BurstHADS:
+  1. No burstable VMs — only spot + regular on-demand
+  2. Migration philosophy: WAIT as long as possible for hibernated
+     spot VMs to resume before launching expensive on-demand VMs
+  3. No burst mode — all VMs run at constant speed
+  4. Cost-first objective: minimize monetary cost above all else,
+     even if it means makespan gets closer to deadline D
+
+Purpose in comparison: shows what burstable VMs ADD to BurstHADS.
+Expected result: lower or equal cost vs BurstHADS, higher makespan
+when hibernations occur (paper reports ~25% higher makespan).
+"""
+
+from scheduler.burst_hads import BurstHADS, SchedulingSolution
+from models.vm import VM
+
+
+class HADS(BurstHADS):
+    """
+    Inherits BurstHADS ILS machinery.
+    Overrides:
+      - VM pool: spot + ondemand only, no burstable
+      - Burstable allocation: skipped (burst_rate forced to 0)
+      - Migration: wait-for-resume philosophy
+      - Fitness: cost-weighted (alpha closer to 1.0)
+    """
+
+    def __init__(self, vms, all_tasks, jobs, deadline=None,
+                 alpha=0.8, burst_rate=0.0):
+        # HADS is cost-first: alpha=0.8 weights cost heavily
+        # burst_rate=0.0 means no burstable VMs added
+        super().__init__(vms, all_tasks, jobs,
+                         deadline=deadline,
+                         alpha=alpha,
+                         burst_rate=burst_rate)
+
+        self.enable_work_stealing = False
+
+        # Override VM pools: no burstable VMs
+        self.burstable_vms = []
+        self.spot_vms      = [v for v in vms if v.market == VM.SPOT]
+        self.ondemand_vms  = [v for v in vms if v.market == VM.ONDEMAND]
+
+        # Track hibernated VMs waiting to resume
+        # {vm_id: [list of tasks waiting for this VM to resume]}
+        self.hibernated_waiting = {}
+
+        # Resume wait threshold: how long to wait before giving up
+        # and migrating to on-demand. Paper uses deadline proximity.
+        # We use: wait if remaining_time_to_deadline > 2 * longest_task
+        self.resume_wait_threshold = self._compute_wait_threshold()
+
+    def _compute_wait_threshold(self):
+        """
+        How long HADS waits for a hibernated VM to resume.
+        If time remaining > threshold, wait. Otherwise, migrate now.
+        Based on paper: HADS postpones migration as long as possible.
+        """
+        if not self.all_tasks:
+            return 0
+        longest = max(t.exec_time for t in self.all_tasks)
+        # Wait up to 2x the longest task duration before giving up
+        return 2 * longest
+
+    # ------------------------------------------------------------------
+    # OVERRIDE: skip burstable allocation (Part 2 of Algorithm 1)
+    # ------------------------------------------------------------------
+
+    def _allocate_burstable_vms(self, solution):
+        """
+        HADS has no burstable VMs. Return solution unchanged.
+        This overrides BurstHADS's burst allocation phase.
+        """
+        return solution
+
+    # ------------------------------------------------------------------
+    # OVERRIDE: migration — wait-for-resume philosophy
+    # ------------------------------------------------------------------
+
+    def select_vm(self, task, job, current_time):
+        """
+        HADS migration philosophy:
+          1. Check if the task's original VM (if hibernated) might resume
+             soon — if so, we'd rather wait than pay for on-demand.
+          2. Try idle spot VMs first (cheapest).
+          3. Try busy spot VMs if task fits before deadline.
+          4. Only launch on-demand VM as last resort.
+
+        This is the core difference from BurstHADS which immediately
+        uses burstable VMs in burst mode on hibernation.
+        """
+        time_remaining = self.D - current_time
+
+        # Attempt 1: idle spot VM
+        idle_spot = [v for v in self.spot_vms
+                     if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                     and not v.tasks]
+        for vm in sorted(idle_spot, key=lambda v: v.cost_rate):
+            finish = current_time + task.exec_time / vm.speed
+            if finish <= self.D:
+                return vm
+
+        # Attempt 2: busy spot VM with enough slack
+        busy_spot = [v for v in self.spot_vms
+                     if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                     and v.tasks]
+        for vm in sorted(busy_spot, key=lambda v: v.cost_rate):
+            queue_time = sum(t.exec_time / vm.speed for t in vm.tasks)
+            finish = current_time + queue_time + task.exec_time / vm.speed
+            # HADS adds extra slack check: must have room for one more
+            # migration in case this VM also hibernates
+            spare = self.D - finish
+            if self.ondemand_vms:
+                slowest_od = min(self.ondemand_vms, key=lambda v: v.speed)
+                worst_case = task.exec_time / slowest_od.speed
+            else:
+                worst_case = 0
+            if finish <= self.D and spare >= worst_case:
+                return vm
+
+        # Attempt 3: on-demand VM (last resort — expensive)
+        # HADS only does this when time_remaining is critically low
+        if self.ondemand_vms:
+            # Sort by cost — HADS is cost-first
+            candidates = sorted(self.ondemand_vms, key=lambda v: v.cost_rate)
+            for vm in candidates:
+                queue_time = sum(t.exec_time / vm.speed for t in vm.tasks)
+                finish = (current_time + queue_time
+                          + task.exec_time / vm.speed)
+                if finish <= self.D:
+                    return vm
+            # If nothing fits deadline, return cheapest anyway
+            return candidates[0]
+
+        return None
+
+    # ------------------------------------------------------------------
+    # OVERRIDE: fitness — cost-weighted
+    # ------------------------------------------------------------------
+
+    def _fitness(self, solution, dspot):
+        """
+        HADS uses alpha=0.8 (cost-heavy) vs BurstHADS alpha=0.5.
+        This makes the ILS optimise primarily for cost,
+        accepting higher makespan as a tradeoff.
+        Already handled by passing alpha=0.8 to __init__,
+        but we document it here explicitly.
+        """
+        return super()._fitness(solution, dspot)

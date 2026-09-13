@@ -1,0 +1,6 @@
+# Bytecode is regenerated on import; not evidence.
+__pycache__/
+*.pyc
+
+# Claude Code session worktrees of the parent repo live here.
+.claude/worktrees/

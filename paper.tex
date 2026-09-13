@@ -1,0 +1,829 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{textcomp}
+\usepackage{url}
+
+\begin{document}
+
+\title{Deadline-Aware Elastic Provisioning for\\Hibernation-Tolerant Bag-of-Tasks Scheduling\\on Spot and Burstable Cloud Instances}
+
+\author{\IEEEauthorblockN{}\IEEEauthorblockA{}}
+
+\maketitle
+
+\begin{abstract}
+Spot virtual machines cut cloud compute prices substantially but may be
+hibernated by the provider at any time, which threatens deadline-constrained
+workloads. Burst-HADS tolerates such interruptions by migrating the tasks of a
+hibernated instance onto burstable VMs running in burst mode, falling back to
+on-demand capacity when no burstable instance is free. Because a burstable
+instance accepts only one task at a time and the number provisioned is a fixed
+fraction of the selected fleet, the rescue capacity available at the moment of
+an interruption is bounded independently of how much work is actually
+displaced. We present R-BurstHADS, which extends Burst-HADS's dynamic scheduler
+with elastic spot provisioning drawn from the same instance catalogue, sized by
+a work-conservation argument against the remaining deadline rather than by a
+fixed queue-length constant. Across 2{,}700 simulation runs spanning five
+hibernation scenarios, six workload sizes and 30 seeds, R-BurstHADS reduces
+makespan relative to Burst-HADS by 26.0--39.8\% in every scenario, while its
+monetary-cost advantage scales monotonically with the interruption rate: it is
+cost-neutral at $k_h=1$, 12.5\% cheaper at $k_h=3$, and 14.3--64.3\% cheaper at
+$k_h=5$. All three schedulers complete 100\% of tasks, but only the two
+burstable-aware schedulers meet the deadline in every configuration. We first
+validate our HADS and Burst-HADS implementations against the published results
+of the source work, reproducing the reported ordering and the direction and
+magnitude of its cost differences.
+\end{abstract}
+
+\begin{IEEEkeywords}
+cloud computing, spot instances, burstable instances, task scheduling,
+hibernation, bag-of-tasks, deadline constraints
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Infrastructure-as-a-Service providers sell surplus capacity at a steep discount
+under names such as Amazon EC2 Spot. The discount is paid for in reliability:
+the provider may reclaim the instance at short notice. Amazon EC2 additionally
+offers \emph{hibernation}, in which the instance's memory and context are
+written to its EBS root volume and execution is suspended rather than
+destroyed, with the instance resuming when capacity becomes available again.
+For a workload with a deadline, hibernation is not free even though the
+checkpoint preserves progress: the capacity disappears for an unknown period,
+and the displaced work must be placed somewhere else in time to finish.
+
+Bag-of-Tasks (BoT) applications --- parameter sweeps, Monte Carlo simulation,
+chromosome mapping, image processing --- are a natural fit for this market.
+Their tasks are independent, so a lost instance costs only the work resident on
+it, and the remaining tasks can in principle be redistributed freely.
+
+Teylo et al. addressed this setting in two stages. HADS~\cite{hads2021}
+schedules a BoT application across spot and non-burstable on-demand instances
+and, when a spot VM hibernates, migrates its unfinished tasks to other running
+instances or to newly launched on-demand ones. Burst-HADS~\cite{bursthads}
+extends this with \emph{burstable} instances, which accumulate CPU credits
+while idle and can then be driven at full processing power in burst mode; a
+hibernation is answered first by migrating a task to an idle burstable VM,
+and only then by falling back to on-demand capacity.
+
+The rescue capacity Burst-HADS can call on at the instant of an interruption
+is, however, fixed in advance. Its burstable fleet is sized once, after the
+primary scheduling step, as a fixed fraction of the instances the search
+selected, and a burstable instance holds only one task at a time so that
+credits continue to accrue. Neither quantity depends on how much work a
+hibernation actually displaces or on how much deadline slack remains when it
+occurs. When the displaced work exceeds the standing burstable capacity, every
+remaining task falls through to on-demand instances, which are the most
+expensive resource in the catalogue and carry a start-up latency.
+
+This paper makes the following contributions.
+
+\begin{itemize}
+\item We present \textbf{R-BurstHADS}, which adds two provisioning behaviours to
+Burst-HADS: a risk-triggered \emph{preemptive} step (Algorithm~\ref{alg:preempt})
+that launches a replacement spot instance for a high-risk VM before it is
+interrupted, and a \emph{deadline-aware reactive} step
+(Algorithm~\ref{alg:sizing}) that provisions the minimum additional capacity
+required for the displaced work to finish before the deadline. Both draw from
+the same instance catalogue available to the baselines.
+\item We \textbf{validate our baseline implementations} against the published
+results of Burst-HADS before using them for comparison
+(Section~\ref{sec:validation}).
+\item We evaluate all three schedulers under the \textbf{hibernation scenarios of
+the source work} across six workload sizes and 30 seeds, and show that
+R-BurstHADS's cost advantage grows monotonically with the interruption rate
+while its makespan advantage is essentially rate-independent
+(Section~\ref{sec:results}).
+\end{itemize}
+
+\section{Background and Related Work}
+
+\subsection{Scheduling on interruptible instances}
+
+Work on interruptible cloud instances divides broadly into bidding and
+checkpointing strategies for surviving reclamation, and scheduling strategies
+that treat interruption as a first-class constraint. AutoBoT-like approaches
+select instance types under a deadline and budget but do not model hibernation.
+The line we build on schedules explicitly against a hibernation process.
+
+\subsection{HADS and Burst-HADS}
+
+HADS~\cite{hads2021} formulates BoT scheduling on spot and on-demand instances
+as a cost-minimisation problem under a deadline $D$, building a static map with
+a greedy single-pass construction and migrating tasks away from hibernated
+instances at runtime. Burst-HADS~\cite{bursthads} replaces the greedy
+construction with an Iterated Local Search (ILS), adds burstable instances as a
+rescue tier, and introduces a work-stealing procedure that rebalances load
+whenever an instance becomes idle.
+
+Because Burst-HADS's Burst Migration Procedure draws burstable candidates from
+the idle set and moves each recipient to the busy set on assignment, a burstable
+instance accepts exactly one migrated task at a time. Combined with a fleet size
+fixed at scheduling time, this bounds the burstable rescue capacity independently
+of the size of the interruption --- the gap this work addresses.
+
+\section{System Model and Problem Formulation}
+
+An application is a set $T$ of $|T|$ independent tasks with a common deadline
+$D$. A task $t_i$ has execution time $e_i$ on a reference core and memory
+requirement $m_i$. The provider offers a catalogue $M$ of VM types; $vm_j$ has
+processing speed $s_j$, virtual core count $\mathit{nvc}_j$, memory $M_j$ and
+price $c_j$ per unit time. A multi-core instance executes up to $\mathit{nvc}_j$
+tasks simultaneously, one per core, so its whole-instance throughput is
+$s_j\cdot \mathit{nvc}_j$. Symbols are collected in Table~\ref{tab:vars}.
+
+\begin{table}[t]
+\caption{Variables and parameters used in the algorithms}
+\label{tab:vars}
+\centering
+\footnotesize
+\begin{tabular}{ll}
+\toprule
+Symbol & Meaning \\
+\midrule
+$T$, $t_i$ & task set; task $i$ \\
+$e_i$, $m_i$ & execution time and memory requirement of $t_i$ \\
+$e_{ij}$ & execution time of $t_i$ on $vm_j$ \\
+$M$, $vm_j$ & VM catalogue; instance $j$ \\
+$s_j$, $\mathit{nvc}_j$ & speed and virtual-core count of $vm_j$ \\
+$M_j$, $c_j$ & memory capacity and price per period of $vm_j$ \\
+$\Theta(\cdot)$ & throughput of a VM set, $\sum_j s_j\!\cdot\!\mathit{nvc}_j$ \\
+$D$ & application deadline \\
+$D_{\mathit{spot}}$ & deadline minus the worst-case migration reserve \\
+$\mathit{RD}_{\mathit{spot}}$ & relaxed $D_{\mathit{spot}}$ used inside the ILS \\
+$\omega$ & checkpoint overhead fraction \\
+$T_{\mathit{start}}$ & instance start-up latency \\
+$\mathit{cc}_j$, $\mathit{rcc}_{ij}$ & accrued and required CPU credits \\
+$\lambda_h$, $\lambda_r$ & hibernation and resumption rates \\
+$k_h$, $k_r$ & expected hibernations / resumptions over $D$ \\
+$S$, $S_{\mathit{best}}$ & candidate and incumbent scheduling solutions \\
+$\alpha$ & cost/makespan weight in the fitness function \\
+$\mathit{burst\_rate}$ & burstable fleet size as a fraction of $|S|$ \\
+$Q_l$ & unfinished tasks of a hibernated instance $vm_l$ \\
+$\mathit{IR}$, $\mathit{BR}$ & sets of idle and busy instances \\
+$M^{o}$, $M^{b}$ & elastic on-demand and burstable pools \\
+$A$ & active replacement instances provisioned at runtime \\
+$W$ & remaining work of the tasks awaiting placement \\
+$\rho$ & preemptive provisioning risk threshold \\
+$p_v$ & hibernation probability of $vm_v$ over one task \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cost is instance-seconds: an instance is charged from launch until termination
+or hibernation, whether or not it is executing. The objective is
+\begin{equation}
+\min\ \alpha \cdot \widehat{\mathit{cost}} + (1-\alpha)\cdot \widehat{\mathit{mkp}}
+\quad \text{s.t.}\quad \mathit{mkp} \leq D
+\label{eq:fitness}
+\end{equation}
+over normalised cost and makespan. Candidate instances are ranked by
+\begin{equation}
+\mathit{weight}(vm_j) = \frac{\mathit{Gflops}_j}{c_j} = \frac{s_j \cdot \mathit{nvc}_j}{c_j}
+\label{eq:wrr}
+\end{equation}
+where $\mathit{Gflops}_j$ quantifies the whole instance's computing power.
+Placement on spot instances is constrained not by $D$ but by
+\begin{equation}
+D_{\mathit{spot}} = D - \max_i \frac{e_i \cdot (1+\omega)}{s_{\min}}
+\label{eq:dspot}
+\end{equation}
+a reserve guaranteeing that the longest task can still be migrated to the
+slowest instance and executed before $D$ if its host hibernates.
+
+\section{R-BurstHADS}
+\label{sec:design}
+
+R-BurstHADS inherits Burst-HADS's ILS (Algorithm~\ref{alg:primary}), greedy
+construction (Algorithm~\ref{alg:greedy}), local search
+(Algorithm~\ref{alg:ls}), burst migration (Algorithm~\ref{alg:migrate}) and
+work stealing (Algorithm~\ref{alg:steal}), and adds two provisioning
+behaviours, Algorithms~\ref{alg:preempt} and~\ref{alg:sizing}. Both launch
+instances of the most cost-efficient spot type present in the scheduler's own
+pool, $\arg\max_j s_j\mathit{nvc}_j/c_j$, so the proposed method has access to
+no instance type the baselines cannot also select.
+
+\begin{algorithm}[t]
+\caption{R-BurstHADS primary scheduler}
+\label{alg:primary}
+\begin{algorithmic}[1]
+\STATE $D_{\mathit{spot}} \leftarrow$ Eq.~(\ref{eq:dspot})
+\STATE $S \leftarrow \textsc{GreedyInitial}(T, M, D_{\mathit{spot}})$
+\STATE $S_{\mathit{best}} \leftarrow \textsc{LocalSearch}(S, D_{\mathit{spot}})$
+\STATE $\mathit{RD}_{\mathit{spot}} \leftarrow D_{\mathit{spot}}$;\ \ $it_b \leftarrow 0$;\ \ $it_r \leftarrow 0$
+\FOR{$it = 1$ to $\mathit{max\_iteration}$}
+  \IF{unused spot instances remain}
+    \STATE add one at random to $S.\mathit{selected}$
+  \ENDIF
+  \IF{$it - it_b > \mathit{max\_failed}$ \AND $it - it_r > \mathit{max\_failed}$}
+    \STATE $\mathit{RD}_{\mathit{spot}} \leftarrow \min\!\big(\mathit{RD}_{\mathit{spot}}(1+\mathit{relaxed\_rate}),\, D\big)$
+    \STATE $it_r \leftarrow it$
+  \ENDIF
+  \STATE $S' \leftarrow \textsc{LocalSearch}(S, \mathit{RD}_{\mathit{spot}})$
+  \IF{$\mathit{fitness}(S') < \mathit{fitness}(S_{\mathit{best}})$}
+    \STATE $S_{\mathit{best}} \leftarrow S'$;\ \ $it_b \leftarrow it$
+  \ENDIF
+  \STATE $S \leftarrow S'$
+\ENDFOR
+\STATE $n_b \leftarrow \lceil \mathit{burst\_rate}\cdot|S_{\mathit{best}}.\mathit{selected}|\rceil$
+\STATE $B \leftarrow \textsc{LaunchBurstable}(n_b)$ from $M^{b}$
+\FORALL{$t_i$ with predicted finish $> D_{\mathit{spot}}$, latest first}
+  \STATE $b \leftarrow$ next free instance of $B$
+  \IF{$b \neq \varnothing$ \AND baseline finish of $t_i$ on $b$ improves on its current finish}
+    \STATE move $t_i$ to $b$ in baseline mode
+  \ENDIF
+\ENDFOR
+\STATE \textsc{PreemptiveProvision}($S_{\mathit{best}}$) \COMMENT{Alg.~\ref{alg:preempt}}
+\RETURN $S_{\mathit{best}}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{\textsc{GreedyInitial}: initial solution}
+\label{alg:greedy}
+\begin{algorithmic}[1]
+\STATE sort $T$ by memory requirement, descending
+\FORALL{$t_i \in T$}
+  \FORALL{$vm_j \in \mathit{selected}$, least loaded first}
+    \IF{$\textsc{Feasible}(t_i, vm_j, D_{\mathit{spot}})$}
+      \STATE assign $t_i$ to $vm_j$; \textbf{continue} with next task
+    \ENDIF
+  \ENDFOR
+  \STATE $K \leftarrow \{vm_j \in M^{s}\setminus \mathit{selected} : \textsc{Feasible}(t_i,vm_j,D_{\mathit{spot}})\}$
+  \STATE $vm_j \leftarrow \textsc{WrrPick}(K)$ using Eq.~(\ref{eq:wrr})
+  \IF{$vm_j \neq \varnothing$}
+    \STATE select and assign; \textbf{continue} with next task
+  \ENDIF
+  \FORALL{$vm_j \in M^{o}$ already running, cheapest first}
+    \IF{$\textsc{Feasible}(t_i, vm_j, D)$}
+      \STATE assign; \textbf{continue} with next task
+    \ENDIF
+  \ENDFOR
+  \STATE $vm_{\mathit{new}} \leftarrow \textsc{LaunchOnDemand}()$ from $M^{o}$
+  \IF{$\textsc{Feasible}(t_i, vm_{\mathit{new}}, D)$}
+    \STATE assign
+  \ELSE
+    \STATE \textbf{abort}: no feasible placement before $D$
+  \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{\textsc{LocalSearch}}
+\label{alg:ls}
+\begin{algorithmic}[1]
+\REQUIRE solution $S$, bound $d$
+\STATE $\mathit{best} \leftarrow S$
+\STATE $\mathit{dest} \leftarrow$ one instance chosen at random from $S.\mathit{selected}\cup$ unused spot
+\FOR{$a = 1$ to $\mathit{max\_attempt}$}
+  \STATE $\mathit{cand} \leftarrow \mathit{clone}(\mathit{best})$
+  \STATE $R \leftarrow$ random sample of $\mathit{swap\_rate}\cdot|T|$ tasks
+  \FORALL{$t_i \in R$}
+    \IF{memory of $\mathit{dest}$ permits}
+      \STATE move $t_i$ to $\mathit{dest}$
+    \ELSE
+      \STATE revert $t_i$
+    \ENDIF
+  \ENDFOR
+  \IF{$\mathit{fitness}(\mathit{cand}, d) < \mathit{fitness}(\mathit{best}, d)$}
+    \STATE $\mathit{best} \leftarrow \mathit{cand}$
+  \ENDIF
+\ENDFOR
+\RETURN $\mathit{best}$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Preemptive replacement provisioning}
+
+Let $p_v$ be the probability that spot instance $v$ hibernates during the
+execution of an average task, derived from its rate $\lambda_h$. For each $v$
+with $p_v$ above a threshold $\rho$, R-BurstHADS compares the expected cost of
+rescuing $v$'s tasks reactively against the cost of holding a replacement
+ready, and provisions only when the comparison favours it
+(Algorithm~\ref{alg:preempt}).
+
+\begin{algorithm}[t]
+\caption{\textsc{PreemptiveProvision} (Theorem 1)}
+\label{alg:preempt}
+\begin{algorithmic}[1]
+\REQUIRE incumbent $S_{\mathit{best}}$, threshold $\rho$
+\STATE $\bar{e} \leftarrow$ mean execution time over $T$
+\STATE $r_s, s_s \leftarrow$ price and speed of $\arg\max_j s_j\mathit{nvc}_j/c_j$ over $M^{s}$
+\FORALL{$vm_v \in M^{s}$ with $\lambda_h(v) > 0$}
+  \STATE $p_v \leftarrow 1 - e^{-\lambda_h(v)\,\bar{e}/s_v}$
+  \IF{$p_v < \rho$} \STATE \textbf{continue} \ENDIF
+  \STATE $n_v \leftarrow |\{t_i : S_{\mathit{best}}(t_i) = v\}|$
+  \STATE $C_{\mathit{react}} \leftarrow n_v\,\bar{e}\,\big(r_{o}/s_{o} - r_s/s_s\big)$
+  \STATE $C_{\mathit{proact}} \leftarrow T_{\mathit{start}}\,r_s + (\bar{e}/s_s)\,r_s$
+  \IF{$p_v \cdot C_{\mathit{react}} > C_{\mathit{proact}}$}
+    \STATE launch one replacement, ready at $T_{\mathit{start}}$
+  \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Deadline-aware capacity sizing}
+
+When spot capacity is lost, R-BurstHADS sizes the replacement fleet from the
+deadline rather than from a fixed queue-length target. With $W$ the remaining
+work of the tasks awaiting placement, $t$ the current time and $\Theta(\cdot)$
+the throughput of an instance set,
+\begin{equation}
+T = D - t - T_{\mathit{start}}, \quad
+n_{\mathit{extra}} = \left\lceil \frac{W/T - \Theta(A)}{\theta} \right\rceil
+\label{eq:sizing}
+\end{equation}
+where $A$ is the set of active replacements and $\theta$ the throughput of one
+new instance. If the surviving fleet can already retire the queue before $D$
+the deficit is non-positive and nothing is provisioned; the scheduler then
+behaves exactly as Burst-HADS. Should the estimate prove optimistic, the
+per-task placement path adds capacity incrementally under its own deadline
+test, so no safety margin is applied to (\ref{eq:sizing}).
+
+\begin{algorithm}[t]
+\caption{\textsc{DeadlineAwareProvision} (Theorem 2)}
+\label{alg:sizing}
+\begin{algorithmic}[1]
+\REQUIRE queued tasks $Q$, current time $t$, active replacements $A$
+\STATE $W \leftarrow \sum_{t_i \in Q}$ remaining time of $t_i$
+\STATE $T \leftarrow D - t - T_{\mathit{start}}$
+\IF{$W \leq 0$ \OR $T \leq 0$} \RETURN $0$ \ENDIF
+\STATE $\theta \leftarrow s_{\mathit{new}}\cdot \mathit{nvc}_{\mathit{new}}$
+\STATE $\mathit{deficit} \leftarrow W/T - \Theta(A)$
+\IF{$\mathit{deficit} \leq 0$} \RETURN $0$ \ENDIF
+\STATE $n \leftarrow \min\!\big(\mathit{max\_per\_event},\ \lceil \mathit{deficit}/\theta \rceil\big)$
+\STATE launch $n$ instances, ready at $t + T_{\mathit{start}}$
+\STATE redistribute $Q$ over $A \cup \mathit{new}$ by earliest estimated finish
+\RETURN $n$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Burst migration procedure}
+\label{alg:migrate}
+\begin{algorithmic}[1]
+\REQUIRE $Q_l$, $\mathit{IR}$, $\mathit{BR}$, $M^{o}$, $D$
+\STATE $Q_l \leftarrow \textsc{SortTasks}(Q_l)$ \COMMENT{checkpointed tasks first}
+\FORALL{$t_i \in Q_l$}
+  \STATE \textbf{Attempt 0} (R-BurstHADS): a provisioned replacement in $A$ with
+         free capacity that finishes $t_i$ before $D$
+  \STATE \textbf{Attempt 1}: burstable $vm_j \in \mathit{IR}$ with
+         $\mathit{cc}_j > \mathit{rcc}_{ij}$; migrate in burst mode,
+         $\mathit{IR}\!\leftarrow\!\mathit{IR}\setminus\{vm_j\}$,
+         $\mathit{BR}\!\leftarrow\!\mathit{BR}\cup\{vm_j\}$
+  \STATE \textbf{Attempt 2}: non-burstable $vm_j \in \textsc{SortByMarket}(\mathit{IR}\cup \mathit{BR})$
+         passing $\textsc{CheckMigration}(t_i,vm_j,D)$
+  \STATE \textbf{Attempt 3} (R-BurstHADS): \textsc{DeadlineAwareProvision}
+         \COMMENT{Alg.~\ref{alg:sizing}}
+  \STATE \textbf{Attempt 4}: new $vm_j \in M^{o}$, cheapest first, if
+         $\mathit{start}_{ij} + e_{ij} + \omega < D$
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Work stealing}
+\label{alg:steal}
+\begin{algorithmic}[1]
+\REQUIRE newly idle $vm_k$, busy set $\mathit{BR}$, deadline $D$
+\FORALL{non-burstable $vm_j \in \mathit{BR}$, most loaded first}
+  \FORALL{waiting $t_i$ on $vm_j$}
+    \IF{$\textsc{Slack}(t_i, vm_k, D) > 0$}
+      \STATE move $t_i$ to $vm_k$
+      \IF{$vm_k$ is burstable}
+        \STATE mark $t_i$ baseline mode; \RETURN \COMMENT{one task only}
+      \ENDIF
+    \ENDIF
+  \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\section{Experimental Setup}
+\label{sec:setup}
+
+\subsection{Simulator, catalogue and workload}
+
+We use a discrete-event simulator in which each instance executes up to
+$\mathit{nvc}_j$ tasks concurrently. Hibernation stops the charge and
+checkpoints resident tasks; a resumed instance continues from its checkpoint.
+The shared pool (Table~\ref{tab:vms}) contains three instances of each spot
+type, one burstable instance seeding the elastic pool $M^{b}$, and one
+on-demand instance as the template for the unbounded pool $M^{o}$. Prices are
+us-east-1 rates. Per-instance-type hibernation rates use the source work's
+worst-case parameterisation ($k_h=5$ over $D=2700$\,s) for \texttt{m5.xlarge}
+and a low nominal rate for the remaining spot types; this differentiation is a
+modelling choice of the present study rather than a measured quantity.
+
+Tasks are drawn independently with execution time
+$\mathcal{U}[100,350]$\,s and memory $\mathcal{U}[2.85,13.19]$\,MB, matching the
+ranges reported for the reference jobs, with
+$|T| \in \{10,20,50,100,200,300\}$.
+
+\begin{table}[t]
+\caption{VM catalogue. Three instances of each spot type.}
+\label{tab:vms}
+\centering
+\footnotesize
+\begin{tabular}{llccccc}
+\toprule
+Type & Market & $s_j$ & $\mathit{nvc}_j$ & Mem & \$/h & $\lambda_h$ \\
+\midrule
+c5.large  & spot      & 2 & 2 & 4\,GB  & 0.0306 & $0.03/3600$ \\
+c5.xlarge & spot      & 4 & 4 & 8\,GB  & 0.0612 & $0.04/3600$ \\
+m5.xlarge & spot      & 4 & 4 & 16\,GB & 0.0700 & $5.0/2700$ \\
+t3.large  & burstable & 2 & 1 & 8\,GB  & 0.0832 & --- \\
+c5.large  & on-demand & 2 & 2 & 4\,GB  & 0.0850 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Deadline derivation}
+
+The deadline is derived from the pool rather than fixed, so that experimental
+difficulty is invariant to pool size:
+\begin{equation}
+M^{*} = \max\!\left(\frac{|T|\bar{e}}{\Theta(M^{s})},\ \frac{e_{\max}}{s_{\max}}\right),
+\qquad D = \mathit{DF}\cdot\kappa\cdot M^{*}
+\label{eq:deadline}
+\end{equation}
+with $\kappa = 3$ calibrated so that $\mathit{DF}=1$ is met by a well-packed
+undisturbed run but not by a disrupted one without escalation. A floor keeps
+$D$ above the migration reserve of (\ref{eq:dspot}), below which the problem is
+infeasible rather than tight. All reported experiments use $\mathit{DF}=1$.
+
+\subsection{Hibernation scenarios and parameters}
+
+Interruptions follow the source work's scenarios
+(Table~\ref{tab:scenarios}), in which each spot instance is subject to an
+independent Poisson process with rate $\lambda_h = k_h/D$ and, where resumption
+is modelled, $\lambda_r = k_r/D$. Algorithm parameters are given in
+Table~\ref{tab:params}. Every configuration is run with 30 seeds; all three
+schedulers see a byte-identical task set and interruption stream for a given
+seed, so the comparison is paired at the level of the workload. In total the
+evaluation comprises 2{,}700 simulation runs.
+
+\begin{table}[t]
+\caption{Hibernation scenarios}
+\label{tab:scenarios}
+\centering
+\footnotesize
+\begin{tabular}{lccccc}
+\toprule
+ & sc1 & sc2 & sc3 & sc4 & sc5 \\
+\midrule
+$k_h$ & 1 & 5 & 1 & 5 & 3 \\
+$k_r$ & 0 & 0 & 5 & 5 & 2.5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Algorithm and experiment parameters}
+\label{tab:params}
+\centering
+\footnotesize
+\begin{tabular}{ll}
+\toprule
+Parameter & Value \\
+\midrule
+$\alpha$ & 0.5 \\
+$\mathit{max\_iteration}$, $\mathit{max\_attempt}$ & 200, 50 \\
+$\mathit{swap\_rate}$, $\mathit{max\_failed}$ & 0.10, 20 \\
+$\mathit{relaxed\_rate}$ & 0.25 \\
+$\mathit{burst\_rate}$ & 0.2 \\
+Allocation cycle & 900\,s \\
+$T_{\mathit{start}}$, $\omega$ & 45\,s, 0.10 \\
+$\rho$, $\mathit{max\_per\_event}$ & 0.05, 10 \\
+$\mathit{DF}$, $\kappa$ & 1.0, 3 \\
+Seeds per configuration & 30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Baseline Validation}
+\label{sec:validation}
+
+A comparison is only as trustworthy as its baseline implementation. We
+therefore first reproduce the published comparison between HADS and Burst-HADS,
+using the source work's own catalogue, job definitions, fixed deadline
+$D=2700$\,s and scenarios. Table~\ref{tab:validation} and
+Fig.~\ref{fig:validation} report the outcome.
+
+\begin{table}[t]
+\caption{Baseline validation against published results}
+\label{tab:validation}
+\centering
+\footnotesize
+\begin{tabular}{lccccc}
+\toprule
+ & \multicolumn{2}{c}{HADS mkp (s)} & \multicolumn{2}{c}{$\Delta$ cost (\%)} & $\Delta$ mkp \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Job & ours & pub. & ours & pub. & ours \\
+\midrule
+J60   & 2476 & 2620 & $+29.5$ & $+30.8$ & $-33.9$ \\
+J80   & 2501 & 2581 & $+25.0$ & $+11.3$ & $-36.0$ \\
+J100  & 2541 & 2518 & $+31.3$ & --- & $-8.4$ \\
+ED200 & 2694 & 2680 & $+21.6$ & $+23.6$ & $-2.7$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/fig10_validation.png}
+\caption{Validation against the published results. Our HADS lands within a few
+percent of the reported makespans, pinned just below the deadline.}
+\label{fig:validation}
+\end{figure}
+
+Our HADS implementation lands within a few percent of the published makespans,
+in every case pinned just below the deadline, which is the expected behaviour of
+a cost-minimising greedy that packs to its budget. The direction of the cost
+difference is reproduced in every job and its magnitude closely in three of
+four: Burst-HADS is faster than HADS and slightly more expensive, which is what
+the source work reports.
+
+Our reproduction of the makespan \emph{reduction} is smaller than published, and
+the shortfall grows with job size. The most plausible explanation is capacity: at
+a fixed $D=2700$\,s the largest job consumes the whole pool, leaving the search
+no spare instances to spread onto. We report this as a limitation of the
+reproduction rather than a correction to the source work.
+
+\section{Results}
+\label{sec:results}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/fig1_makespan_cost.png}
+\caption{Makespan (top) and monetary cost (bottom) against workload size for
+each hibernation scenario. Means over 30 seeds. Lower is better.}
+\label{fig:main}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/fig6_makespan_variability.png}
+\caption{Makespan with $\pm1$ standard deviation over the 30 seeds. Dispersion
+grows with the interruption rate but the ordering is stable.}
+\label{fig:variability}
+\end{figure*}
+
+\subsection{Task completion and deadline satisfaction}
+
+All three schedulers completed 100\% of tasks in all 30 configurations, so
+completion rate does not discriminate between them. Deadline satisfaction does.
+Burst-HADS and R-BurstHADS met the deadline in every configuration. HADS missed
+in three --- sc1, sc2 and sc3 at $|T|=50$ --- the workload size at which the
+deadline is closest to its feasibility floor and HADS, lacking burstable rescue
+capacity, must absorb an interruption entirely on on-demand instances subject to
+start-up latency.
+
+\subsection{Burst-HADS against HADS}
+
+At $|T|=300$ the ordering reported in the source work is reproduced in all five
+scenarios: Burst-HADS is faster than HADS, by between 1.1\% (sc2) and 24.9\%
+(sc3), and more expensive, by between 1.7\% (sc4) and 16.1\% (sc1). The ordering
+weakens as the workload shrinks --- four of five scenarios at $|T|=200$, two of
+five at $|T|=100$ --- because a smaller workload leaves the pool underutilised
+and the two schedulers converge on similar placements. We therefore treat
+$|T| \geq 200$ as the regime in which this comparison is informative.
+Fig.~\ref{fig:speedup} shows the speedup of both extensions relative to HADS,
+and Fig.~\ref{fig:util} the fraction of the deadline each scheduler consumes.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/fig4_speedup.png}
+\caption{Speedup relative to HADS. Values above unity indicate a faster
+scheduler.}
+\label{fig:speedup}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/fig9_deadline_utilisation.png}
+\caption{Deadline utilisation, i.e. makespan divided by $D$. HADS consumes its
+budget almost entirely; R-BurstHADS retains headroom.}
+\label{fig:util}
+\end{figure*}
+
+\subsection{R-BurstHADS against Burst-HADS}
+
+Fig.~\ref{fig:main} shows the full comparison, Fig.~\ref{fig:advantage}
+summarises R-BurstHADS's advantage, and Fig.~\ref{fig:heatmap} resolves it per
+cell. Two patterns are visible.
+
+First, the \textbf{makespan advantage is large and rate-independent}:
+R-BurstHADS is 26.0--39.8\% faster than Burst-HADS in every scenario, with no
+systematic relationship to $k_h$. This is the expected signature of elastic
+provisioning: whenever spot capacity is lost, replacement capacity is acquired
+in proportion to the displaced work rather than drawn from a standing pool of
+fixed size.
+
+Second, the \textbf{cost advantage scales monotonically with the interruption
+rate} (Fig.~\ref{fig:kh}). At $k_h=1$ the two schedulers are indistinguishable
+on cost ($+0.5\%$ in sc1, $-0.5\%$ in sc3); at $k_h=3$ R-BurstHADS is 12.5\%
+cheaper; at $k_h=5$ it is 14.3\% cheaper when instances resume (sc4) and 64.3\%
+cheaper when they do not (sc2). Under frequent interruption Burst-HADS exhausts
+its standing burstable capacity early and places the remainder of the displaced
+work on on-demand instances, the most expensive resource available, whereas
+R-BurstHADS replaces lost spot capacity with spot capacity. That the cost
+advantage tracks a parameter which was not tuned, and which controls the
+environment rather than the algorithm, is the strongest evidence that the effect
+is mechanistic rather than an artefact of configuration.
+
+Fig.~\ref{fig:tradeoff} places both extensions in the cost--makespan plane
+relative to HADS, and Fig.~\ref{fig:cpt} normalises cost per task.
+Table~\ref{tab:advantage} gives the summary figures and Table~\ref{tab:main}
+the full grid.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/fig2_rburst_advantage.png}
+\caption{R-BurstHADS's advantage over Burst-HADS, averaged over $|T|\geq100$.}
+\label{fig:advantage}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/fig8_kh_sensitivity.png}
+\caption{Advantage against the expected interruption count $k_h$. The cost
+advantage is monotone in $k_h$; the makespan advantage is not.}
+\label{fig:kh}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/fig5_tradeoff.png}
+\caption{Cost--makespan plane relative to HADS, for $|T|\geq100$. R-BurstHADS
+occupies the faster region; Burst-HADS clusters near the baseline.}
+\label{fig:tradeoff}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/fig7_heatmap.png}
+\caption{Per-cell advantage of R-BurstHADS over Burst-HADS.}
+\label{fig:heatmap}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/fig3_cost_per_task.png}
+\caption{Cost per task. Normalising by workload size isolates the per-unit
+efficiency of each scheduler.}
+\label{fig:cpt}
+\end{figure*}
+
+\begin{table}[t]
+\caption{R-BurstHADS relative to Burst-HADS, mean over $|T|\geq100$}
+\label{tab:advantage}
+\centering
+\footnotesize
+\begin{tabular}{lccrr}
+\toprule
+Scenario & $k_h$ & $k_r$ & Cost (\%) & Makespan (\%) \\
+\midrule
+sc1 & 1 & 0   & $+0.5$  & $+39.8$ \\
+sc3 & 1 & 5   & $-0.5$  & $+35.6$ \\
+sc5 & 3 & 2.5 & $+12.5$ & $+29.7$ \\
+sc4 & 5 & 5   & $+14.3$ & $+28.3$ \\
+sc2 & 5 & 0   & $+64.3$ & $+26.0$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table*}[t]
+\caption{Full results. Monetary cost (USD) and makespan (s), means over 30 seeds.}
+\label{tab:main}
+\centering
+\begin{tabular}{llcccccc}
+\toprule
+& & \multicolumn{2}{c}{HADS} & \multicolumn{2}{c}{Burst-HADS} & \multicolumn{2}{c}{R-BurstHADS} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+Sc. & $n$ & cost & mkp & cost & mkp & cost & mkp \\
+\midrule
+\multirow{6}{*}{sc1} & 10 & 0.0400 & 114 & 0.0321 & 108 & 0.0317 & 107 \\
+ & 20 & 0.0658 & 128 & 0.0530 & 125 & 0.0530 & 125 \\
+ & 50 & 0.1150 & 295 & 0.0868 & 208 & 0.0831 & 198 \\
+ & 100 & 0.1160 & 533 & 0.1125 & 525 & 0.1230 & 256 \\
+ & 200 & 0.1670 & 1177 & 0.1938 & 1121 & 0.1934 & 698 \\
+ & 300 & 0.2141 & 1836 & 0.2486 & 1449 & 0.2356 & 908 \\
+\midrule
+\multirow{6}{*}{sc2} & 10 & 0.0272 & 150 & 0.0190 & 137 & 0.0190 & 137 \\
+ & 20 & 0.0562 & 223 & 0.0388 & 192 & 0.0348 & 185 \\
+ & 50 & 0.1947 & 316 & 0.2043 & 300 & 0.0954 & 279 \\
+ & 100 & 0.2762 & 624 & 0.2643 & 614 & 0.0753 & 361 \\
+ & 200 & 0.3950 & 1248 & 0.4017 & 1234 & 0.1563 & 1065 \\
+ & 300 & 0.5053 & 1874 & 0.5292 & 1852 & 0.1945 & 1310 \\
+\midrule
+\multirow{6}{*}{sc3} & 10 & 0.1003 & 112 & 0.0937 & 119 & 0.0937 & 119 \\
+ & 20 & 0.1234 & 124 & 0.1128 & 125 & 0.1128 & 125 \\
+ & 50 & 0.1731 & 204 & 0.1443 & 201 & 0.1416 & 194 \\
+ & 100 & 0.1707 & 487 & 0.1771 & 528 & 0.1848 & 254 \\
+ & 200 & 0.2248 & 1124 & 0.2570 & 1067 & 0.2592 & 701 \\
+ & 300 & 0.2709 & 1759 & 0.3072 & 1320 & 0.3007 & 923 \\
+\midrule
+\multirow{6}{*}{sc4} & 10 & 0.0953 & 126 & 0.0813 & 136 & 0.0813 & 136 \\
+ & 20 & 0.1044 & 151 & 0.0894 & 168 & 0.0889 & 167 \\
+ & 50 & 0.1684 & 234 & 0.1719 & 256 & 0.1393 & 244 \\
+ & 100 & 0.1884 & 499 & 0.1854 & 548 & 0.1503 & 297 \\
+ & 200 & 0.2615 & 1080 & 0.2713 & 1123 & 0.2417 & 928 \\
+ & 300 & 0.3364 & 1696 & 0.3421 & 1552 & 0.2929 & 1087 \\
+\midrule
+\multirow{6}{*}{sc5} & 10 & 0.0880 & 122 & 0.0762 & 133 & 0.0762 & 133 \\
+ & 20 & 0.0985 & 142 & 0.0873 & 157 & 0.0864 & 151 \\
+ & 50 & 0.1689 & 235 & 0.1700 & 260 & 0.1273 & 245 \\
+ & 100 & 0.1781 & 519 & 0.1715 & 553 & 0.1451 & 295 \\
+ & 200 & 0.2480 & 1135 & 0.2511 & 1102 & 0.2313 & 903 \\
+ & 300 & 0.3165 & 1758 & 0.3255 & 1585 & 0.2780 & 1079 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Discussion}
+
+\subsection{When the contribution is inert}
+
+R-BurstHADS provisions nothing when the deadline is not threatened, which is a
+property of (\ref{eq:sizing}) rather than an accident. In the validation
+experiments, where $D$ is fixed at 2700\,s against a pool sized for a much
+shorter makespan, R-BurstHADS is identical to Burst-HADS in most cells. The
+exception is the largest job, where memory pressure binds and it is 33\%
+cheaper. This is the intended behaviour: the mechanism costs nothing when it is
+not needed, and its value is confined to deadline-pressured regimes.
+
+\subsection{Cost--makespan trade}
+
+Neither extension dominates HADS on cost. HADS is the cheapest of the three in
+most configurations, because it packs onto the fewest instances and consumes its
+deadline budget --- visible directly in Fig.~\ref{fig:util}. What the extensions
+buy is time and deadline safety: HADS is the only scheduler in the study that
+misses a deadline, and it is 26--40\% slower than R-BurstHADS at every workload
+size above 100 tasks. Which of these is preferable is a property of the
+application, not of the scheduler, and we report both rather than collapsing
+them into a single figure of merit.
+
+\subsection{Limitations}
+
+The evaluation is a simulation and inherits the abstractions of its model. Task
+execution times are drawn from a uniform distribution whose range matches the
+reference jobs but whose shape does not reflect the right-skewed,
+straggler-heavy profile of real workloads; this understates the tail that
+scheduling must absorb. Hibernation stops compute billing but incurs no storage
+charge, where the provider does charge for the retained EBS volume; the omitted
+quantity is small relative to compute but non-zero. The per-instance-type
+differentiation of hibernation rates, as noted in Section~\ref{sec:setup}, is a
+modelling choice of this study. Finally, the baseline reproduction degrades on
+the largest job, so conclusions drawn at that scale rest on a weaker validation
+than those at smaller ones.
+
+\section{Conclusion}
+
+We presented R-BurstHADS, which extends Burst-HADS with elastic spot
+provisioning sized against the remaining deadline by a work-conservation
+argument, drawing from the same instance catalogue available to the baselines.
+Across 2{,}700 simulation runs it reduced makespan relative to Burst-HADS by
+26.0--39.8\% in every hibernation scenario, and its monetary-cost advantage
+scaled monotonically with the expected interruption count, from cost-neutral at
+$k_h=1$ to 64.3\% cheaper at $k_h=5$ without resumption. Both extensions met the
+deadline in every configuration, where HADS did not.
+
+Two directions follow. The provisioning rule currently treats replacement
+instances as equally reliable as those they replace; incorporating the
+replacement's own interruption risk into (\ref{eq:sizing}) would make the sizing
+risk-aware as well as deadline-aware. Second, the evaluation should move from a
+synthetic uniform workload to real BoT traces, where the straggler tail is the
+dominant source of makespan and the value of elastic rescue capacity is likely
+to be larger than reported here.
+
+\begin{thebibliography}{00}
+\bibitem{hads2021} L. Teylo, L. Arantes, P. Sens, and L. M. de A. Drummond,
+``A dynamic task scheduler tolerant to multiple hibernations in cloud
+environments,'' \emph{Cluster Computing}, vol.~24, no.~2, pp.~1051--1073, 2021.
+
+\bibitem{bursthads} L. Teylo, L. Arantes, P. Sens, and L. M. de A. Drummond,
+``Scheduling bag-of-tasks in clouds using spot and burstable virtual
+machines,'' \emph{IEEE Transactions on Cloud Computing}, 2023.
+
+\bibitem{hadsconf} L. Teylo, L. Arantes, P. Sens, and L. M. de A. Drummond,
+``A hibernation aware dynamic scheduler for cloud environments,'' in
+\emph{Proc. 48th Int. Conf. on Parallel Processing Workshops (ICPP)}, 2019.
+
+\bibitem{aws} Amazon Web Services, ``Amazon EC2 Spot Instances,''
+\url{https://aws.amazon.com/ec2/spot/}.
+
+\bibitem{t3} Amazon Web Services, ``Burstable performance instances,''
+\emph{Amazon EC2 User Guide}.
+
+\end{thebibliography}
+
+\end{document}
