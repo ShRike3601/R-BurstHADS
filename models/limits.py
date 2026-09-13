@@ -23,10 +23,16 @@ What the reference does at a limit:
 Counts are of instances LAUNCHED during the job and are never decremented
 when one terminates, as count_dict / count_list are in the reference.
 
-ENABLED = False reproduces the uncapped simulator of fixes 1-10.
+ENABLED = True since fix 12. False reproduces the uncapped simulator of
+fixes 1-11 (commit 93d3b03), bit-for-bit.
+
+Both markets are limited, as in the reference. The simulator's pool holds
+SPOT_COPIES = 3 spot VMs per type, under the limit of 5, so the spot limit
+can only bind on R-BurstHADS's own launches; exempting them would give our
+scheduler capacity the reference account could not obtain.
 """
 
-ENABLED = False
+ENABLED = True
 
 # Keyed by models.vm.VM market values. Burstable VMs count as on-demand.
 PER_TYPE = {"ondemand": 5, "spot": 5}
