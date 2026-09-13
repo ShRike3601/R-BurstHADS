@@ -383,6 +383,11 @@ class RBurstHADS(BurstHADS):
             if p_hib * c_reactive <= c_proactive:
                 continue
 
+            # Instance limits apply to this scheduler's own launches too.
+            if not self._launches.can_launch_type("spot",
+                                                  self._spot_tpl["vm_type"]):
+                continue
+
             replacement = self._create_spot_vm(
                 ready_time=STARTUP_LATENCY,  # ready before hibernation fires
             )
@@ -482,14 +487,21 @@ class RBurstHADS(BurstHADS):
         if not tasks_to_move:
             return
 
-        # Provision new VMs
+        # Provision new VMs (the loop below stops at the instance limit;
+        # if nothing could be launched, the waiting tasks go back where
+        # they came from via the normal redistribution over active_prov)
         new_vms = []
         for _ in range(n_extra):
             if use_spot:
+                if not self._launches.can_launch_type(
+                        "spot", self._spot_tpl["vm_type"]):
+                    break
                 new_vm = self._create_spot_vm(
                     ready_time=current_time + STARTUP_LATENCY,
                 )
             else:
+                if not self._launches.can_launch_type("ondemand", BURST_TYPE):
+                    break
                 new_vm = self._create_vm(
                     BURST_TYPE, BURST_SPEED, BURST_RATE,
                     BURST_MEM_GB, 0.0, BURST_VCPU,
@@ -621,6 +633,7 @@ class RBurstHADS(BurstHADS):
 
         new_vm = VM(**kwargs)
         new_vm.state = VM.IDLE
+        self._launches.commit(new_vm)
         if extra_credits is not None:
             new_vm.cpu_credits = extra_credits
 
@@ -739,7 +752,9 @@ class RBurstHADS(BurstHADS):
                           + task.remaining_time / spot_speed * ovh)
             spare      = self.D - finish
             longest    = task.exec_time / spot_speed
-            if finish <= self.D and spare > longest:
+            if (finish <= self.D and spare > longest
+                    and self._launches.can_launch_type(
+                        "spot", self._spot_tpl["vm_type"])):
                 vm = self._create_spot_vm(
                     ready_time=current_time + STARTUP_LATENCY,
                 )
@@ -747,7 +762,8 @@ class RBurstHADS(BurstHADS):
                 return vm
 
         # Try burstable
-        if (current_time + task.remaining_time / BURST_SPEED * ovh) <= self.D:
+        if ((current_time + task.remaining_time / BURST_SPEED * ovh) <= self.D
+                and self._launches.can_launch_type("ondemand", BURST_TYPE)):
             vm = self._create_vm(
                 BURST_TYPE, BURST_SPEED, BURST_RATE,
                 BURST_MEM_GB, 0.0, BURST_VCPU,

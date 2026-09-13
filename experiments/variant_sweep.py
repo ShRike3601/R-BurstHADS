@@ -53,7 +53,7 @@ def _pct(x, y):
 def summarize(rows, label):
     cells = {}
     for r in rows:
-        if r["error"] is None:
+        if r["error"] is None and not r.get("infeasible"):
             cells.setdefault((r["scenario"], r["n"], r["df"]), {}) \
                  .setdefault(r["key"], []).append(r)
     out = {}
@@ -123,6 +123,7 @@ def main():
         for r in rows:
             f.write(json.dumps(r) + "\n")
     errors = [r for r in rows if r["error"] is not None]
+    print(f"infeasible runs: {sum(1 for r in rows if r.get('infeasible'))}")
     print(f"done in {time.time() - t0:.0f}s, {len(errors)} errors"
           + (f"; first: {errors[0]['error']}" if errors else ""))
 

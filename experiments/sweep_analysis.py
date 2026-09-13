@@ -62,7 +62,20 @@ def main():
         latest[dc._unit_key(r)] = r
     rows = list(latest.values())
     errors = [r for r in rows if r["error"] is not None]
-    ok = [r for r in rows if r["error"] is None]
+    infeasible = [r for r in rows if r.get("infeasible")]
+    ok = [r for r in rows if r["error"] is None and not r.get("infeasible")]
+    if infeasible:
+        from collections import Counter
+        print(f"  infeasible runs (no primary schedule within D and the "
+              f"instance limits): {len(infeasible)}")
+        by = Counter((r["key"], r["scenario"], r["n"], r["df"]) for r in infeasible)
+        for k in KEYS:
+            cells_k = sorted({(s, n, d) for (kk, s, n, d) in by if kk == k})
+            print(f"    {k}: {sum(v for (kk, *_), v in by.items() if kk == k)} runs "
+                  f"in {len(cells_k)} cells")
+    overrides = sum(r.get("limit_overrides") or 0 for r in ok)
+    if overrides:
+        print(f"  launches forced past a spent limit: {overrides}")
     print(f"fingerprint {fp}: {len(rows)} units, {len(errors)} errors")
     if errors:
         print("  first error:", errors[0]["error"])

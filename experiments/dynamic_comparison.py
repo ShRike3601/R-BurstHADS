@@ -188,7 +188,12 @@ def run_one_unit(args):
            "key": key, "D": D,
            "floored": df * DEADLINE_SLACK * ideal_makespan(n)
                       < min_feasible_deadline(),
-           "error": None}
+           "infeasible": False, "error": None}
+    try:
+        from models.limits import NoFeasibleSchedule
+    except ImportError:                    # code before instance limits
+        class NoFeasibleSchedule(Exception):
+            pass
     try:
         hib_time = _hib_time_for(scenario, n, seed, D)
 
@@ -221,6 +226,14 @@ def run_one_unit(args):
                                       None) or []),
             vms_billed=billed,
         )
+        launches = getattr(holder.get("s"), "_launches", None)
+        if launches is not None:
+            row.update(launched=launches.launched(),
+                       limit_overrides=launches.overrides)
+    except NoFeasibleSchedule as e:
+        # The primary schedule cannot meet D within the instance limits.
+        # The reference raises here too; this is a result, not a crash.
+        row.update(infeasible=True, infeasible_reason=str(e))
     except Exception as e:
         row["error"] = repr(e)
     return row
@@ -347,9 +360,11 @@ def cmd_summarize(args):
         cell = {"scenario": sc, "n": n, "df": df, "D": rows[0]["D"],
                 "floored": rows[0]["floored"]}
         for k in SCHEDULER_KEYS:
-            ok  = [r for r in rows if r["key"] == k and r["error"] is None]
+            ok  = [r for r in rows if r["key"] == k and r["error"] is None
+                   and not r.get("infeasible")]
+            inf = [r for r in rows if r["key"] == k and r.get("infeasible")]
             err = [r for r in rows if r["key"] == k and r["error"] is not None]
-            st = {"runs": len(ok), "errors": len(err)}
+            st = {"runs": len(ok), "infeasible": len(inf), "errors": len(err)}
             for field in ("mk", "cost", "misses", "pct", "mk_frac",
                           "n_provisioned"):
                 st[f"{field}_mean"], st[f"{field}_std"] = _stats(
@@ -384,7 +399,9 @@ def cmd_summarize(args):
         label = (f"{c['scenario']} n={c['n']}"
                  + ("*" if c["floored"] else ""))
         if h["mk_mean"] is None or b["mk_mean"] is None or r_["mk_mean"] is None:
-            print(f"{label:24s} {c['df']:5.2f} | incomplete")
+            print(f"{label:24s} {c['df']:5.2f} | no feasible runs for some "
+                  f"scheduler; infeasible H/B/R "
+                  f"{h['infeasible']}/{b['infeasible']}/{r_['infeasible']}")
             continue
         print(f"{label:24s} {c['df']:5.2f} | {h['mk_mean']:8.0f} {h['cost_mean']:7.3f} "
               f"{h['misses_mean']:5.1f} | {b['mk_vs_hads_pct']:+9.1f} "
@@ -392,6 +409,9 @@ def cmd_summarize(args):
               f"{r_['mk_vs_hads_pct']:+6.1f} {r_['cost_vs_hads_pct']:+6.1f} "
               f"{r_['misses_mean']:5.1f} |  {'Y' if c['rburst_dominates_burst'] else 'N'}  {runs}")
     print("(* = D set by min_feasible_deadline floor)")
+    infeasible = {k: sum(c[k]["infeasible"] for c in out) for k in SCHEDULER_KEYS}
+    print(f"infeasible runs (no primary schedule within D and the instance "
+          f"limits): {infeasible}")
     if short:
         print(f"[WARNING] {len(short)} cells below {RUNS_PER_CONFIG} seeds: "
               f"{short[:10]}{' ...' if len(short) > 10 else ''}")

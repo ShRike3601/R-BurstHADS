@@ -87,6 +87,7 @@ proposed.
 """
 
 from models.vm import VM
+from models.limits import LaunchCounter, NoFeasibleSchedule
 from simulation.provisioning_event import STARTUP_LATENCY
 
 
@@ -173,6 +174,9 @@ class HADS:
         # Smooth-WRR accumulator state, reset fresh at the start of
         # the one and only scheduling pass (_greedy_construct).
         self._wrr_current = {}
+
+        # Instance limits (models/limits.py): what this run has launched.
+        self._launches = LaunchCounter()
 
     # ------------------------------------------------------------------
     # DSPOT
@@ -369,11 +373,13 @@ class HADS:
             feasible_spot = [
                 vm for vm in self.spot_vms
                 if vm.id not in selected_vm_ids
+                and self._launches.can_launch(vm)
                 and self._check_schedule(task, vm, vm_tasks, vm_memory,
                                          self.Dspot)
             ]
             pick = self._wrr_pick(feasible_spot)
             if pick is not None:
+                self._launches.commit(pick)
                 allocation[task.task_id] = pick.id
                 vm_tasks.setdefault(pick.id, []).append(task)
                 vm_memory[pick.id] = (vm_memory.get(pick.id, 0)
@@ -411,8 +417,11 @@ class HADS:
             for vm in ondemand_sorted:
                 if vm.id in selected_vm_ids:
                     continue
+                if not self._launches.can_launch(vm):
+                    continue
                 if self._check_schedule(task, vm, vm_tasks, vm_memory,
                                         self.D):
+                    self._launches.commit(vm)
                     allocation[task.task_id] = vm.id
                     vm_tasks.setdefault(vm.id, []).append(task)
                     vm_memory[vm.id] = (vm_memory.get(vm.id, 0)
@@ -424,6 +433,12 @@ class HADS:
             if placed:
                 continue
 
+            template_type = (self.ondemand_vms[0].vm_type
+                             if self.ondemand_vms else "c5.large")
+            if not self._launches.can_launch_type("ondemand", template_type):
+                raise NoFeasibleSchedule(
+                    f"HADS: no placement for task {task.task_id} within "
+                    f"D={self.D:.1f}s and the instance limits.")
             new_vm = self._launch_new_ondemand_vm(0.0)
             if self._check_schedule(task, new_vm, vm_tasks, vm_memory,
                                     self.D):
@@ -485,6 +500,7 @@ class HADS:
                 continue
             tasks.sort(key=lambda t: t.memory_req, reverse=True)
             vm.tasks = tasks
+            self._launches.commit(vm)
             for task in tasks:
                 task.assigned_vm = vm
                 vm.reserve_memory(task)
@@ -574,7 +590,9 @@ class HADS:
                 if v.state not in (VM.HIBERNATED, VM.TERMINATED)
                 and not v.tasks]
         for vm in sorted(idle, key=lambda v: v.cost_rate):
-            if self._check_migration(task, vm, current_time, deadline):
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time, deadline)):
+                self._launches.commit(vm)
                 return vm
 
         # Stage 2: working/busy dispatchers -- work-stealing into a
@@ -583,7 +601,9 @@ class HADS:
                    if v.state not in (VM.HIBERNATED, VM.TERMINATED)
                    and v.tasks]
         for vm in sorted(working, key=lambda v: v.cost_rate):
-            if self._check_migration(task, vm, current_time, deadline):
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time, deadline)):
+                self._launches.commit(vm)
                 return vm
 
         # Stage 3: brand-new on-demand VM, last resort.
@@ -597,6 +617,10 @@ class HADS:
         (time to deploy a new VM), same as BurstHADS's own fallback.
         """
         deadline = self.D
+        template_type = (self.ondemand_vms[0].vm_type
+                         if self.ondemand_vms else "c5.large")
+        if not self._launches.can_launch_type("ondemand", template_type):
+            return self._capped_fallback(task, current_time)
         new_vm = self._launch_new_ondemand_vm(current_time)
         finish = (current_time + STARTUP_LATENCY
                   + task.remaining_time / new_vm.speed)
@@ -639,7 +663,31 @@ class HADS:
             self.all_vms.append(new_vm)
         if new_vm not in self.vms:
             self.vms.append(new_vm)
+        self._launches.commit(new_vm)
         return new_vm
+
+    def _capped_fallback(self, task, current_time):
+        """No new on-demand VM may be launched: the instance limit is spent.
+
+        CCScheduler.backup_heuristic leaves such a task unallocated, which
+        in a real run loses it. Losing it here would remove it from every
+        metric, so instead it waits on the active non-burstable VM that
+        would finish it soonest -- it still runs, and a late finish counts
+        as a deadline miss. Only if no such VM exists (every launched
+        instance already terminated) is one more launched past the limit,
+        and that is counted in self._launches.overrides.
+        """
+        cands = [v for v in (self.spot_vms + self.ondemand_vms)
+                 if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                 and self._launches.can_launch(v)]
+        fit = [v for v in cands if v.can_fit_task(task)]
+        if fit or cands:
+            vm = min(fit or cands,
+                     key=lambda v: v.estimate_finish_time(task, current_time))
+            self._launches.commit(vm)
+            return vm
+        self._launches.overrides += 1
+        return self._launch_new_ondemand_vm(current_time)
 
     def slack(self, task, vm, deadline, current_time):
         """Used by policies/work_stealing.py -- same contract as
