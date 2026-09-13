@@ -174,12 +174,137 @@ def _pre_fix1():
     _patch(rb.RBurstHADS, "_provision_one_more", _provision_one_more)
 
 
+def _thm1(horizon):
+    """Theorem 1 with P(v hibernates) taken over a chosen horizon.
+
+    horizon="task": e_avg / vm.speed, exactly what the code on disk
+        computes. Exists only to prove this copy of _preemptive_provision
+        is faithful: variant thm1_copy must reproduce base bit-for-bit.
+    horizon="D": the deadline, as the module docstring states Theorem 1,
+        P(v hibernates) = 1 - exp(-lambda_v * D).
+    """
+    import scheduler.r_burst_hads as rb
+
+    def _preemptive_provision(self):
+        if not self.all_tasks:
+            return
+        n_tasks = len(self.all_tasks)
+        e_avg   = sum(t.exec_time for t in self.all_tasks) / n_tasks
+        od_rate = (min(self.ondemand_vms, key=lambda v: v.cost_rate
+                      ).cost_rate if self.ondemand_vms else 0.085/3600)
+        for vm in list(self.spot_vms):
+            if vm.hibernation_rate <= 0:
+                continue
+            p_hib = vm.hibernation_probability(
+                e_avg / vm.speed if horizon == "task" else self.D)
+            if p_hib < rb.PREEMPTIVE_RISK_THRESHOLD:
+                continue
+            if self.solution:
+                n_v = sum(1 for vid in self.solution.allocation.values()
+                          if vid == vm.id)
+            else:
+                n_v = n_tasks // max(1, len(self.spot_vms))
+            s_rate   = self._spot_tpl["cost_rate"]
+            s_speed  = self._spot_tpl["speed"]
+            theta_s  = s_speed * self._spot_tpl["vcpu"]
+            od_vm    = (min(self.ondemand_vms, key=lambda v: v.cost_rate)
+                        if self.ondemand_vms else None)
+            theta_od = ((od_vm.speed * od_vm.vcpu_count) if od_vm else 4.0)
+            EPSILON = 0.0
+            c_reactive  = n_v * e_avg * (od_rate/theta_od - s_rate/theta_s)
+            c_proactive = rb.STARTUP_LATENCY * s_rate + EPSILON
+            if p_hib * c_reactive <= c_proactive:
+                continue
+            replacement = self._create_spot_vm(
+                ready_time=rb.STARTUP_LATENCY,
+            )
+            self.provisioned_vms.append(replacement)
+
+    return lambda: _patch(rb.RBurstHADS, "_preemptive_provision",
+                          _preemptive_provision)
+
+
+def _rb_predictors(with_overhead):
+    """R-BurstHADS's own finish-time predictors, with or without the
+    checkpoint overhead execution charges (fix 8's principle, applied to
+    the scheduler fix 8 did not touch):
+      _provision_one_more       spot finish and burstable finish
+      _vms_needed_for_deadline  remaining work W
+    The Section 3.4 spare-time rule keeps exec_time / speed, as
+    BurstHADS._check_migration does.
+
+    with_overhead=False reproduces the code on disk and exists only to
+    prove the copy is faithful (variant rb_copy must equal base).
+    """
+    import math
+    import scheduler.r_burst_hads as rb
+
+    def f(task):
+        return (1.0 + task.checkpoint_overhead) if with_overhead else 1.0
+
+    def _provision_one_more(self, task, current_time):
+        slack = self.D - current_time
+        if slack > rb.STARTUP_LATENCY * rb.SLACK_MULTIPLIER:
+            spot_speed = self._spot_tpl["speed"]
+            finish     = (current_time + rb.STARTUP_LATENCY
+                          + task.remaining_time / spot_speed * f(task))
+            spare      = self.D - finish
+            longest    = task.exec_time / spot_speed
+            if finish <= self.D and spare > longest:
+                vm = self._create_spot_vm(
+                    ready_time=current_time + rb.STARTUP_LATENCY,
+                )
+                self.provisioned_vms.append(vm)
+                return vm
+        if (current_time + task.remaining_time / rb.BURST_SPEED * f(task)) <= self.D:
+            vm = self._create_vm(
+                rb.BURST_TYPE, rb.BURST_SPEED, rb.BURST_RATE,
+                rb.BURST_MEM_GB, 0.0, rb.BURST_VCPU,
+                ready_time=current_time,
+                extra_credits=rb.BURST_CREDITS_INIT,
+                baseline_fraction=rb.BURST_BASELINE_FRAC,
+            )
+            self.provisioned_vms.append(vm)
+            return vm
+        return None
+
+    def _vms_needed_for_deadline(self, tasks, current_time, targets,
+                                 use_spot, startup):
+        W = sum(t.remaining_time * f(t) for t in tasks if not t.completed)
+        if W <= 0:
+            return 0
+        T = self.D - current_time - startup
+        if T <= 0:
+            return 0
+        existing = sum(v.speed * v.vcpu_count for v in targets)
+        deficit  = (W / T) - existing
+        if deficit <= 0:
+            return 0
+        if use_spot:
+            per_vm = self._spot_tpl["speed"] * self._spot_tpl["vcpu"]
+        else:
+            per_vm = rb.BURST_SPEED * 1
+        if per_vm <= 0:
+            return 0
+        return int(math.ceil(deficit / per_vm))
+
+    def apply_patch():
+        _patch(rb.RBurstHADS, "_provision_one_more", _provision_one_more)
+        _patch(rb.RBurstHADS, "_vms_needed_for_deadline",
+               _vms_needed_for_deadline)
+    return apply_patch
+
+
 VARIANTS = {
     "base":             [],
     "plan_ovh":         [_plan_ovh],
     "repl_t9":          [_repl_t9],
     "plan_ovh+repl_t9": [_plan_ovh, _repl_t9],
     "pre_fix1":         [_pre_fix1],
+    "thm1_copy":        [lambda: _thm1("task")()],
+    "thm1_D":           [lambda: _thm1("D")()],
+    "rb_copy":          [lambda: _rb_predictors(False)()],
+    "rb_ovh":           [lambda: _rb_predictors(True)()],
 }
 
 
