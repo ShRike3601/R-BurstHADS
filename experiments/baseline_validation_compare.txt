@@ -1,0 +1,93 @@
+T7  NO HIBERNATION. Burst-HADS vs HADS, paired per seed (mean +/- 95% CI), and makespans
+
+J60: published HADS 2290 s $0.067 | Burst 1274 s $0.112 | makespan -44.37% | cost +66.34%
+  state                   HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-7 uniform           2541   0.064       749    0.087   -70.5 +/-  0.5%   +37.2 +/-  7.5%
+  fixes1-7 table6            2560   0.063       692    0.077   -72.9 +/-  0.5%   +22.3 +/-  4.5%
+  fix8 uniform               2320   0.071       746    0.093   -67.8 +/-  0.6%   +33.1 +/- 10.1%
+  fix8 table6                2330   0.059       693    0.080   -70.2 +/-  0.5%   +35.3 +/-  7.5%
+  fixes1-11 uniform          2320   0.071       713    0.092   -69.3 +/-  0.6%   +30.5 +/-  9.4%
+  fixes1-11 table6           2330   0.059       678    0.076   -70.9 +/-  0.5%   +28.5 +/-  5.3%
+  fixes1-12 uniform          2320   0.071       713    0.092   -69.3 +/-  0.6%   +30.5 +/-  9.4%
+  fixes1-12 table6           2330   0.059       678    0.076   -70.9 +/-  0.5%   +28.5 +/-  5.3%
+  fixes1-11 table6 6cp       2330   0.059       480    0.092   -79.4 +/-  0.5%   +56.8 +/-  3.8%
+  fixes1-12 table6 5cp       2330   0.059       508    0.088   -78.2 +/-  0.4%   +50.1 +/-  2.8%
+
+J80: published HADS 2295 s $0.104 | Burst 1329 s $0.151 | makespan -42.09% | cost +44.54%
+  state                   HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-7 uniform           2543   0.098      1381    0.193   -45.6 +/-  7.8%   +97.7 +/- 26.4%
+  fixes1-7 table6            2583   0.093       891    0.115   -65.5 +/-  1.8%   +23.9 +/- 11.0%
+  fix8 uniform               2323   0.097      1369    0.203   -41.1 +/-  7.6%  +109.2 +/- 23.2%
+  fix8 table6                2350   0.093       874    0.124   -62.8 +/-  0.5%   +33.3 +/-  6.0%
+  fixes1-11 uniform          2323   0.097      1311    0.198   -43.6 +/-  7.0%  +104.4 +/- 24.8%
+  fixes1-11 table6           2350   0.093       945    0.137   -59.8 +/-  3.6%   +47.3 +/- 14.5%
+  fixes1-12 uniform          2323   0.097      1311    0.198   -43.6 +/-  7.0%  +104.4 +/- 24.8%
+  fixes1-12 table6           2350   0.093       945    0.137   -59.8 +/-  3.6%   +47.3 +/- 14.5%
+  fixes1-11 table6 6cp       2354   0.079       574    0.109   -75.6 +/-  0.5%   +38.5 +/-  3.6%
+  fixes1-12 table6 5cp       2354   0.079       604    0.107   -74.3 +/-  0.6%   +35.5 +/-  4.5%
+
+J100: published HADS 2332 s $0.112 | Burst 1660 s $0.176 | makespan -28.82% | cost +57.55%
+  state                   HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-7 uniform           2549   0.112      1824    0.274   -28.4 +/-  6.5%  +145.8 +/- 20.2%
+  fixes1-7 table6            2579   0.107      1273    0.197   -50.6 +/-  5.0%   +84.3 +/- 17.8%
+  fix8 uniform               2318   0.123      1599    0.242   -31.0 +/-  6.9%   +97.2 +/- 16.0%
+  fix8 table6                2356   0.100      1193    0.186   -49.4 +/-  4.5%   +85.3 +/- 15.8%
+  fixes1-11 uniform          2318   0.123      1536    0.231   -33.8 +/-  7.5%   +90.5 +/- 21.7%
+  fixes1-11 table6           2356   0.100      1162    0.180   -50.7 +/-  4.8%   +79.2 +/- 15.6%
+  fixes1-12 uniform          2318   0.123      1536    0.231   -33.8 +/-  7.5%   +90.5 +/- 21.7%
+  fixes1-12 table6           2356   0.100      1162    0.180   -50.7 +/-  4.8%   +79.2 +/- 15.6%
+  fixes1-11 table6 6cp       2362   0.097       657    0.131   -72.2 +/-  0.7%   +35.6 +/-  4.5%
+  fixes1-12 table6 5cp       2362   0.097       721    0.138   -69.5 +/-  0.9%   +42.6 +/-  9.7%
+
+ED200: published HADS 2580 s $0.267 | Burst 2275 s $0.357 | makespan -11.82% | cost +33.71%
+  state                   HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-7 uniform           2536   0.273      2597    0.403    +2.4 +/-  1.3%   +47.8 +/-  1.8%
+  fixes1-7 table6            2598   0.219      2429    0.375    -6.5 +/-  2.4%   +71.1 +/-  4.5%
+  fix8 uniform               2340   0.320      2518    0.468    +7.7 +/-  2.9%   +46.0 +/-  4.2%
+  fix8 table6                2365   0.220      2404    0.371    +1.7 +/-  2.4%   +68.9 +/-  3.9%
+  fixes1-11 uniform          2340   0.320      2598    0.483   +11.2 +/-  2.1%   +50.6 +/-  3.2%
+  fixes1-11 table6           2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  fixes1-12 uniform          2340   0.320      2598    0.483   +11.2 +/-  2.1%   +50.6 +/-  3.2%
+  fixes1-12 table6           2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  fixes1-11 table6 6cp       2361   0.220      1959    0.499   -17.0 +/-  6.5%  +127.3 +/- 16.3%
+  fixes1-12 table6 5cp       2361   0.221      2360    0.522    -0.0 +/-  4.3%  +135.8 +/-  8.4%
+
+T10 J60 BURST-HADS makespan / cost, 'w/o Fluctuation'
+  state                            none            sc1            sc2            sc3            sc4            sc5
+  published                 1274/0.112    1274/0.119    1277/0.204    1752/0.127    1857/0.142    1445/0.150
+  fixes1-7 uniform           749/0.087    1409/0.198    2179/0.251    1446/0.216    1707/0.240    1721/0.239
+  fixes1-7 table6            692/0.077    1297/0.178    1919/0.219    1379/0.207    1579/0.218    1580/0.217
+  fix8 uniform               746/0.093    1186/0.173    2082/0.241    1393/0.206    1684/0.234    1740/0.237
+  fix8 table6                693/0.080    1332/0.187    1900/0.220    1338/0.203    1545/0.215    1605/0.221
+  fixes1-11 uniform          713/0.092    1386/0.196    2138/0.244    1268/0.196    1755/0.244    1705/0.233
+  fixes1-11 table6           678/0.076    1337/0.183    2001/0.226    1375/0.205    1538/0.214    1544/0.213
+  fixes1-12 uniform          713/0.092    1386/0.196    2138/0.244    1268/0.196    1755/0.244    1705/0.233
+  fixes1-12 table6           678/0.076    1337/0.183    2001/0.226    1375/0.205    1538/0.214    1544/0.213
+  fixes1-11 table6 6cp       480/0.092     947/0.230    1328/0.278     831/0.221    1301/0.329    1253/0.322
+  fixes1-12 table6 5cp       508/0.088    1049/0.223    1484/0.253    1013/0.230    1489/0.317    1351/0.294
+
+T9  HIBERNATION AGGREGATES (Section 4 text)
+  state                      avg mk red.     J60 mk red.   ED200 mk red.  avg cost incr.
+  published                       25.87%          40.10%          10.24%           1.92%
+  fixes1-7 uniform                10.61%          21.41%           1.68%          42.91%
+  fixes1-7 table6                 15.79%          26.51%           1.93%          37.93%
+  fix8 uniform                    10.42%          22.75%           1.38%          40.90%
+  fix8 table6                     14.45%          26.22%           0.88%          39.35%
+  fixes1-11 uniform                9.77%          21.36%           1.49%          42.04%
+  fixes1-11 table6                14.69%          25.75%           1.22%          38.74%
+  fixes1-12 uniform               10.18%          21.36%           3.16%          43.76%
+  fixes1-12 table6                14.85%          25.75%           1.88%          39.78%
+  fixes1-11 table6 6cp            21.40%          30.82%           4.12%          51.54%
+  fixes1-12 table6 5cp            20.68%          27.78%           1.39%          49.50%
+
+RUNS
+  fixes1-7 uniform       workload uniform copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 210 J80 210 J100 216 ED200 257
+  fixes1-7 table6        workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  fix8 uniform           workload uniform copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 210 J80 210 J100 216 ED200 257
+  fix8 table6            workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  fixes1-11 uniform      workload uniform copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 210 J80 210 J100 216 ED200 257
+  fixes1-11 table6       workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  fixes1-12 uniform      workload uniform copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 210 J80 210 J100 216 ED200 257
+  fixes1-12 table6       workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  fixes1-11 table6 6cp   workload table6  copies 6 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  fixes1-12 table6 5cp   workload table6  copies 5 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211

@@ -1,0 +1,34 @@
+baseline validation 'fixes1to11_93d3b03_uniform': workload=uniform, 30 seeds, 3 copies per spot type, 1440 runs
+done in 54s; infeasible 0, errors 0
+
+T7  NO HIBERNATION vs paper Table 7 (ours mean +/- 95% CI | published)
+  job    |            HADS mk             HADS $ |           Burst mk            Burst $ |         mk change (paired) |         cost change (paired)
+  J60    |   2320+/-   9 | 2290  0.071+/-0.004|0.067 |    713+/-  13 | 1274  0.092+/-0.006|0.112 |   -69.3+/-  0.6% |  -44.37% |    30.5+/-  9.4% |  +66.34%
+  J80    |   2323+/-   7 | 2295  0.097+/-0.001|0.104 |   1311+/- 163 | 1329  0.198+/-0.024|0.151 |   -43.6+/-  7.0% |  -42.09% |   104.4+/- 24.8% |  +44.54%
+  J100   |   2318+/-   8 | 2332  0.123+/-0.003|0.112 |   1536+/- 173 | 1660  0.231+/-0.022|0.176 |   -33.8+/-  7.5% |  -28.82% |    90.5+/- 21.7% |  +57.55%
+  ED200  |   2340+/-  27 | 2580  0.320+/-0.007|0.267 |   2598+/-  38 | 2275  0.483+/-0.016|0.357 |    11.2+/-  2.1% |  -11.82% |    50.6+/-  3.2% |  +33.71%
+
+T10 J60 BURST-HADS, 'w/o Fluctuation' (ours mean +/- 95% CI | published)
+  none  makespan    713 +/-  13 |  1274   cost  0.092 +/-0.006 | 0.112
+  sc1   makespan   1386 +/- 185 |  1274   cost  0.196 +/-0.026 | 0.119
+  sc2   makespan   2138 +/- 155 |  1277   cost  0.244 +/-0.016 | 0.204
+  sc3   makespan   1268 +/- 158 |  1752   cost  0.196 +/-0.027 | 0.127
+  sc4   makespan   1755 +/- 127 |  1857   cost  0.244 +/-0.018 | 0.142
+  sc5   makespan   1705 +/- 113 |  1445   cost  0.233 +/-0.017 | 0.150
+
+T9  HIBERNATION AGGREGATES vs Section 4 text (sc1-sc5)
+  average makespan reduction  ours   9.77%  published 25.87%
+  J60 makespan reduction      ours  21.36%  published 40.10%
+  ED200 makespan reduction    ours   1.49%  published 10.24%
+  average cost increase       ours +42.04%  published +1.92%
+
+OLD cells (HADS values from Table 9's image, NOT re-verified from text)
+  J60 sc1    HADS mk  2359|2620  Burst mk  1386|1274  mk change -41.3%|-51.4%  cost change 27.6%|+30.8%
+  J60 sc2    HADS mk  2620|2549  Burst mk  2138|1277  mk change -18.4%|-49.9%  cost change 50.4%|-20.6%
+  J80 sc1    HADS mk  2386|2581  Burst mk  1730|1419  mk change -27.5%|-45.0%  cost change 38.3%|+11.3%
+  J100 sc2   HADS mk  2687|2518  Burst mk  2561|1900  mk change -4.7%|-24.5%  cost change 46.6%|-39.9%
+  ED200 sc1  HADS mk  2678|2680  Burst mk  2637|2327  mk change -1.5%|-13.2%  cost change 33.0%|+23.6%
+
+mean task runtime generated vs Table 6: J60 210|198, J80 210|199, J100 216|190, ED200 257|211
+
+wrote C:\Users\Shrike\AppData\Local\Temp\claude\C--my-folder-projects-Improvement-on-Burst-HADS--claude-worktrees-claude-md-review-status-325adb\eb9e3acb-8c59-4ea0-9e21-35fc4839a80b\scratchpad\val_fixes1to11\experiments\baseline_validation_fixes1to11_93d3b03_uniform.json
