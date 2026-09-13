@@ -19,14 +19,22 @@ Usage (Windows PowerShell, from the project root):
     python experiments\\checkpoint.py --tag fix1_migcheck --workers 18
 
     python experiments\\checkpoint.py --tag fix1_migcheck --workers 18 --seeds 20
+
+    python experiments\\checkpoint.py --tag repl_t9 --variant repl_t9
+
+--variant names a counterfactual patch from experiments/variants.py,
+applied in each worker before it simulates. The default, "base", is the
+simulator exactly as it is on disk.
 """
 
-import sys, os, json, argparse, random, io, contextlib
+import sys, os, json, argparse, random, io, contextlib, time
 from pathlib import Path
 
 _PROJ = Path(__file__).resolve().parent.parent
 if str(_PROJ) not in sys.path:
     sys.path.insert(0, str(_PROJ))
+
+from experiments import variants as _variants
 
 # (n, kh, kr, label) -- Table 9 scenarios at paper scale, plus one
 # smaller cell so a regression that only shows up at low n is visible.
@@ -55,13 +63,16 @@ def _policies(vms, mk, sim_end):
 def run_unit(args):
     """One (cell, seed, scheduler) -> one simulation. Top level so the
     Windows spawn-based Pool can pickle it."""
-    n, kh, kr, label, seed, sched, df = args
+    n, kh, kr, label, seed, sched, df, variant = args
 
     import sys
     from pathlib import Path
     proj = Path(__file__).resolve().parent.parent
     if str(proj) not in sys.path:
         sys.path.insert(0, str(proj))
+
+    from experiments import variants
+    variants.apply(variant, kh=kh, kr=kr)
 
     import random
     from main import (run_simulation, generate_tasks, compute_deadlines,
@@ -117,17 +128,22 @@ def main():
                          "deadline grants, since HADS and Burst-HADS only "
                          "escalate when D is threatened and therefore "
                          "finish just under it.")
+    ap.add_argument("--variant", default="base",
+                    choices=sorted(_variants.VARIANTS),
+                    help="counterfactual patch from experiments/variants.py")
     a = ap.parse_args()
 
-    units = [(n, kh, kr, label, s, sched, a.df)
+    units = [(n, kh, kr, label, s, sched, a.df, a.variant)
              for (n, kh, kr, label) in CELLS
              for s in range(a.seeds)
              for sched in SCHEDULERS]
 
-    print(f"checkpoint '{a.tag}' (DF={a.df}): {len(units)} runs "
+    print(f"checkpoint '{a.tag}' (DF={a.df}, variant={a.variant}): "
+          f"{len(units)} runs "
           f"({len(CELLS)} cells x {a.seeds} seeds x {len(SCHEDULERS)} "
           f"schedulers) on {a.workers} workers", flush=True)
 
+    t0 = time.time()
     from multiprocessing import Pool
     with Pool(processes=a.workers) as pool:
         rows = []
@@ -135,6 +151,7 @@ def main():
             rows.append(r)
             if (i + 1) % 25 == 0 or i + 1 == len(units):
                 print(f"  {i+1}/{len(units)} done", flush=True)
+    print(f"  wall time {time.time() - t0:.0f}s", flush=True)
 
     bad = [r for r in rows if not r["ok"]]
     if bad:
@@ -191,6 +208,7 @@ def main():
 
     path = _PROJ / "experiments" / f"checkpoint_{a.tag}.json"
     json.dump({"tag": a.tag, "seeds": a.seeds, "df": a.df,
+               "variant": a.variant,
                "cells": out, "raw": rows}, open(path, "w"), indent=1)
     print(f"\nwrote {path}")
 
