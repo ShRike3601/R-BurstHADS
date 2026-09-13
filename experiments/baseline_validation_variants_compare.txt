@@ -1,0 +1,65 @@
+T7  NO HIBERNATION. Burst-HADS vs HADS, paired per seed (mean +/- 95% CI), and makespans
+
+J60: published HADS 2290 s $0.067 | Burst 1274 s $0.112 | makespan -44.37% | cost +66.34%
+  state                         HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-12 capped (3c8cfe8)       2330   0.059       678    0.076   -70.9 +/-  0.5%   +28.5 +/-  5.3%
+  nocap                            2330   0.059       678    0.076   -70.9 +/-  0.5%   +28.5 +/-  5.3%
+  nocap+mig_launched               2330   0.059       678    0.076   -70.9 +/-  0.5%   +28.5 +/-  5.3%
+  nocap+burst_fill                 2330   0.059      1305    0.210   -43.9 +/-  3.2%  +254.5 +/- 22.2%
+  nocap+both                       2330   0.059      1305    0.210   -43.9 +/-  3.2%  +254.5 +/- 22.2%
+  nocap+both, uniform              2320   0.071      1484    0.232   -36.0 +/-  3.9%  +232.3 +/- 30.2%
+
+J80: published HADS 2295 s $0.104 | Burst 1329 s $0.151 | makespan -42.09% | cost +44.54%
+  state                         HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-12 capped (3c8cfe8)       2350   0.093       945    0.137   -59.8 +/-  3.6%   +47.3 +/- 14.5%
+  nocap                            2350   0.093       945    0.137   -59.8 +/-  3.6%   +47.3 +/- 14.5%
+  nocap+mig_launched               2350   0.093       945    0.137   -59.8 +/-  3.6%   +47.3 +/- 14.5%
+  nocap+burst_fill                 2350   0.093      1332    0.208   -43.3 +/-  3.8%  +124.4 +/- 16.3%
+  nocap+both                       2350   0.093      1332    0.208   -43.3 +/-  3.8%  +124.4 +/- 16.3%
+  nocap+both, uniform              2323   0.097      1502    0.230   -35.3 +/-  4.7%  +137.5 +/- 15.0%
+
+J100: published HADS 2332 s $0.112 | Burst 1660 s $0.176 | makespan -28.82% | cost +57.55%
+  state                         HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-12 capped (3c8cfe8)       2356   0.100      1162    0.180   -50.7 +/-  4.8%   +79.2 +/- 15.6%
+  nocap                            2356   0.100      1162    0.180   -50.7 +/-  4.8%   +79.2 +/- 15.6%
+  nocap+mig_launched               2356   0.100      1162    0.180   -50.7 +/-  4.8%   +79.2 +/- 15.6%
+  nocap+burst_fill                 2356   0.100      1381    0.215   -41.4 +/-  3.3%  +114.7 +/- 12.1%
+  nocap+both                       2356   0.100      1381    0.215   -41.4 +/-  3.3%  +114.7 +/- 12.1%
+  nocap+both, uniform              2318   0.123      1686    0.259   -27.3 +/-  4.8%  +112.6 +/- 15.0%
+
+ED200: published HADS 2580 s $0.267 | Burst 2275 s $0.357 | makespan -11.82% | cost +33.71%
+  state                         HADS mk  HADS $  Burst mk  Burst $        mk change       cost change
+  fixes1-12 capped (3c8cfe8)       2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  nocap                            2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  nocap+mig_launched               2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  nocap+burst_fill                 2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  nocap+both                       2365   0.220      2363    0.365    -0.1 +/-  2.8%   +66.1 +/-  4.8%
+  nocap+both, uniform              2340   0.320      2598    0.483   +11.2 +/-  2.1%   +50.6 +/-  3.2%
+
+T10 J60 BURST-HADS makespan / cost, 'w/o Fluctuation'
+  state                                  none            sc1            sc2            sc3            sc4            sc5
+  published                       1274/0.112    1274/0.119    1277/0.204    1752/0.127    1857/0.142    1445/0.150
+  fixes1-12 capped (3c8cfe8)       678/0.076    1337/0.183    2001/0.226    1375/0.205    1538/0.214    1544/0.213
+  nocap                            678/0.076    1337/0.183    2001/0.226    1375/0.205    1538/0.214    1544/0.213
+  nocap+mig_launched               678/0.076    1230/0.150    1937/0.182    1290/0.172    1397/0.166    1483/0.174
+  nocap+burst_fill                1305/0.210    1417/0.217    1927/0.228    1401/0.229    1500/0.211    1471/0.208
+  nocap+both                      1305/0.210    1305/0.181    1930/0.187    1305/0.192    1390/0.167    1388/0.167
+  nocap+both, uniform             1484/0.232    1506/0.202    2077/0.199    1511/0.219    1566/0.188    1516/0.181
+
+T9  HIBERNATION AGGREGATES (Section 4 text)
+  state                            avg mk red.     J60 mk red.   ED200 mk red.  avg cost incr.
+  published                             25.87%          40.10%          10.24%           1.92%
+  fixes1-12 capped (3c8cfe8)            14.85%          25.75%           1.88%          39.78%
+  nocap                                 14.69%          25.75%           1.22%          38.74%
+  nocap+mig_launched                    21.51%          35.03%           5.05%          16.00%
+  nocap+burst_fill                      16.16%          26.61%           1.22%          39.17%
+  nocap+both                            22.40%          35.32%           5.05%          18.22%
+  nocap+both, uniform                   16.00%          26.83%           1.87%          29.37%
+
+RUNS
+  fixes1-12 capped (3c8cfe8)   workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  nocap                        workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  nocap+mig_launched           workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  nocap+burst_fill             workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  nocap+both                   workload table6  copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 198 J80 199 J100 190 ED200 211
+  nocap+both, uniform          workload uniform copies 3 seeds 30 infeasible 0 errors 0 | mean runtime J60 210 J80 210 J100 216 ED200 257
