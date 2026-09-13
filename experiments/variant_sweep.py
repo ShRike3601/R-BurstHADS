@@ -3,21 +3,28 @@ Run the full-sweep grid (or a slice of it) under a counterfactual patch
 from experiments/variants.py, and compare with a base sweep results file.
 
 checkpoint.py measures a candidate fix on five fixed cells. Some effects
-live elsewhere -- the residual Burst-HADS misses are at DF=0.25 and at
-n=50/200 -- so this reuses dynamic_comparison.run_one_unit unchanged, with
-the variant applied in the worker first.
+live elsewhere -- the residual Burst-HADS misses were at DF=0.25 and at
+n=50/200, and instance limits bind mostly at small DF -- so this reuses
+dynamic_comparison.run_one_unit unchanged, with the variant applied in the
+worker first.
 
 Output: experiments/sweep_variant_<variant>_<code fingerprint>.jsonl,
 rewritten on every run (a variant file is a measurement, not a resumable
-result). The comparison reads the base rows for exactly the same units
-from sweep_raw_<base fingerprint>.jsonl; with --variant base (or a
-faithful copy) every row must match.
+result); --report-only re-reads it instead. The comparison reads the base
+rows for exactly the same units from sweep_raw_<base fingerprint>.jsonl;
+with --variant base (or a faithful copy) every row must match.
+
+A run whose primary schedule cannot meet D within the instance limits is
+recorded as infeasible (models.limits.NoFeasibleSchedule). Cell means use
+feasible runs only and exclude any cell where a scheduler was infeasible
+in some seed; the infeasibility itself is reported separately.
 
 Usage (from the project root):
     python experiments\\variant_sweep.py --variant b_order --seeds 0-9 --base-fp fb931f79c624
 """
 
 import sys, os, json, time, argparse
+from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -50,34 +57,41 @@ def _pct(x, y):
     return 100.0 * (x - y) / y
 
 
+def _feasible(r):
+    return r["error"] is None and not r.get("infeasible")
+
+
 def summarize(rows, label):
-    cells = {}
+    cells, blocked = {}, set()
     for r in rows:
-        if r["error"] is None and not r.get("infeasible"):
-            cells.setdefault((r["scenario"], r["n"], r["df"]), {}) \
-                 .setdefault(r["key"], []).append(r)
+        c = (r["scenario"], r["n"], r["df"])
+        if r.get("infeasible"):
+            blocked.add(c)
+        elif r["error"] is None:
+            cells.setdefault(c, {}).setdefault(r["key"], []).append(r)
     out = {}
     for c, g in cells.items():
-        if all(k in g for k in KEYS):
-            out[c] = {k: dict(mk=sum(x["mk"] for x in g[k]) / len(g[k]),
-                              cost=sum(x["cost"] for x in g[k]) / len(g[k]),
-                              misses=sum(x["misses"] for x in g[k]) / len(g[k]))
-                      for k in KEYS}
+        if c in blocked or not all(k in g for k in KEYS):
+            continue
+        out[c] = {k: dict(mk=sum(x["mk"] for x in g[k]) / len(g[k]),
+                          cost=sum(x["cost"] for x in g[k]) / len(g[k]),
+                          misses=sum(x["misses"] for x in g[k]) / len(g[k]))
+                  for k in KEYS}
     return out
 
 
 def report(base, var, title):
     print(f"\n{title}")
-    print(f"  {'group':10s} {'cells':>5s} | {'Burst mk':>8s} {'Burst $':>8s} | "
+    print(f"  {'group':10s} {'':>7s} {'cells':>3s} | {'Burst mk':>8s} {'Burst $':>8s} | "
           f"{'R mk':>7s} {'R $':>7s} | {'R/B mk':>7s} {'R/B $':>7s} | {'dom':>5s} | "
           f"{'miss cells H/B/R':>16s} {'miss total H/B/R':>18s}")
     for name, sel in [("all", lambda c: True)] + [
             (f"DF={df}", (lambda d: lambda c: c[2] == d)(df))
             for df in sorted({c[2] for c in var})]:
+        cs = [c for c in var if sel(c) and c in base]
+        if not cs:
+            continue
         for tag, src in (("base", base), ("variant", var)):
-            cs = [c for c in var if sel(c) and c in base]
-            if not cs:
-                continue
             m = lambda f: sum(f(src[c]) for c in cs) / len(cs)
             dom = sum(src[c]["rburst"]["mk"] <= src[c]["burst"]["mk"]
                       and src[c]["rburst"]["cost"] <= src[c]["burst"]["cost"]
@@ -94,6 +108,41 @@ def report(base, var, title):
                   f"{dom:2d}/{len(cs):<2d} | {mc:>16s} {mt:>18s}")
 
 
+def infeasible_table(rows):
+    """Share of runs with no primary schedule within D and the instance
+    limits, by scheduler, per DF and per n; the cells where schedulers
+    differ; and mean deadline misses over FEASIBLE runs, by DF."""
+    if not any(r.get("infeasible") for r in rows):
+        return
+    for dim in ("df", "n"):
+        tot = Counter((r["key"], r[dim]) for r in rows)
+        inf = Counter((r["key"], r[dim]) for r in rows if r.get("infeasible"))
+        print(f"\ninfeasible runs by {dim} (share of runs per scheduler)")
+        for v in sorted({r[dim] for r in rows}):
+            print(f"  {dim}={v!s:<6} " + "  ".join(
+                f"{k}:{inf[(k, v)]:4d}/{tot[(k, v)]:<4d} "
+                f"({100 * inf[(k, v)] / max(1, tot[(k, v)]):3.0f}%)" for k in KEYS))
+    cells = sorted({(r["scenario"], r["n"], r["df"]) for r in rows})
+    tot = Counter((r["key"], r["scenario"], r["n"], r["df"]) for r in rows)
+    inf = Counter((r["key"], r["scenario"], r["n"], r["df"]) for r in rows
+                  if r.get("infeasible"))
+    differ = [c for c in cells if len({inf[(k,) + c] for k in KEYS}) > 1]
+    partial = [c for c in cells if any(0 < inf[(k,) + c] < tot[(k,) + c] for k in KEYS)]
+    print(f"\ncells where schedulers differ in infeasible seeds: {len(differ)}; "
+          f"cells with some but not all seeds infeasible: {len(partial)}")
+    for c in sorted(set(differ) | set(partial)):
+        print(f"  {c[0]} n={c[1]} DF={c[2]}: " + " ".join(
+            f"{k}:{inf[(k,) + c]}/{tot[(k,) + c]}" for k in KEYS))
+    print("\nmean deadline misses per FEASIBLE run, by DF")
+    for v in sorted({r["df"] for r in rows}):
+        parts = []
+        for k in KEYS:
+            fe = [r for r in rows if r["df"] == v and r["key"] == k and _feasible(r)]
+            parts.append(f"{k}:{sum(r['misses'] for r in fe) / max(1, len(fe)):6.2f} "
+                         f"(n={len(fe)})")
+        print(f"  DF={v!s:<5} " + "  ".join(parts))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--variant", required=True)
@@ -103,6 +152,8 @@ def main():
     ap.add_argument("--dfs")
     ap.add_argument("--seeds", default="0-9")
     ap.add_argument("--workers", type=int, default=os.cpu_count() or 4)
+    ap.add_argument("--report-only", action="store_true",
+                    help="re-read the existing variant file instead of running")
     a = ap.parse_args()
 
     import variants
@@ -114,14 +165,17 @@ def main():
              for df in dfs for s in seeds for k in KEYS]
     path = HERE / f"sweep_variant_{a.variant}_{fp}.jsonl"
     print(f"variant {a.variant}: {len(units)} units on {a.workers} workers -> "
-          f"{path.name}", flush=True)
-    from multiprocessing import Pool
+          f"{path.name}{' (report only)' if a.report_only else ''}", flush=True)
     t0 = time.time()
-    with Pool(a.workers) as pool:
-        rows = list(pool.imap_unordered(run_unit, units, chunksize=2))
-    with open(path, "w") as f:
-        for r in rows:
-            f.write(json.dumps(r) + "\n")
+    if a.report_only:
+        rows = dc._load_rows(path)
+    else:
+        from multiprocessing import Pool
+        with Pool(a.workers) as pool:
+            rows = list(pool.imap_unordered(run_unit, units, chunksize=2))
+        with open(path, "w") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
     errors = [r for r in rows if r["error"] is not None]
     print(f"infeasible runs: {sum(1 for r in rows if r.get('infeasible'))}")
     print(f"done in {time.time() - t0:.0f}s, {len(errors)} errors"
@@ -131,13 +185,15 @@ def main():
     wanted = {u[:5] for u in units}
     base_sel = [r for k, r in base_rows.items() if k in wanted]
     same = sum(1 for r in rows if (b := base_rows.get(dc._unit_key(r)))
-               and b["error"] is None and r["error"] is None
+               and _feasible(b) and _feasible(r)
                and abs(b["mk"] - r["mk"]) < 1e-9 and abs(b["cost"] - r["cost"]) < 1e-12
                and b["misses"] == r["misses"])
     print(f"identical to base {a.base_fp}: {same}/{len(rows)} units "
           f"(base rows found: {len(base_sel)})")
     report(summarize(base_sel, "base"), summarize(rows, a.variant),
-           f"variant {a.variant} vs base, mean of cells (% vs HADS unless R/B)")
+           f"variant {a.variant} vs base, mean of cells (% vs HADS unless R/B); "
+           f"cells with any infeasible run excluded")
+    infeasible_table(rows)
 
 
 if __name__ == "__main__":
