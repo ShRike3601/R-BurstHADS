@@ -1,0 +1,16 @@
+running 7200 of 7200 units on 20 workers -> sweep_raw_519c868a99f9.jsonl
+  500/7200  8s  errors=0
+  1000/7200  32s  errors=0
+  1500/7200  66s  errors=0
+  2000/7200  78s  errors=0
+  2500/7200  104s  errors=0
+  3000/7200  136s  errors=0
+  3500/7200  151s  errors=0
+  4000/7200  175s  errors=0
+  4500/7200  209s  errors=0
+  5000/7200  225s  errors=0
+  5500/7200  251s  errors=0
+  6000/7200  282s  errors=0
+  6500/7200  296s  errors=0
+  7000/7200  330s  errors=0
+  7200/7200  355s  errors=0
