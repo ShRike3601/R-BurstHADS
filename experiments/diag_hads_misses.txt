@@ -1,0 +1,98 @@
+variant base: 300 runs on 20 workers
+variant plan_ovh: 300 runs on 20 workers
+all runs done in 49s
+
+MEAN DEADLINE MISSES  (mean makespan / D)
+config         DF scheduler                      base              plan_ovh
+sc1 n=300     0.5 HADS                  0.0 (  99.6%)         0.0 (  98.8%)
+sc1 n=300     0.5 BurstHADS             0.0 (  96.4%)         0.0 (  97.5%)
+sc1 n=300     0.5 R-BurstHADS           0.0 (  86.1%)         0.0 (  85.3%)
+
+sc1 n=300     1.0 HADS                  3.7 ( 101.2%)         0.0 (  96.6%)
+sc1 n=300     1.0 BurstHADS             0.0 (  62.9%)         0.0 (  63.0%)
+sc1 n=300     1.0 R-BurstHADS           0.0 (  46.7%)         0.0 (  41.9%)
+
+sc1 n=300     2.0 HADS                  2.2 ( 100.4%)         0.0 (  96.5%)
+sc1 n=300     2.0 BurstHADS             0.0 (  29.2%)         0.0 (  28.1%)
+sc1 n=300     2.0 R-BurstHADS           0.0 (  22.1%)         0.0 (  21.0%)
+
+sc2 n=100     0.5 HADS                  0.9 ( 103.2%)         0.0 (  99.7%)
+sc2 n=100     0.5 BurstHADS             0.0 (  98.4%)         0.0 (  98.2%)
+sc2 n=100     0.5 R-BurstHADS           0.0 (  92.1%)         0.0 (  90.8%)
+
+nohib n=300   0.5 HADS                  0.0 (  95.9%)         0.0 (  87.2%)
+nohib n=300   0.5 BurstHADS             0.0 (  94.5%)         0.0 (  88.3%)
+nohib n=300   0.5 R-BurstHADS           0.0 (  76.2%)         0.0 (  73.9%)
+
+nohib n=300   1.0 HADS                  7.5 ( 102.8%)         0.0 (  93.2%)
+nohib n=300   1.0 BurstHADS             0.0 (  46.1%)         0.0 (  51.8%)
+nohib n=300   1.0 R-BurstHADS           0.0 (  37.2%)         0.0 (  36.1%)
+
+nohib n=300   2.0 HADS                  7.2 ( 105.8%)         0.0 (  96.2%)
+nohib n=300   2.0 BurstHADS             0.0 (  25.4%)         0.0 (  25.6%)
+nohib n=300   2.0 R-BurstHADS           0.0 (  21.2%)         0.0 (  20.0%)
+
+nohib n=100   0.5 HADS                  0.9 ( 101.2%)         0.0 (  94.0%)
+nohib n=100   0.5 BurstHADS             0.0 (  81.9%)         0.0 (  77.6%)
+nohib n=100   0.5 R-BurstHADS           0.0 (  67.0%)         0.0 (  70.3%)
+
+nohib n=100   1.0 HADS                  0.0 (  88.8%)         0.0 (  80.8%)
+nohib n=100   1.0 BurstHADS             0.0 (  46.7%)         0.0 (  50.1%)
+nohib n=100   1.0 R-BurstHADS           0.0 (  35.6%)         0.0 (  38.0%)
+
+nohib n=100   2.0 HADS                  0.0 (  97.5%)         0.0 (  89.1%)
+nohib n=100   2.0 BurstHADS             0.0 (  27.8%)         0.0 (  23.2%)
+nohib n=100   2.0 R-BurstHADS           0.0 (  19.1%)         0.0 (  20.4%)
+
+LATE-TASK ATTRIBUTION
+[base] sc1 n=300 DF=1.0 HADS: 37 late tasks over 10 runs
+    stayed on planned, never-hibernated VM: 35  by planned market {'spot': 35}
+      plan_nominal <= Dspot and plan_ovh > D: 35/35
+      mean plan_nominal/Dspot 0.986   mean finish/plan_ovh 1.000   mean late_by 59.5s
+    stayed on planned VM that was hibernated: 0
+    moved off planned VM: 2  by final market {'ondemand': 2}  mean late_by 37.5s
+[base] sc1 n=300 DF=2.0 HADS: 22 late tasks over 10 runs
+    stayed on planned, never-hibernated VM: 20  by planned market {'spot': 20}
+      plan_nominal <= Dspot and plan_ovh > D: 20/20
+      mean plan_nominal/Dspot 0.968   mean finish/plan_ovh 1.000   mean late_by 221.9s
+    stayed on planned VM that was hibernated: 0
+    moved off planned VM: 2  by final market {'ondemand': 2}  mean late_by 3.2s
+[base] sc2 n=100 DF=0.5 HADS: 9 late tasks over 10 runs
+    stayed on planned, never-hibernated VM: 9  by planned market {'ondemand': 9}
+      plan_nominal <= Dspot and plan_ovh > D: 0/9
+      mean plan_nominal/Dspot 1.530   mean finish/plan_ovh 1.000   mean late_by 29.3s
+    stayed on planned VM that was hibernated: 0
+    moved off planned VM: 0  by final market {}
+[base] nohib n=300 DF=1.0 HADS: 75 late tasks over 10 runs
+    stayed on planned, never-hibernated VM: 75  by planned market {'spot': 75}
+      plan_nominal <= Dspot and plan_ovh > D: 75/75
+      mean plan_nominal/Dspot 0.986   mean finish/plan_ovh 1.000   mean late_by 59.5s
+    stayed on planned VM that was hibernated: 0
+    moved off planned VM: 0  by final market {}
+[base] nohib n=300 DF=2.0 HADS: 72 late tasks over 10 runs
+    stayed on planned, never-hibernated VM: 72  by planned market {'spot': 72}
+      plan_nominal <= Dspot and plan_ovh > D: 72/72
+      mean plan_nominal/Dspot 0.968   mean finish/plan_ovh 1.000   mean late_by 223.2s
+    stayed on planned VM that was hibernated: 0
+    moved off planned VM: 0  by final market {}
+[base] nohib n=100 DF=0.5 HADS: 9 late tasks over 10 runs
+    stayed on planned, never-hibernated VM: 9  by planned market {'ondemand': 9}
+      plan_nominal <= Dspot and plan_ovh > D: 0/9
+      mean plan_nominal/Dspot 1.530   mean finish/plan_ovh 1.000   mean late_by 29.3s
+    stayed on planned VM that was hibernated: 0
+    moved off planned VM: 0  by final market {}
+
+
+PLANNED QUEUE ENDS, HADS, first variant (nominal, no overhead)
+  sc1 n=300    DF=0.5: D=1795 Dspot=1569 max spot queue 1565 (x1.1 = 1722)  spot VMs 8.0  od VMs 0.0
+  sc1 n=300    DF=1.0: D=3590 Dspot=3365 max spot queue 3354 (x1.1 = 3689)  spot VMs 4.0  od VMs 0.0
+  sc1 n=300    DF=2.0: D=7181 Dspot=6955 max spot queue 6907 (x1.1 = 7598)  spot VMs 2.0  od VMs 0.0
+  sc2 n=100    DF=0.5: D=598 Dspot=373 max spot queue 371 (x1.1 = 408)  spot VMs 9.0  od VMs 2.1
+  nohib n=300  DF=0.5: D=1795 Dspot=1569 max spot queue 1565 (x1.1 = 1722)  spot VMs 8.0  od VMs 0.0
+  nohib n=300  DF=1.0: D=3590 Dspot=3365 max spot queue 3354 (x1.1 = 3689)  spot VMs 4.0  od VMs 0.0
+  nohib n=300  DF=2.0: D=7181 Dspot=6955 max spot queue 6907 (x1.1 = 7598)  spot VMs 2.0  od VMs 0.0
+  nohib n=100  DF=0.5: D=598 Dspot=373 max spot queue 371 (x1.1 = 408)  spot VMs 9.0  od VMs 2.1
+  nohib n=100  DF=1.0: D=1197 Dspot=972 max spot queue 966 (x1.1 = 1063)  spot VMs 4.7  od VMs 0.0
+  nohib n=100  DF=2.0: D=2394 Dspot=2168 max spot queue 2121 (x1.1 = 2334)  spot VMs 2.0  od VMs 0.0
+
+wrote C:\Users\Shrike\AppData\Local\Temp\claude\C--my-folder-projects-Improvement-on-Burst-HADS--claude-worktrees-claude-md-review-status-325adb\eb9e3acb-8c59-4ea0-9e21-35fc4839a80b\scratchpad\diag_hads_misses.json
