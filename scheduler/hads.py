@@ -291,10 +291,19 @@ class HADS:
     # ------------------------------------------------------------------
 
     def _vm_makespan_static(self, tasks, vm):
+        # A task's planned duration carries (1 + checkpoint_overhead),
+        # because VM.start_next_if_free charges exactly that on every
+        # execution and VM.estimate_finish_time mirrors it. Planning
+        # without it packed each queue against Dspot (spot) or D
+        # (on-demand) in units execution never delivers: the queue then
+        # ran 10% past its planned end, and wherever 10% of the planned
+        # end exceeds the D - Dspot migration margin, its tail finished
+        # after D on a VM that was never interrupted. BurstHADS's planner
+        # had the same omission and is corrected identically.
         cores = [0.0] * vm.vcpu_count
         for t in tasks:
             idx = cores.index(min(cores))
-            cores[idx] += t.exec_time / vm.speed
+            cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
         return max(cores) if cores else 0.0
 
     # ------------------------------------------------------------------

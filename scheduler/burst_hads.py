@@ -219,11 +219,18 @@ class BurstHADS:
         pack multiple tasks onto one multi-core VM concurrently
         instead of treating every VM, no matter how many vCPUs it
         has, as a single sequential worker.
+
+        Each task's planned duration carries (1 + checkpoint_overhead).
+        VM.start_next_if_free charges that factor on every execution and
+        VM.estimate_finish_time mirrors it; a planner that leaves it out
+        judges Dspot and D in units execution never delivers, so every
+        queue it packs runs 10% past its planned end. HADS's planner had
+        the same omission and is corrected identically.
         """
         cores = [0.0] * vm.vcpu_count
         for t in tasks:
             idx = cores.index(min(cores))
-            cores[idx] += t.exec_time / vm.speed
+            cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
         return max(cores) if cores else 0.0
 
     def _solution_task_finish_times(self, solution):
@@ -232,7 +239,10 @@ class BurstHADS:
         via the same list-scheduling model as _vm_makespan_static but
         keeping each task's own finish time instead of collapsing to
         the VM's overall makespan. Used by proactive burst allocation
-        to find which tasks are projected to blow Dspot.
+        to find which tasks are projected to blow Dspot. Carries the
+        checkpoint overhead for the same reason _vm_makespan_static
+        does, and so that it is comparable with _baseline_finish, which
+        always did.
         """
         vm_map  = {vm.id: vm for vm in self.all_vms}
         buckets = {}
@@ -250,7 +260,7 @@ class BurstHADS:
             cores = [0.0] * vm.vcpu_count
             for t in tasks:
                 idx = cores.index(min(cores))
-                cores[idx] += t.exec_time / vm.speed
+                cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
                 finish[t] = cores[idx]
         return finish
 
