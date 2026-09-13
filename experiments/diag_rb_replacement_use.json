@@ -1,0 +1,7505 @@
+{
+ "seeds": 10,
+ "rows": [
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 886.2167164846906,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 39,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 741.8276917950166,
+    "steal": 2546.2988604489474,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1322.75,
+   "first_hib": 106.5563053949155
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1002.9411764705882,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 43,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1991.8344126269642,
+    "steal": 1830.4009334809407,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.726414185931296
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 436.6,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 6,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 269.8399506595702,
+    "steal": 3172.400000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2680.7000000000007,
+   "first_hib": 213.112610789831
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 472.45,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 23,
+    "steal": 23,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1395.4388687614653,
+    "steal": 2536.320965652475,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 15.452828371862593
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 408.2941176470589,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 18,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1709.4592849986889,
+    "steal": 1738.5499999999997,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.2703691789071388
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 493.87864317277376,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2329.8588246688664,
+    "steal": 507.1,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 22.86903717331808
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 520.6707033507425,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 45,
+    "steal": 5,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1689.4883461905526,
+    "steal": 449.35,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 41.18845642769804
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 375.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 3,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 291.2501952312757,
+    "steal": 2528.3500000000004,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 17.613547622147422
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 434.17647058823536,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3565.6500000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3565.6500000000005,
+   "first_hib": 358.61446940483074
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 31,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 624.6403744260681,
+    "steal": 2826.2861226464684,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1806.7387735353168,
+   "first_hib": 117.9586477605584
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 444.40000000000003,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 20,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1393.520751225617,
+    "steal": 2625.15,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.5407383578142776
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 34,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1409.0342928539224,
+    "steal": 1941.9339860063187,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 876.7,
+   "first_hib": 45.73807434663616
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3308.8,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3308.8,
+   "first_hib": null
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 562.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 10,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 92.479698222303,
+    "steal": 3359.4000000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3268.6500000000005,
+   "first_hib": 235.9172955211168
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 485.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 22,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1255.0460188885963,
+    "steal": 1637.730976125127,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 841.3309761251269,
+   "first_hib": 69.67024403128173
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 540.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 23,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1228.920447133348,
+    "steal": 2566.3,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 15.864245239589351
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 581.0967399014796,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 33,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1517.2762351076776,
+    "steal": 853.4665421037369,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 853.4665421037369,
+   "first_hib": 53.27815269745775
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 419.2628283994151,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 44,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2765.811252959457,
+    "steal": 341.9628500553526,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.863207092965648
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 11,
+    "steal": 23,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 360.91750677182154,
+    "steal": 2653.127872818812,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2231.3500000000004,
+   "first_hib": 164.75382571079217
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 438.0588235294118,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 6,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 655.1507809251027,
+    "steal": 2580.6000000000004,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1533.4000000000003,
+   "first_hib": 70.45419048858969
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 585.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 13,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1465.3915024512344,
+    "steal": 2396.3500000000004,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.0814767156285552
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 23,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 587.3669179459085,
+    "steal": 2681.0463422671646,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1456.4,
+   "first_hib": 91.47614869327232
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 446.6,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 21,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1732.9495518941033,
+    "steal": 721.2404880625635,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 34.83512201564086
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 440.01638588398976,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 38,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1575.3108146473025,
+    "steal": 1483.9,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.932122619794676
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 505.6433382673889,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 28,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 790.3218389049077,
+    "steal": 2192.6297502783805,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1525.0778728188118,
+   "first_hib": 82.37691285539609
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 458.11764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 6,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 689.7503904625514,
+    "steal": 2715.350000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 35.227095244294844
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 507.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 14,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 527.6351226768027,
+    "steal": 2515.3619522502536,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1748.2809761251267,
+   "first_hib": 139.34048806256345
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 475.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 14,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1029.3510353626139,
+    "steal": 2570.7000000000007,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 31.728490479178703
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 404.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 6,
+    "steal": 23,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 158.4078993535472,
+    "steal": 2787.896200924905,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2074.6000000000004,
+   "first_hib": 179.30723470241537
+  },
+  {
+   "sc": "sc1",
+   "n": 100,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 452.65,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 27,
+    "steal": 10,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1303.0286571659635,
+    "steal": 1169.3000000000002,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 932.8000000000001,
+   "first_hib": 58.9793238802792
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 583.143426521305,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1613.381796615313,
+    "steal": 261.24565478054967,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 35.86144694048307
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 586.85,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 38,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1287.851554094707,
+    "steal": 597.85,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 11.79586477605584
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 579.7,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 45,
+    "steal": 2,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2025.4436276840518,
+    "steal": 42.5550924337918,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 10.655630539491549
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 574.562565679883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 46,
+    "steal": 0,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1086.2349106336446,
+    "steal": 0.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.7726414185931296
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 591.7715640861129,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 38,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1868.0109203464162,
+    "steal": 317.7074773148401,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.054073835781427756
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 540.1566579131128,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 0,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1182.4389883920992,
+    "steal": 0.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 4.573807434663616
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 578.6000000000001,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 33,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3080.1874152698683,
+    "steal": 42.525655062566116,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 6.967024403128172
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 596.161646776751,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 41,
+    "steal": 3,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 790.7673901431035,
+    "steal": 165.86484100822798,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.586424523958935
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 559.35,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 42,
+    "steal": 0,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 825.3683678657034,
+    "steal": 0.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 8.237691285539608
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 597.4573218332296,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 36,
+    "steal": 9,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 733.2464626916839,
+    "steal": 1265.3443311850224,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.5227095244294837
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1754.595084483592,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 97,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5557.406091882574,
+    "steal": 2895.34962631121,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2313.1999065778023,
+   "first_hib": 159.8344580923733
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1741.3731983003318,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 115,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7354.368720204085,
+    "steal": 1670.6257001107058,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 11.589621278896947
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1724.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 84,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7604.121212847487,
+    "steal": 2468.4214641876906,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1526.8160981407682,
+   "first_hib": 104.50536604692262
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1730.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 119,
+    "steal": 35,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6369.533437116403,
+    "steal": 4392.3,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 23.79636785938403
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1620.9942857248316,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 133,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3646.8599097109914,
+    "steal": 2689.612713842327,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1740.75,
+   "first_hib": 123.56536928309416
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1158.235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 23,
+    "steal": 75,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2566.6505856938275,
+    "steal": 8437.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 897.6000000000001,
+   "first_hib": 52.84064286644227
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1695.294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 74,
+    "steal": 57,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5661.302214353473,
+    "steal": 7424.245751540907,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.8111075367214166
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1783.432774427075,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 148,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7931.412519652545,
+    "steal": 2345.7500000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1366.7500000000002,
+   "first_hib": 68.60711151995426
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1131.2390452605148,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 79,
+    "steal": 10,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2383.8027198306963,
+    "steal": 1171.4913095610993,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 993.5684821708245,
+   "first_hib": 71.72289388096614
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1168.022680277818,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 99,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2334.6497088012525,
+    "steal": 1070.8500000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 23.59172955211168
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1090.9411764705885,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 41,
+    "steal": 85,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1730.2106995901672,
+    "steal": 9631.178401007584,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 6873.35,
+   "first_hib": 537.9217041072462
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1491.4705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 95,
+    "steal": 41,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4828.42941397399,
+    "steal": 5633.0831603029765,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2269.8331603029756,
+   "first_hib": 176.93797164083765
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 863.8235294117648,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 55,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3389.2431986251368,
+    "steal": 886.6267567996904,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 13.934048806256344
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1155.5394060715923,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 75,
+    "steal": 9,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 754.3117978366238,
+    "steal": 854.779682016456,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.17284904791787
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1106.4705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 71,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 419.70088893737227,
+    "steal": 539.2605972520864,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 16.475382571079216
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 426.9972752267796,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 38,
+    "steal": 18,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1232.1369427584896,
+    "steal": 2466.75,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.045419048858967
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 490.85562556037223,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 37,
+    "steal": 32,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 751.4557411509337,
+    "steal": 3251.6747249427926,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2009.7000000000003,
+   "first_hib": 143.44578776193228
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 566.4,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 50,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1232.7781700322885,
+    "steal": 2432.329217240253,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1169.3000000000002,
+   "first_hib": 47.18345910422336
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1656.4705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 115,
+    "steal": 60,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3526.0846842305864,
+    "steal": 6597.3672369128735,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3191.1000000000004,
+   "first_hib": 247.1307385661883
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1096.764705882353,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 21,
+    "steal": 68,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2078.326171387654,
+    "steal": 8895.15,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1720.4,
+   "first_hib": 105.68128573288455
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 527.6202740883166,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 40,
+    "steal": 18,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1642.3662454042537,
+    "steal": 1705.6426645383672,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 27.86809761251269
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1113.1387768500667,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 65,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1568.6200321466474,
+    "steal": 1495.662485377216,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 6.34569809583574
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1294.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 53,
+    "steal": 61,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4188.824507353705,
+    "steal": 8185.100000000003,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.244430146885666
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1902.3529411764707,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 57,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2616.947611661484,
+    "steal": 8963.957545091613,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3640.4500000000003,
+   "first_hib": 274.42844607981704
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1860.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 20,
+    "steal": 70,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1878.3410121227762,
+    "steal": 8323.785856750765,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 5331.742928375381,
+   "first_hib": 418.02146418769047
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1931.4705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 33,
+    "steal": 67,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3285.0631060878422,
+    "steal": 8026.700000000002,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1458.6,
+   "first_hib": 95.18547143753612
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1226.1764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 37,
+    "steal": 78,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1763.93920425484,
+    "steal": 8952.657493523662,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 6089.599999999999,
+   "first_hib": 494.2614771323766
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1239.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 14,
+    "steal": 77,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1567.252342775308,
+    "steal": 9423.699999999999,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2483.8,
+   "first_hib": 211.3625714657691
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1320.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 71,
+    "steal": 10,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 907.9206741238679,
+    "steal": 830.0022982550495,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 32.95076514215843
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 447.11764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 8,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 888.9923267517523,
+    "steal": 2310.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 14.090838097717935
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1902.3529411764707,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 58,
+    "steal": 54,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3312.7198619690193,
+    "steal": 6273.562555724793,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2807.2107320938453,
+   "first_hib": 209.01073209384523
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1866.7647058823532,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 53,
+    "steal": 65,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3931.335943621126,
+    "steal": 7875.449999999996,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1117.6000000000001,
+   "first_hib": 47.59273571876806
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1088.918757020931,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 73,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2884.2862024946226,
+    "steal": 724.4066168414947,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 21.311261078983097
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1145.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 66,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1253.7722159829295,
+    "steal": 142.78018669618803,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.5452828371862593
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1122.6470588235295,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 83,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2628.6343174805866,
+    "steal": 1348.2149546296803,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.10814767156285551
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1184.654448043817,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 86,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1326.8312597515824,
+    "steal": 378.95000000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 9.147614869327231
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 585.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 31,
+    "steal": 26,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1629.0675112523436,
+    "steal": 2676.7090681638488,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.21629534312571103
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1504.8037632285293,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 94,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1855.1625195031647,
+    "steal": 1329.5204495849582,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 18.295229738654463
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1520.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 124,
+    "steal": 11,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2256.4505467611098,
+    "steal": 1009.3632336829895,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 42.622522157966195
+  },
+  {
+   "sc": "sc2",
+   "n": 100,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1639.825819584882,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 54,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1358.2628386726858,
+    "steal": 1180.4023400779247,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.0905656743725185
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1763.235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 104,
+    "steal": 62,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3334.2126144580484,
+    "steal": 7145.607927321928,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3962.2000000000007,
+   "first_hib": 319.6689161847466
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1377.184671054695,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 110,
+    "steal": 60,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4923.561551510205,
+    "steal": 6926.811260199271,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 23.179242557793895
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1633.8235294117646,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 8,
+    "steal": 83,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 541.2655857712854,
+    "steal": 10467.74962631121,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 8067.400000000001,
+   "first_hib": 639.3378323694932
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1556.1764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 75,
+    "steal": 70,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4095.584858860076,
+    "steal": 8228.001400221408,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1005.9500000000002,
+   "first_hib": 46.35848511558779
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1200.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 85,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 10607.300000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 10607.300000000001,
+   "first_hib": 1075.8434082144925
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2067.3529411764703,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 53,
+    "steal": 63,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2423.004102125393,
+    "steal": 8304.999999999998,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 4683.8,
+   "first_hib": 353.8759432816753
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1446.1764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 38,
+    "steal": 63,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4267.462253676853,
+    "steal": 8164.199999999998,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.622215073442833
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1646.764705882353,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 78,
+    "steal": 63,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3979.2720917772954,
+    "steal": 7583.852444618208,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1820.5000000000005,
+   "first_hib": 137.21422303990852
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1468.8235294117646,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 86,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 10766.249999999996,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 10766.249999999996,
+   "first_hib": null
+  },
+  {
+   "sc": "sc1",
+   "n": 300,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1098.3500000000001,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 9,
+    "steal": 84,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 817.5679442530694,
+    "steal": 10455.500000000002,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 8654.800000000003,
+   "first_hib": 707.7518865633506
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 404.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 2787.4000000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2787.4000000000005,
+   "first_hib": 310.62158748784924
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 417.3529411764706,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 40,
+    "steal": 6,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1753.5682843844083,
+    "steal": 640.8173555928483,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 18.590997484549657
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 427.05882352941177,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 15,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1202.7293752270934,
+    "steal": 1665.5904880625635,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 34.83512201564086
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 430.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 20,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 468.5100980285266,
+    "steal": 2187.459957172583,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1124.1762795676987,
+   "first_hib": 85.55656989192467
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1728.0818182352382,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 108,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 8877.408026642195,
+    "steal": 83.60429283753808,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 20.901073209384524
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1756.8834097624858,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 159,
+    "steal": 7,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1681.3303803209778,
+    "steal": 723.8796820164561,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 4.759273571876807
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3127.9317156667294,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 215,
+    "steal": 31,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6806.032886063682,
+    "steal": 4180.523928683298,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2979.3500000000004,
+   "first_hib": 215.1686816428985
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3410.0000000000005,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 167,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6438.688280141068,
+    "steal": 3520.911600888031,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1581.6765282423803,
+   "first_hib": 70.77518865633506
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 24,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 487.71484640721644,
+    "steal": 2212.509760113544,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1996.9618208071142,
+   "first_hib": 128.63989372536952
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 390.3792973896502,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 26,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1642.733926672469,
+    "steal": 1144.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 17.613547622147422
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1928.2352941176468,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 139,
+    "steal": 40,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 8711.368655291219,
+    "steal": 4413.790849216375,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 41.80214641876905
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3377.4725556488083,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 206,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2216.455048219972,
+    "steal": 2289.968728065824,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 9.518547143753613
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1760.112443647947,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 144,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4624.179303741934,
+    "steal": 698.8599252622422,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 31.96689161847466
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1777.1221852362187,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 125,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1793.8061488797698,
+    "steal": 214.17028004428215,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 2.3179242557793893
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3154.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 234,
+    "steal": 12,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1034.8310111858027,
+    "steal": 1482.0534473825744,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 827.0034473825743,
+   "first_hib": 49.42614771323767
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1501.1764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 124,
+    "steal": 56,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3945.843229863426,
+    "steal": 7217.650000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 21.13625714657691
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3468.235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 217,
+    "steal": 31,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7630.402952441765,
+    "steal": 3940.1448638890406,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.3244430146885666
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3428.1315744448666,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 238,
+    "steal": 11,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3384.084116443466,
+    "steal": 1302.9403371887188,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 27.4428446079817
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3357.5601517329774,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 215,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 8795.943740431665,
+    "steal": 1745.8698505244843,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1385.8099252622424,
+   "first_hib": 63.93378323694932
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3589.741657884734,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 171,
+    "steal": 10,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2766.057208037352,
+    "steal": 951.9405600885643,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 4.635848511558779
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 427.05882352941177,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 51,
+    "steal": 10,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1970.7529784915027,
+    "steal": 808.9447068882205,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 38.99599734260554
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 567.604456526075,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 34,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1691.9805730146602,
+    "steal": 1013.3498846009823,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.863207092965648
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 404.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 10,
+    "steal": 18,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 632.0351119201509,
+    "steal": 2467.3,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1614.25,
+   "first_hib": 128.30557355148022
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 423.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 43,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1608.4059543562544,
+    "steal": 1018.4760256250479,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 22.86903717331808
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2717.6470588235293,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 311,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7384.117245098815,
+    "steal": 3191.439701048969,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1754.5000000000002,
+   "first_hib": 127.86756647389863
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 4847.3823300616095,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 130,
+    "steal": 32,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3714.7885160180604,
+    "steal": 3541.207020233775,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 9.271697023117557
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 434.17647058823536,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3565.6500000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3565.6500000000005,
+   "first_hib": null
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 56,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1127.4517180860041,
+    "steal": 2239.309659329101,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 37.181994969099314
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1782.6470588235293,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 157,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 734.4013334060587,
+    "steal": 637.6641721868426,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 24.713073856618834
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1690.1980970361446,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 144,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3184.0042530568326,
+    "steal": 2576.2,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 10.568128573288455
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 4,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 10.768245140775491,
+    "steal": 3213.1000000000004,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3213.1000000000004,
+   "first_hib": 257.27978745073904
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 453.58823529411774,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 28,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1260.8506637863375,
+    "steal": 2301.2,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 35.227095244294844
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 431.20000000000005,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 15,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1149.0832873230063,
+    "steal": 2370.880976125127,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 841.3309761251269,
+   "first_hib": 69.67024403128173
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 540.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 8,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 568.3859789751081,
+    "steal": 2708.152559135397,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1267.1525591353973,
+   "first_hib": 126.11313978384933
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1781.2666758271203,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 152,
+    "steal": 11,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4575.912692193142,
+    "steal": 1299.3612159722604,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.1622215073442833
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1746.43552843292,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 166,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2100.7211407800005,
+    "steal": 404.8,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 13.72142230399085
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 445.40000000000003,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 6,
+    "steal": 30,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3622.718577458733,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3449.600000000001,
+   "first_hib": 256.61114710296044
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 498.9587256303277,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 50,
+    "steal": 20,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1482.1949768083632,
+    "steal": 1218.2021329807453,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 524.6374407800313,
+   "first_hib": 45.73807434663616
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1794.5009275133307,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 74,
+    "steal": 79,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2453.207451827483,
+    "steal": 9477.007003546258,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 5511.55,
+   "first_hib": 430.337363285797
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1640.294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 88,
+    "steal": 57,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4255.34833425302,
+    "steal": 7018.515038424322,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1841.95,
+   "first_hib": 141.55037731267012
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3308.8,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3308.8,
+   "first_hib": null
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 562.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 21,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 652.1798081307161,
+    "steal": 3001.9000000000005,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1664.3000000000002,
+   "first_hib": 74.36398993819863
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3066.25,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3066.25,
+   "first_hib": null
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 445.17647058823536,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 19,
+    "steal": 23,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 540.0878962484765,
+    "steal": 2846.8,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1533.4000000000003,
+   "first_hib": 70.45419048858969
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 507.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 12,
+    "steal": 26,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 471.06657464601267,
+    "steal": 2727.3974153814333,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1748.2809761251267,
+   "first_hib": 139.34048806256345
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 475.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 4,
+    "steal": 28,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 101.85718495106292,
+    "steal": 3266.8762107463263,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2695.4551182707946,
+   "first_hib": 207.22627956769867
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 585.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 3441.3500000000013,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3441.3500000000013,
+   "first_hib": 513.2222942059209
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 525.9629363886783,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 35,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 926.7769816199365,
+    "steal": 1590.1951683470356,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1343.0374407800314,
+   "first_hib": 91.47614869327232
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2115.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 93,
+    "steal": 66,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4919.058464057516,
+    "steal": 8369.655052639111,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.6488860293771332
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 4583.033839148227,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 247,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5799.487558509496,
+    "steal": 3394.561348754875,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 931.1500000000001,
+   "first_hib": 54.8856892159634
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 456.34873982372153,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 25,
+    "steal": 28,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 465.8852233850713,
+    "steal": 2956.2191689544234,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2182.4,
+   "first_hib": 155.98398937042217
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1362.0588235294117,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 31,
+    "steal": 15,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1581.7311180299598,
+    "steal": 868.6276810801603,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 15.452828371862593
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1788.4109452288744,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 145,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3593.1756841172514,
+    "steal": 1900.102723256237,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1404.7000000000003,
+   "first_hib": 107.58434082144925
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1785.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 156,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3887.4495632018798,
+    "steal": 1130.8000000000002,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 35.38759432816753
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 464.8408133841749,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1533.8864220445041,
+    "steal": 1987.125221579662,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1228.412610789831,
+   "first_hib": 77.99199468521108
+  },
+  {
+   "sc": "sc3",
+   "n": 100,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 843.5729276620327,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 38,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1538.920308527842,
+    "steal": 1143.26384054008,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.726414185931296
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 3774.9475340701197,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 219,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2195.8212040775056,
+    "steal": 2873.3568947651484,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1278.376723691287,
+   "first_hib": 98.85229542647534
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1607.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 19,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2018.6919802552568,
+    "steal": 9053.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 42.27251429315382
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 590.316377206597,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 50,
+    "steal": 15,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1246.8886490547466,
+    "steal": 1073.8045189720574,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 36.11616205418502
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 539.9611295331268,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 64,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 587.6532369774911,
+    "steal": 1591.915700956875,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 17.268877353531682
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1986.4705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 92,
+    "steal": 48,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4282.648721074102,
+    "steal": 5726.617171350153,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1432.2128785126145,
+   "first_hib": 83.6042928375381
+  },
+  {
+   "sc": "sc2",
+   "n": 300,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2992.653391939629,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 164,
+    "steal": 38,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4529.5600964399455,
+    "steal": 4303.28745613165,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 19.037094287507227
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1132.3529411764705,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 93,
+    "steal": 65,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3304.284552839282,
+    "steal": 7447.738710045093,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 4912.05,
+   "first_hib": 385.9196811761086
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1158.235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 61,
+    "steal": 61,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4025.7137838004996,
+    "steal": 6892.7328921689505,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 897.6000000000001,
+   "first_hib": 52.84064286644227
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 582.9454024542508,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 56,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1902.9759754006834,
+    "steal": 1268.4505688314443,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 6.967024403128172
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 589.6818458919411,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 81,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1614.5221203774286,
+    "steal": 613.1753013569536,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.919687742844014
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 98,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2368.370116852509,
+    "steal": 837.1011187867882,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 10.856351830497909
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 591.743340928415,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 56,
+    "steal": 4,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1855.3115113955,
+    "steal": 382.33450745415934,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 20.81038432368138
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 534.8632903797144,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 77,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1321.7737768596367,
+    "steal": 713.786738479544,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.799199468521108
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 459.16061372835804,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 83,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1108.7451572299906,
+    "steal": 1052.775077646683,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 2.108675144675413
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1200.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 85,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 10607.300000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 10607.300000000001,
+   "first_hib": null
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1135.5882352941178,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 160,
+    "steal": 51,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3303.905909505139,
+    "steal": 6653.35,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1701.15,
+   "first_hib": 111.54598490729798
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1514.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 35,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2101.976804373975,
+    "steal": 9311.625551210058,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 5110.050000000001,
+   "first_hib": 384.9167206544407
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1536.764705882353,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 195,
+    "steal": 56,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3706.296191816459,
+    "steal": 5564.621914559483,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1143.3561611700472,
+   "first_hib": 68.60711151995426
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 575.0127341390235,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 54,
+    "steal": 7,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2112.3837597416086,
+    "steal": 428.4936615738806,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.4508423527531877
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 423.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 87,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1569.4459797356908,
+    "steal": 1632.4532688881957,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 5.709084230894104
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 495.7739184713846,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1550.769357111702,
+    "steal": 1664.9843110773504,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1007.7816272920875,
+   "first_hib": 72.23232410837004
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 549.7867748166069,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 80,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 835.580244221792,
+    "steal": 1938.6945975096678,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 34.537754707063364
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1096.764705882353,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 18,
+    "steal": 75,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1793.5402815121995,
+    "steal": 8818.785856750761,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 5331.742928375381,
+   "first_hib": 418.02146418769047
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1514.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 4,
+    "steal": 68,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 180.1729442561308,
+    "steal": 7651.741885750144,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1606.6918857501446,
+   "first_hib": 140.18547143753614
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1643.9133946787138,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 150,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7078.421967432822,
+    "steal": 3190.7200248662693,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1662.6499999999996,
+   "first_hib": 116.98799202781666
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1363.6197102377125,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 139,
+    "steal": 36,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5862.6595858464,
+    "steal": 3853.2649072652057,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 11.589621278896947
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1643.5294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 86,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 10288.85,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 10288.85,
+   "first_hib": 1543.6787247044344
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1666.1764705882351,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 42,
+    "steal": 68,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2853.1985600348144,
+    "steal": 8615.749999999998,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2483.8,
+   "first_hib": 211.3625714657691
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1129.1176470588236,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 12,
+    "steal": 79,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 399.3729295047839,
+    "steal": 10484.099999999997,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 9635.999999999998,
+   "first_hib": 769.8334413088814
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1389.786075806496,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 130,
+    "steal": 48,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4041.7837530463107,
+    "steal": 5504.96531425783,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1705.7926691197258,
+   "first_hib": 137.21422303990852
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1468.8235294117646,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 86,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 10766.249999999996,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 10766.249999999996,
+   "first_hib": null
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1076.058823529412,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 52,
+    "steal": 64,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2561.5605942787424,
+    "steal": 8569.0,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3237.3,
+   "first_hib": 223.09196981459596
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1601.4705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 0,
+    "steal": 84,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 0.0,
+    "steal": 11045.650000000003,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 11045.650000000003,
+   "first_hib": 1539.666882617763
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1698.5294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 53,
+    "steal": 45,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3584.992357233761,
+    "steal": 4841.071612247086,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3542.5068921596344,
+   "first_hib": 274.42844607981704
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1404.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 42,
+    "steal": 67,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2688.6230566657896,
+    "steal": 8062.426123072149,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2807.2107320938453,
+   "first_hib": 209.01073209384523
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1417.0588235294117,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 24,
+    "steal": 51,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1782.4210835380436,
+    "steal": 6273.920942875073,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1307.9709428750723,
+   "first_hib": 92.59273571876807
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1076.0588235294117,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 11,
+    "steal": 84,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 397.7988574703552,
+    "steal": 10098.550000000003,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 9599.7,
+   "first_hib": 771.8393623522172
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1140.7647058823532,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 59,
+    "steal": 63,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3387.4777756969133,
+    "steal": 7994.250000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1720.4,
+   "first_hib": 105.68128573288455
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1815.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 134,
+    "steal": 72,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2788.591479654162,
+    "steal": 8548.549927550728,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2994.7500000000005,
+   "first_hib": 233.97598405563332
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1729.7225481554515,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 100,
+    "steal": 44,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4444.114165932135,
+    "steal": 4415.598685447612,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 23.179242557793895
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1721.1764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 69,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2154.671340310427,
+    "steal": 8760.609582947027,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 5985.100000000001,
+   "first_hib": 467.95196811126664
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1899.1176470588236,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 76,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4803.222665491415,
+    "steal": 3216.4430654660937,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 698.5839404623512,
+   "first_hib": 46.35848511558779
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1423.5294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 58,
+    "steal": 65,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3276.16493098451,
+    "steal": 7904.538057471945,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1526.8160981407682,
+   "first_hib": 104.50536604692262
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1517.3529411764707,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 60,
+    "steal": 66,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2449.5528835125706,
+    "steal": 7523.928838703097,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1695.0288387030962,
+   "first_hib": 166.66970967577402
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1038.4,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 3,
+    "steal": 89,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 73.0949455058925,
+    "steal": 10588.05,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 10588.05,
+   "first_hib": 931.8647624635478
+  },
+  {
+   "sc": "sc3",
+   "n": 300,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1455.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 170,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6172.674033230927,
+    "steal": 3676.509926622447,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1130.8000000000002,
+   "first_hib": 55.77299245364899
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 873.5294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 58,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2101.7859602097587,
+    "steal": 1554.4565886265186,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 13.934048806256344
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 608.5268470877623,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 145,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1666.807042556216,
+    "steal": 1428.704160129476,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 15.839375485688027
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 105,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2207.4935724245142,
+    "steal": 1615.733281965902,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 21.712703660995818
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 953.0803110166721,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 93,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1678.9442621451262,
+    "steal": 1560.047770173258,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 41.62076864736276
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 14,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 746.8875066599742,
+    "steal": 3068.184357301808,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2009.7000000000003,
+   "first_hib": 144.46464821674007
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 562.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 16,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 693.9936199183917,
+    "steal": 2406.6765282423803,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1426.5765282423804,
+   "first_hib": 69.07550941412673
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1100.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 122,
+    "steal": 18,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2173.9055360725183,
+    "steal": 1782.1269043629854,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 6.9016847055063755
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 536.4885748069688,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 70,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1427.1128412987168,
+    "steal": 2138.266737771604,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 11.418168461788207
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1167.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 104,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1520.8238689958016,
+    "steal": 1401.767761749689,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 15.598398937042216
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 818.5294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 186,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2455.393312580945,
+    "steal": 684.8201988913204,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 4.217350289350826
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 507.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 35,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1313.8711792159822,
+    "steal": 2441.218911713045,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 27.86809761251269
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 619.5014736466134,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 93,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1129.436208162286,
+    "steal": 1962.1794636758295,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 31.678750971376054
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1007.267791914624,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 92,
+    "steal": 12,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 547.5238852216689,
+    "steal": 994.2816884951645,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 31.19679787408443
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 884.426227062696,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 101,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1607.2273530876819,
+    "steal": 1585.6146784777138,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 8.434700578701651
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1252.2975046276595,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 53,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1883.9569731245065,
+    "steal": 2967.0308354571102,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 13.803369411012751
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 36,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 708.027608645906,
+    "steal": 2706.480541669658,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 22.836336923576415
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 484.2919418457891,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 57,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1049.9059597886724,
+    "steal": 2515.403011307403,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 43.425407321991635
+  },
+  {
+   "sc": "sc4",
+   "n": 100,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 498.2352941176471,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 41,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 947.8039865606806,
+    "steal": 3198.9425451701004,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1533.4000000000003,
+   "first_hib": 83.24153729472552
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 494.23239353345434,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 35,
+    "steal": 18,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1238.724864102184,
+    "steal": 1662.1354610172345,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 703.4730073090782,
+   "first_hib": 57.51810284555685
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 481.56811072397966,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 39,
+    "steal": 11,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1146.6636619476126,
+    "steal": 985.8920587057016,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.42053341758679924
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 543.5309167833162,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 33,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2313.474886768733,
+    "steal": 1278.4468293541877,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 17.691089259967463
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 577.3843768183553,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 72,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1956.2476336611196,
+    "steal": 937.937772991635,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 6.283802111304096
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 591.0239331033284,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 42,
+    "steal": 11,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2061.489415131142,
+    "steal": 863.19106651218,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 42.76852451716007
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 595.8895443965831,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 77,
+    "steal": 17,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1261.4920034469067,
+    "steal": 1288.622555211202,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 9.515140384823507
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1064.309298136835,
+    "steal": 1015.1286907843536,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 542.315244601687,
+   "first_hib": 50.05381115042175
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 406.3529411764706,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 39,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1938.7996161230212,
+    "steal": 1019.6609915038321,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 29.798673154556592
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 583.5503207041689,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 40,
+    "steal": 10,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 516.4608252359923,
+    "steal": 456.06545110725995,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 12.998665780868514
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 598.4042553191489,
+   "mk": 431.68191921369106,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 61,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1145.364454444767,
+    "steal": 995.0163540348482,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.2877356976552161
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1743.8235294117649,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 237,
+    "steal": 12,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5674.339090111467,
+    "steal": 1340.9375833581112,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 10.352527058259566
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1595.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 318,
+    "steal": 38,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7321.64968685233,
+    "steal": 3578.928543466592,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 17.127252692682315
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1655.5202873845683,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 204,
+    "steal": 47,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4925.986168697379,
+    "steal": 4982.904837951349,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1404.7000000000003,
+   "first_hib": 108.3484861625551
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1747.0588235294117,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 227,
+    "steal": 38,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4980.101839218289,
+    "steal": 3626.3621925482867,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 931.1500000000001,
+   "first_hib": 51.806632060595064
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1052.4681225606269,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1384.2887621272073,
+    "steal": 2114.5788737183393,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1695.3489082500864,
+   "first_hib": 115.0362056911137
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 903.1542438115252,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 104,
+    "steal": 8,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1798.5069076485413,
+    "steal": 979.1889099376538,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 0.8410668351735985
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1756.662033271683,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 228,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7615.982620236111,
+    "steal": 2546.7018088315754,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 20.901073209384524
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1717.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 303,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5533.677015745009,
+    "steal": 3185.5551263737743,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 23.75906322853205
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1818.2352941176473,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 141,
+    "steal": 50,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5755.393417548158,
+    "steal": 5268.919765879557,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 41.80214641876905
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1944.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 411,
+    "steal": 33,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5802.765030326971,
+    "steal": 3609.727988628829,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1117.6000000000001,
+   "first_hib": 47.5181264570641
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 503.41176470588243,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 31,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1304.9600894023347,
+    "steal": 2389.786904605184,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 35.382178519934925
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 540.2941176470588,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 89,
+    "steal": 15,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2029.8947954824955,
+    "steal": 1275.1067239084969,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 12.567604222608193
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1595.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 297,
+    "steal": 18,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5418.235437849908,
+    "steal": 1735.6831528221767,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 23.397598405563333
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1587.5067037221334,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 359,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4109.941287903484,
+    "steal": 2591.101999775293,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 6.326025434026239
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 597.0034414287833,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 42,
+    "steal": 27,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 937.1194464403917,
+    "steal": 3209.4325865861733,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1491.6000000000001,
+   "first_hib": 85.53704903432013
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 891.2155511737277,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 80,
+    "steal": 26,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1773.3293847636273,
+    "steal": 1640.3858018489582,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 19.030280769647014
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 495.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 29,
+    "steal": 19,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 536.5166384478209,
+    "steal": 1826.7895805867195,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1342.9003428168037,
+   "first_hib": 100.1076223008435
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 485.09728624910963,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 43,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1324.169686553591,
+    "steal": 2604.5809011806887,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1639.0000000000005,
+   "first_hib": 59.597346309113185
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1733.1927959563473,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 305,
+    "steal": 39,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7201.174655994315,
+    "steal": 3076.710636012502,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 32.569055491493735
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1624.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 193,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3993.5541319431795,
+    "steal": 2177.3185223624782,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 897.6000000000001,
+   "first_hib": 62.43115297104416
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1459.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 312,
+    "steal": 45,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6486.914080076038,
+    "steal": 5165.606154364451,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1458.0500000000002,
+   "first_hib": 65.13811098298747
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2639.067830238293,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 263,
+    "steal": 40,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5521.992837833678,
+    "steal": 4859.756109055835,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1863.95,
+   "first_hib": 124.86230594208833
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1501.1764705882354,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 78,
+    "steal": 71,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3046.398555914487,
+    "steal": 8382.37437600981,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2979.3500000000004,
+   "first_hib": 216.6969723251102
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2054.411764705882,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 163,
+    "steal": 47,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2713.5204550215176,
+    "steal": 6146.994598713022,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1581.6765282423803,
+   "first_hib": 103.61326412119013
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1688.8235294117649,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 41,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1851.8633217695156,
+    "steal": 9225.15,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 5511.55,
+   "first_hib": 433.3939446502204
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1795.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 32,
+    "steal": 63,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1856.319606638587,
+    "steal": 7810.179584727142,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2595.3265282423804,
+   "first_hib": 207.22652824238025
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2620.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 241,
+    "steal": 33,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1176.4141800535488,
+    "steal": 3543.6102592314483,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1015.171371950269,
+   "first_hib": 46.795196811126665
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2073.823529411765,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 469,
+    "steal": 53,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4299.987021547543,
+    "steal": 5167.673933842871,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 12.652050868052479
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 1125.4187569399996,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 49,
+    "steal": 15,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 549.3385818457248,
+    "steal": 985.4771264815183,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 25.997331561737028
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1196.8085106382978,
+   "mk": 856.7297283427176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 55,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1239.5525469365016,
+    "steal": 1029.4410442690337,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 2.5754713953104322
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2122.3529411764707,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 344,
+    "steal": 34,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7840.926028716022,
+    "steal": 4595.310863680053,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 20.705054116519133
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1329.705882352941,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 173,
+    "steal": 51,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5551.821445027976,
+    "steal": 6203.156783446322,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 34.25450538536463
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1798.8235294117649,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 90,
+    "steal": 71,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3584.5558336361246,
+    "steal": 8355.700187413284,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1361.2628785126144,
+   "first_hib": 83.6042928375381
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2142.5920737539277,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 207,
+    "steal": 39,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4658.244945431878,
+    "steal": 4498.970004185019,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1458.6,
+   "first_hib": 95.0362529141282
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1620.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 164,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3916.265057044403,
+    "steal": 8621.97118860102,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1668.15,
+   "first_hib": 130.27622196597494
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1555.7426132380947,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 121,
+    "steal": 79,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3245.0017077096227,
+    "steal": 9765.044708582895,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3497.4499999999994,
+   "first_hib": 249.72461188417665
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1785.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 141,
+    "steal": 75,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5774.664855997016,
+    "steal": 9200.047236750926,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 41.410108233038265
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1430.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 122,
+    "steal": 67,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3054.676207726146,
+    "steal": 8301.989000690333,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1474.0,
+   "first_hib": 68.50901077072926
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 12,
+    "steal": 30,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 270.29819101459725,
+    "steal": 3255.5372251463323,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2815.6159388333913,
+   "first_hib": 230.0724113822274
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1248.8235294117649,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 78,
+    "steal": 16,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1073.3867624493491,
+    "steal": 2213.9258490235447,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.682133670347197
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2357.9269051556366,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 271,
+    "steal": 30,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1058.0017526248562,
+    "steal": 3401.776543014659,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1438.8000000000002,
+   "first_hib": 93.59039362225333
+  },
+  {
+   "sc": "sc4",
+   "n": 300,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2284.9812076323333,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 232,
+    "steal": 56,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4057.993256036013,
+    "steal": 5399.522779025916,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 25.304101736104958
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 507.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 15,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 606.7167678020671,
+    "steal": 2801.037317416751,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1401.8373174167514,
+   "first_hib": 70.76435703986985
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 475.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 51,
+    "steal": 23,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1340.2513206899077,
+    "steal": 2330.335767740619,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 25.135208445216385
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 478.8235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 17,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 73.25495182854587,
+    "steal": 2679.7659302352945,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2420.6854410319206,
+   "first_hib": 200.215244601687
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 516.9850426460113,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 23,
+    "steal": 25,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 654.1824410902891,
+    "steal": 2935.2695724982195,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1533.4000000000003,
+   "first_hib": 119.19469261822637
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1137.7903255855135,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 32,
+    "steal": 14,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 792.5398087027814,
+    "steal": 1180.8948203617326,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 927.7610280691579,
+   "first_hib": 51.994663123474055
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1430.0,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 53,
+    "steal": 9,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2119.5810513501674,
+    "steal": 289.54256036005336,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 5.1509427906208645
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 585.5882352941176,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 13,
+    "steal": 26,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 475.23047637348714,
+    "steal": 3268.973957200087,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2147.2000000000003,
+   "first_hib": 171.07409806864027
+  },
+  {
+   "sc": "sc5",
+   "n": 100,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 2393.6170212765956,
+   "mk": 1384.7058823529412,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 58,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1276.6349162943268,
+    "steal": 1046.4351217896808,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 38.06056153929403
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1622.6257515070592,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 193,
+    "steal": 35,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6472.493116967255,
+    "steal": 3961.951988701519,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2290.3244541250438,
+   "first_hib": 172.5543085366706
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1780.1809952422198,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 193,
+    "steal": 24,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4580.379052689907,
+    "steal": 2094.6179293724927,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 1.261600252760398
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1633.8235294117646,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 138,
+    "steal": 35,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 9184.711268652789,
+    "steal": 3899.808283234025,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 660.7404880625636,
+   "first_hib": 53.07326777990241
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1749.696033164516,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 213,
+    "steal": 21,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5801.032571845138,
+    "steal": 2513.151292789784,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 18.851406333912294
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1740.1882872278106,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 161,
+    "steal": 47,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3760.6030071952873,
+    "steal": 4668.0809167091065,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1817.6781615478803,
+   "first_hib": 150.16143345126528
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1689.3254660948262,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 139,
+    "steal": 33,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 7213.886565695473,
+    "steal": 3894.0000000000014,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1398.1000000000001,
+   "first_hib": 89.3960194636698
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1763.2352941176473,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 150,
+    "steal": 30,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6480.907471259905,
+    "steal": 3200.4314767156284,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1614.8000000000002,
+   "first_hib": 128.30557355148025
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1508.00625306048,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 294,
+    "steal": 39,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5898.154230469126,
+    "steal": 2788.3212847874133,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 28.545421154470528
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2060.8823529411766,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 85,
+    "steal": 47,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4257.268781123443,
+    "steal": 5677.119220317213,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1660.9896066794145,
+   "first_hib": 106.14653555980482
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2018.8235294117649,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 211,
+    "steal": 41,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5534.062429333276,
+    "steal": 4397.944165889567,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 37.70281266782459
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1780.24820211542,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 232,
+    "steal": 22,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1691.4195762702855,
+    "steal": 2235.4078713296003,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 38.995997342605556
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 0.5,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 1795.2127659574471,
+   "mk": 1692.0588235294117,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 220,
+    "steal": 28,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5912.873973319765,
+    "steal": 2283.3073707728145,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 3.8632070929656495
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1395.5579200424495,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 84,
+    "steal": 53,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2754.486549944966,
+    "steal": 6025.16510922435,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3591.392242321821,
+   "first_hib": 300.32286690253056
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1798.8235294117649,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 104,
+    "steal": 73,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3116.05127153978,
+    "steal": 9369.800000000001,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2634.5000000000005,
+   "first_hib": 178.7920389273396
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2251.764705882353,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 65,
+    "steal": 75,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3736.49821456023,
+    "steal": 9391.541901461402,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 3370.9500000000003,
+   "first_hib": 256.6111471029605
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2394.1176470588234,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 233,
+    "steal": 45,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6428.056923941135,
+    "steal": 4747.211969587463,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 838.8797367690452,
+   "first_hib": 57.090842308941056
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1963.8235294117646,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 106,
+    "steal": 60,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 4155.438382804023,
+    "steal": 6875.857698225871,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 4506.150000000001,
+   "first_hib": 345.1086170733412
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 2109.411764705882,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 269,
+    "steal": 29,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5676.896711186682,
+    "steal": 3534.549078858535,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 2.523200505520796
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 3010.1028515167086,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 131,
+    "steal": 50,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1147.3108828436734,
+    "steal": 4411.278340217998,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1457.4332710518686,
+   "first_hib": 77.99199468521111
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 1.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 3590.4255319148942,
+   "mk": 1902.3529411764707,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 129,
+    "steal": 46,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3340.199756945817,
+    "steal": 4560.034749522163,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 7.726414185931299
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 2,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1827.9411764705883,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 32,
+    "steal": 50,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3274.4829355094953,
+    "steal": 5861.322284478438,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2526.6861422392194,
+   "first_hib": 212.29307111960964
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 3,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1779.4117647058824,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 161,
+    "steal": 64,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3726.1065061722493,
+    "steal": 7188.4107560332095,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1452.5262795676986,
+   "first_hib": 75.40562533564918
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 0,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1468.8235294117646,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 16,
+    "steal": 86,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 525.2366625383756,
+    "steal": 10195.695316228637,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 8584.949999999999,
+   "first_hib": 690.2172341466824
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 1,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1921.7647058823527,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 253,
+    "steal": 39,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 5141.870002965504,
+    "steal": 4565.419182084468,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 5.046401011041592
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 4,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1643.5294117647059,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 19,
+    "steal": 74,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 623.8164702095331,
+    "steal": 8339.832935220245,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 7173.191467610122,
+   "first_hib": 600.6457338050611
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 5,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1545.922698513697,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 71,
+    "steal": 81,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 2387.730057439412,
+    "steal": 9732.140983326113,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 4715.15,
+   "first_hib": 357.5840778546792
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 6,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1737.3529411764707,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 55,
+    "steal": 75,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1964.8014291204613,
+    "steal": 9996.616871600267,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 6289.250000000003,
+   "first_hib": 513.222294205921
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 7,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 1873.235294117647,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 111,
+    "steal": 43,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 3451.144527592427,
+    "steal": 4755.999051002262,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 1615.9317908535688,
+   "first_hib": 114.18168461788211
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 8,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2667.876781590152,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 48,
+    "steal": 38,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 1720.155383590034,
+    "steal": 4284.084461085199,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 2136.7500000000005,
+   "first_hib": 155.98398937042222
+  },
+  {
+   "sc": "sc5",
+   "n": 300,
+   "df": 2.0,
+   "seed": 9,
+   "ok": true,
+   "error": null,
+   "D": 7180.8510638297885,
+   "mk": 2073.7265208015606,
+   "n_preempt": 3,
+   "arrivals": {
+    "rescue": 127,
+    "steal": 13,
+    "rebalance": 0,
+    "untagged": 0
+   },
+   "busy": {
+    "rescue": 6071.314193363434,
+    "steal": 868.6276810801602,
+    "rebalance": 0.0,
+    "untagged": 0.0
+   },
+   "busy_pre_hib": 0.0,
+   "first_hib": 15.452828371862598
+  }
+ ]
+}
