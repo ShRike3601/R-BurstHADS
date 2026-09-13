@@ -21,6 +21,9 @@ AWS spot / burstable / on-demand fleets under hibernation:
 - **R-BurstHADS** — our extension. Adds deadline-aware preemptive and
   reactive spot provisioning on top of an unmodified Burst-HADS.
 
+Reference implementation for both baselines: github.com/luanteylo/hads_
+(`control/scheduler/CCScheduler.py`, `IPDPS.py`, `input/*/env.json`).
+
 Target output is a paper. Owner is a final-year student; the supervisor
 wants many comparison figures and tables.
 
@@ -32,14 +35,15 @@ wants many comparison figures and tables.
 2. **Fix specifications, not outcomes.** Every change must be defensible
    as restoring a stated formula, removing a dimensional error, or
    removing an asymmetry between our scheduler and the baselines — never
-   as "this made the number better." Three separate fixes moved numbers
-   in our favour; each one has a written justification in the code
-   comments that does not reference the result.
+   as "this made the number better." When two principled fixes exist,
+   choose between them before seeing their results (fixes 11 and 12 were
+   decided that way) and keep the other as a recorded sensitivity.
 3. **Measure before asserting.** Hypotheses about why something happened
-   get tested with a diagnostic, not written up as findings. Two
-   confidently stated hypotheses have turned out flatly wrong:
-   `MAX_VMS_PER_EVENT` binding (`cap=10` and `cap=40` are identical), and
-   sc1's cost premium being Theorem 1 not pricing idle time (Open items).
+   get tested with a diagnostic, not written up as findings. Confidently
+   stated hypotheses that turned out wrong: `MAX_VMS_PER_EVENT` binding;
+   sc1's premium being unpriced idle time; HADS's misses being a result
+   (fix 8); Burst-HADS's residual misses being a property (fix 11).
+   Unexplained misses have been a bug every time so far.
 4. **Verify before reporting.** A stale staged copy of `metrics.py` once
    nearly produced a reported 31-point cost inflation that did not
    exist. This file once pinned post-fix numbers to a pre-fix
@@ -53,6 +57,8 @@ main.py                       VM pools, task generation, deadline formula,
 models/vm.py                  VM state, billing intervals, credits,
                               start_next_if_free (multi-core dispatch)
 models/task.py                exec_time, checkpointing, baseline_mode
+models/limits.py              instance limits (fix 12), LaunchCounter,
+                              NoFeasibleSchedule
 metrics/metrics.py            makespan, deadline_misses, total_cost
 simulation/events.py          TaskComplete / Hibernation / Termination
 simulation/resume_event.py    hibernated -> idle, restarts billing
@@ -62,25 +68,26 @@ policies/work_stealing.py     Algorithm 5
 scheduler/hads.py             baseline 1 (greedy, no ILS)
 scheduler/burst_hads.py       baseline 2 (ILS, Algorithm 4, Dspot)
 scheduler/r_burst_hads.py     ours (Theorem 1/2, select_vm tiers)
-experiments/checkpoint.py     small parallel sweep: --df --seeds --tag --variant
+experiments/checkpoint.py     5-cell parallel sweep: --df --seeds --tag --variant
 experiments/variants.py       counterfactual patches: measure a fix before making it
+experiments/variant_sweep.py  the full grid under a variant, vs a base sweep file
 experiments/dynamic_comparison.py   the full sweep: plan / run / summarize
 experiments/sweep_analysis.py       sweep aggregates + check against checkpoints
 experiments/sweep_*_<fp>.*    full-sweep results, one set per code fingerprint
-experiments/diag_*.py         diagnostics behind fixes 8-10 and the sc1 decision
-experiments/probe_grid.py     deadline-tightness probe used to choose the sweep grid
+experiments/diag_*.py         diagnostics behind fixes 8-11 and the sc1 decision
+experiments/probe_grid.py     deadline-tightness probe (pre-fix-8)
 experiments/billing_audit.py  3 billing policies on one config
 experiments/template_ab.py    forced instance type x VM-count cap A/B
 _fix_scratch/                 pre-change backups for fixes 1-7 (git from fix 8)
 paper/                        IEEE paper, technical report, trace report -- ALL PRE-FIX
 ```
 
-**Version control.** This folder is its own git repo (branch `main`,
-first commit 2026-09-13), separate from the parent `C:\my folder\projects`
-repo, which tracks the old MD_Burst_HADS and pushes to `MD_Burst_Hads`.
-There is **no remote**: history protects against overwrites, not against
-losing the disk. Every checkpoint and sweep result file is committed; they
-are the evidence trail for every number below.
+**Version control.** This folder is its own git repo (branch `main`),
+separate from the parent `C:\my folder\projects` repo, and is pushed to
+the **private** GitHub repo `ShRike3601/R-BurstHADS`. Every checkpoint and
+sweep result file is committed. Pushing needs GitHub's "block command line
+pushes that expose my email" setting off, because commits carry the
+owner's address.
 
 A Claude Code desktop session started from the parent folder runs in a
 worktree of the parent repo, where Write/Edit refuse every file in this
@@ -90,17 +97,36 @@ folder. Start sessions in this folder.
 
 - `speed` is **per core**. Whole-machine throughput is
   `speed * vcpu_count`. Anything dividing a rate by `speed` alone is a
-  bug — that exact error has now been found and fixed in three places
-  (Equation 8's WRR weight, `spot_pool_throughput`, Theorem 1's
-  `c_reactive`).
+  bug — found and fixed in three places (Equation 8's WRR weight,
+  `spot_pool_throughput`, Theorem 1's `c_reactive`).
 - Every finish-time **prediction** must carry `(1 + checkpoint_overhead)`,
-  because execution (`VM.start_next_if_free`) always charges it. Planners
-  that left it out produced every HADS deadline miss (fix 8); R-BurstHADS's
-  own predictors had the same omission (fix 10). The only predictions
-  still without it are the HADS and Burst-HADS `_attempt_ondemand_fallback`
-  deadline tests, where both branches return the same new VM, so it has no
-  effect. The Section 3.4 spare-time margin deliberately uses
+  because execution (`VM.start_next_if_free`) always charges it (fixes 8,
+  10), and must list-schedule a queue in **execution order**, memory
+  descending, because multi-core list scheduling is order-dependent
+  (fix 11). The HADS / Burst-HADS `_attempt_ondemand_fallback` deadline
+  tests still omit the overhead, harmlessly: both branches return the same
+  VM. The Section 3.4 spare-time margin deliberately uses
   `exec_time / speed`, as the paper states it.
+- Eq 9: an infeasible candidate scores 1.0, which is only an upper bound
+  on feasible scores if normalised cost is <= 1, so the normaliser covers
+  every VM the search can use — the spot pool plus the initial solution's
+  on-demand VMs (fix 11).
+- **Instance limits** (fix 12, `models/limits.py`), from the reference:
+  5 on-demand and 5 preemptible instances per type, global 20 / 20;
+  burstable instances count as on-demand; counts are of launches and
+  never decrease. At a limit the primary schedule skips the type and, if
+  no type can take a task, raises `NoFeasibleSchedule` — recorded by the
+  sweep as an **infeasible run**, not an error. Migration at a spent limit
+  places the task on the active VM that would finish it soonest (the
+  reference leaves it unallocated, which would drop it from every metric;
+  launches forced past a limit are counted in `limit_overrides`).
+  R-BurstHADS's own provisioning is limited too. The pool holds
+  `SPOT_COPIES = 3` spot VMs per type, under the limit of 5, so the spot
+  limit binds only on R-BurstHADS's launches.
+- Feasibility is decided by the primary schedule, and the three
+  schedulers' primary schedules hit the limits in exactly the same runs:
+  infeasibility does not separate them. Deadline misses in feasible runs
+  do.
 - `PER_CORE_SPEED` in `main.py` is the single source for speeds. Do not
   hardcode a speed anywhere.
 - Deadline: `D = DF * DEADLINE_SLACK * ideal_makespan(n)`, floored at
@@ -112,18 +138,19 @@ folder. Start sessions in this folder.
 - Billing is one rule: launch to genuine shutdown. `total_cost()`
   measures the true simulation end;
   `TaskCompleteEvent._release_fleet_if_done()` terminates every surviving
-  VM (hibernated ones included, or they resume post-makespan and restart
-  the meter) when the last task completes.
+  VM (hibernated ones included) when the last task completes.
 - A burstable VM holds **exactly one task at a time**, in both baseline
   and burst mode. Verified against the paper's pseudocode.
 - Table 9 scenarios: `lambda_h = kh/D`, `lambda_r = kr/D`, for **every**
-  spot VM, including those launched mid-run (fix 9).
+  spot VM, of every type, including those launched mid-run (fix 9).
   sc1(1,0) sc2(5,0) sc3(1,5) sc4(5,5) sc5(3,2.5).
-- Theorem 1 reads each VM's **declared** per-type λ (`main.py`), not the
-  scenario's kh/D, so it makes the same decision in every scenario: one
-  replacement per m5.xlarge, three in all.
-- The on-demand pool is unlimited, so any deadline above the longest task
-  can be bought, and deadline misses are rare (Open items).
+- **Declared per-type hibernation rates** (`main.py`) are not used by any
+  Table 9 hibernation process and by no WRR weight (Eq 8 has no risk
+  term). Only R-BurstHADS reads them: Theorem 1 fires for the three
+  m5.xlarge and no c5 VM (P ~0.22 vs ~0.001 over one task), and the
+  template survival filter excludes m5.xlarge but never changes the pick
+  (c5.xlarge leads on capacity per dollar, 130.7 vs 97.1, with or without
+  it). See Open items.
 
 ## Fix history, and why each one mattered
 
@@ -135,262 +162,235 @@ Backups. Fixes 1–4 each have a pre-change copy in `_fix_scratch/`:
 `r_burst_hads.py.pre_tiebreak`, which still holds the pre-6/pre-7
 Theorem 1 code. Their individual effects were never measured and cannot
 be separated in the one checkpoint taken after them. From fix 8 on the
-pre-change state is the parent git commit.
+pre-change state is the parent git commit, and every fix from 8 on was
+measured first as a counterfactual in `experiments/variants.py` and
+adopted only when the adopted code reproduced it bit-for-bit.
 
 Checkpoint tags do not follow fix numbers: `fix1_migcheck` = fix 1,
 `fix2_billing` = fix 2, `fix2b_resume` = fix 3, `checkpoint_df050` /
 `checkpoint_df200` = DF sweep of the post-fix-3 state, `fix3_speed*` =
-fix 4, `fix3b*` = fixes 5–7 together, then `fix8_df*`, `fix9_df*`,
-`fix10_df*` (the current state).
+fix 4, `fix3b*` = fixes 5–7 together, then `fix8_df*` … `fix12_df*`.
 
 1. **Fairness** (`r_burst_hads.py`) — `_select_replacement_vm` (tier 0)
    and `_provision_one_more` (tier 3) tested only `can_fit_task` plus a
    flat deadline check, bypassing `_check_migration` and therefore the
    Section 3.4 spot spare-time rule that Burst-HADS enforces on every
-   spot target. Our own provisioned machines were exempt from a rule the
-   baseline obeyed. Tier 0 now routes through `_check_migration`;
+   spot target. Tier 0 now routes through `_check_migration`;
    `_provision_one_more` writes the rule out explicitly because the VM has
-   not booted and `estimate_finish_time` has no notion of boot delay.
-   **Isolated effect**, measured later on the post-fix-9 code by reverting
-   only these two tests (variant `pre_fix1`,
-   `experiments/fix1_isolation.txt`): R-BurstHADS −0.4% makespan and
-   +0.9% cost on average, 0.0% at DF=2.0 (to one decimal), at most +9.8%
-   cost in one DF=0.5 cell; dominance over Burst-HADS 15/15 either way.
-   The relaxation was worth under 1% on average.
+   not booted. **Isolated effect**, measured on the post-fix-9 code
+   (variant `pre_fix1`, `experiments/fix1_isolation.txt`): −0.4% makespan,
+   +0.9% cost for R-BurstHADS on average; under 1%.
 2. **Billing** (`metrics.py`, `events.py`) — `total_cost` passed
-   `sim_end = makespan()`, which only clamps **open** intervals. A VM
-   killed by the 900s idle timer kept its real end, well past the job.
-   One number, three rules. On the n=40 trace the post-makespan tail was
-   ~75% of every reported cost.
-3. **Post-makespan resume** (`events.py`) — hibernated VMs were skipped
-   at fleet release, stayed resumable, and `ResumeEvent` restarts billing
-   unconditionally. Machines woke after the job ended and were billed for
-   another 900s. It penalised finishing early in exact proportion: HADS
-   6.1%, R-BurstHADS 21.4%.
+   `sim_end = makespan()`, which only clamps **open** intervals. One
+   number, three rules. On the n=40 trace the post-makespan tail was ~75%
+   of every reported cost.
+3. **Post-makespan resume** (`events.py`) — hibernated VMs stayed
+   resumable after the job ended and were billed another 900s. It
+   penalised finishing early: HADS 6.1%, R-BurstHADS 21.4%.
 4. **Per-core speed** (`main.py`) — `speed` scaled with instance size
-   *and* `vcpu_count` did too, so a c5.xlarge was modelled as retiring 4x
-   a c5.large's work for 2x the price. This was the single largest
-   artefact in the study: it was most of the cost advantage over HADS.
-5. **Instance selection tie-break** (`r_burst_hads.py`) — with the double
-   count gone, c5.large and c5.xlarge tie at 130.7 units/$ as they should
-   (same silicon, 2x size, 2x price). A survival-weighted score separated
-   them by 1% using a lambda the module docstring itself calls
-   illustrative, and picked the smaller machine — costing up to 36%
-   makespan, measured. Survival is now a **filter** (drop anything below
-   even odds of surviving to D, which correctly annihilates m5.xlarge at
-   0.0013), then rank on capacity per dollar, ties to the larger machine.
-6. **Theorem 1 normalisation** — `c_reactive` divided rates by `speed`
-   not `speed*vcpu_count`, and the on-demand side had a hardcoded `/2`.
-   Switching the template to c5.xlarge therefore halved the benefit and
-   doubled the cost at once, making the test ~4x harder; preemptive
-   provisioning silently switched off and R-BurstHADS went bit-identical
-   to Burst-HADS at n=60.
-7. **Theorem 1 epsilon** — the docstring states
-   `C_proactive = T_startup * r_s + epsilon`; the code substituted the
-   full cost of running one average task for epsilon, 2.6x the startup
-   term, dominating every decision. An absolute compared against a
-   differential. Restored to the stated form.
-8. **Planner checkpoint overhead** (`hads.py`, `burst_hads.py`; commit
-   `042d1a9`) — both static planners predicted a task at
-   `exec_time / speed`, but execution always charges
-   `× (1 + checkpoint_overhead)` and `estimate_finish_time` already
-   mirrored that. HADS packs spot queues to `Dspot` and on-demand queues
-   to `D`, so each queue ran 10% past its plan, and wherever 10% of the
-   planned end exceeds the `D − Dspot` margin (226.5 s) the tail finished
-   after D on a VM that was never interrupted. This was **all** of HADS's
-   deadline misses (`experiments/diag_hads_misses.*`): at n=300, 55 of 59
-   late tasks never left their planned, never-hibernated spot VM, and
-   their finish equals the overhead-free plan × 1.1 exactly; with no
-   hibernation at all HADS missed 7.5 and 7.2 per run. After the fix HADS
-   misses no deadline anywhere in the full sweep. It removed the only
-   deadline result the study had.
+   *and* `vcpu_count` did too, so a c5.xlarge retired 4x a c5.large's work
+   for 2x the price. The single largest artefact in the study.
+5. **Instance selection tie-break** (`r_burst_hads.py`) — survival is a
+   filter, then rank on capacity per dollar, ties to the larger machine.
+   (In this catalogue the filter never binds; see Key mechanics.)
+6. **Theorem 1 normalisation** — `c_reactive` divided by `speed` not
+   `speed*vcpu_count`, plus a hardcoded `/2`; preemptive provisioning
+   silently switched off.
+7. **Theorem 1 epsilon** — the code substituted the cost of a whole task
+   for epsilon, 2.6x the startup term. Restored to the stated form.
+8. **Planner checkpoint overhead** (`hads.py`, `burst_hads.py`; `042d1a9`)
+   — both static planners left out the overhead execution charges. This
+   was **all** of HADS's deadline misses (`diag_hads_misses.*`: 55 of 59
+   late tasks never left a never-hibernated VM; 7.5 misses per run with
+   no hibernation at all).
 9. **Replacement hibernation parity** (`provisioning_event.py`,
-   `main.py`; commit `d9d18c8`) — Table 9 hibernates every pool spot VM
-   at `kh/D` and resumes it at `kr/D`, whatever its type. Spot VMs
-   R-BurstHADS provisioned mid-run were drawn once at the declared
-   c5.xlarge rate, 0.04/hr, with no resume: 12× to 750× safer than the
-   identical c5.xlarge already in the pool. They now join the same
-   process from their ready time. On the checkpoint cells it cost
-   R-BurstHADS its whole average cost advantage over HADS (−5.4% → +2.4%)
-   and 7 points of makespan.
-10. **R-BurstHADS predictor overhead** (`r_burst_hads.py`; commit
-    `5a6266f`) — `_provision_one_more` and `_vms_needed_for_deadline`
-    predicted without the checkpoint overhead: fix 8's error, in the one
-    scheduler fix 8 did not touch. +0.0% makespan, +0.1% cost on average.
-    The same commit corrected the Theorem 1 comment that recorded unpriced
-    idle time as the cause of the sc1 premium.
+   `main.py`; `d9d18c8`) — spot VMs R-BurstHADS provisioned mid-run were
+   drawn at the declared c5.xlarge rate, 12× to 750× safer than identical
+   instances in the pool. They now join the same Table 9 process. The
+   owner's own `SPOT_RISK_MODE="declared"` choice; the most important
+   fairness hole found.
+10. **R-BurstHADS predictor overhead** (`r_burst_hads.py`; `5a6266f`) —
+    fix 8's omission in `_provision_one_more` / `_vms_needed_for_deadline`.
+    Negligible (+0.1% cost).
+11. **Burst-HADS primary schedule** (`burst_hads.py`; `9292a93`) — every
+    residual Burst-HADS / R-BurstHADS deadline miss in the fixes-1–10
+    sweep came from two defects (`diag_burst_misses.*`,
+    `diag_primary_stages.*`, `diag_ils_feasibility.*`): (a)
+    `_compute_vm_load` / `_solution_task_finish_times` list-scheduled in
+    task-id order while execution runs memory-descending, so the ILS
+    scored, and the proactive burstable step picked "violators" from, a
+    schedule that never runs; (b) Eq 9's normaliser covered spot VMs only
+    while Phase 3 puts on-demand VMs in the solution, so feasible scores
+    exceeded the 1.0 infeasibility sentinel and the ILS chose schedules
+    past D. Fixed by sorting to execution order and normalising over every
+    usable VM. Screened (`sweep_variant_b_*`): order alone is far worse
+    (the broken sentinel then decides everything); either sentinel fix
+    alone halves the misses; both together remove all of them. `norm` was
+    chosen over the reference code's `+inf` on principle before the
+    combined results; `b_order_inf` gives near-identical numbers.
+12. **Instance limits** (`models/limits.py` and all three schedulers;
+    code `93d3b03`, enabled `024ce5b`) — the reference never
+    launches past its per-type limits; an uncapped pool let every
+    deadline be bought and flattened deadline satisfaction into a
+    non-metric. Both markets limited, decided before the screening:
+    on-demand only would have left R-BurstHADS at +4.2% cost vs HADS and
+    0.01 misses per feasible run at DF=0.5, instead of +18.7% and 8.00
+    (`sweep_variant_cap_*`, seeds 0–9). Much of R-BurstHADS's advantage in
+    tight cells came from launching spot capacity past the reference
+    limit.
 
-Fixes 8, 9 and 10 were each measured first as a counterfactual
-(`experiments/variants.py`: `plan_ovh`, `repl_t9`, `rb_ovh`), and the
-adopted code reproduces those checkpoints bit-for-bit.
+Documentation-only corrections (`042bef7`): main.py's claim that
+R-BurstHADS "detects risk via risk-adjusted WRR weights" (no such
+mechanism), the matching lines in `build_vms_burst` and `vm.py`, and
+Theorem 1's docstring horizon (now states what the code computes).
 
 ## Where the result stands
 
-**Full sweep** on commit `5a6266f` (code fingerprint `fb931f79c624`):
-Table 9 sc1–sc5 × n 50/100/200/300 × DF 0.25/0.5/1.0/2.0 × 30 seeds,
-7200 runs, 0 errors (`experiments/sweep_raw_fb931f79c624.jsonl`,
-`sweep_summary_fb931f79c624.*`, `sweep_analysis_fb931f79c624.txt`).
-Seeds 0–9 of the five checkpoint cells reproduce `checkpoint_fix10_df*`
-bit-for-bit (450/450 runs). 80 cells, of which 15 have their deadline set
-by the floor; at n=50, DF 0.25 and 0.5 are the same cell counted twice.
-Percentages are ratios of cell means, averaged over cells.
+**Full sweep on fixes 1–12** (code `024ce5b`, fingerprint `519c868a99f9`,
+results `58a5a9d`): Table 9 sc1–sc5 × n 50/100/200/300 × DF
+0.25/0.5/1.0/2.0 × 30 seeds, 7200 runs, 0 errors
+(`experiments/sweep_raw_519c868a99f9.jsonl`, `sweep_summary_519c868a99f9.*`,
+`sweep_analysis_519c868a99f9.txt`). Seeds 0–9 reproduce the `cap_all`
+screening rows and the checkpoint cells reproduce `checkpoint_fix12_df*`,
+both bit-for-bit. No launch was forced past a limit (`limit_overrides` 0
+in every run).
+
+**Feasibility.** 25 of 80 cells — all of DF=0.25, and n=50 at DF=0.5 —
+have no primary schedule within D and the instance limits, for all three
+schedulers in exactly the same runs (750 infeasible runs each). Every
+figure below is over the **55 feasible cells**: ratios of cell means,
+averaged over cells.
 
 Relative to HADS:
 
-| cells | Burst mk | Burst $ | R mk | R $ | R vs Burst mk | R vs Burst $ |
-|---|---|---|---|---|---|---|
-| all 80 | −12.1% | +34.6% | −26.3% | +5.9% | −17.9% | −19.9% |
-| 65 not floor-bound | −14.4% | +38.5% | −31.3% | +4.1% | −21.5% | −23.7% |
-| DF=0.25 (20) | −0.1% | +21.9% | −1.9% | +15.8% | −1.8% | −4.8% |
-| DF=0.5 (20) | −1.4% | +29.9% | −7.9% | +7.5% | −6.6% | −17.1% |
-| DF=1.0 (20) | −6.7% | +44.0% | −30.2% | +6.8% | −25.6% | −25.5% |
-| DF=2.0 (20) | −40.4% | +42.7% | −65.1% | −6.5% | −37.8% | −32.1% |
+| cells | Burst mk | Burst $ | R mk | R $ | R vs Burst mk | R vs Burst $ | R dominates Burst |
+|---|---|---|---|---|---|---|---|
+| all 55 | −18.2% | +42.1% | −34.0% | +15.4% | −20.3% | −17.5% | 48/55 |
+| DF=0.5 (15) | −3.8% | +38.3% | −10.5% | +33.8% | −6.9% | −3.0% | 9/15 |
+| DF=1.0 (20) | −6.8% | +44.0% | −23.5% | +20.9% | −17.7% | −15.4% | 19/20 |
+| DF=2.0 (20) | −40.5% | +43.0% | −62.2% | −3.8% | −32.9% | −30.6% | 20/20 |
 
-By scenario, R-BurstHADS vs HADS (makespan / cost): sc1 −34.7% / +10.0%,
-sc2 −19.2% / +3.5%, sc3 −33.2% / +4.3%, sc4 −20.8% / +5.5%,
-sc5 −23.6% / +6.3%.
+By scenario, R-BurstHADS vs HADS (makespan / cost): sc1 −45.3% / +9.6%,
+sc2 −28.0% / +29.1%, sc3 −43.7% / −1.3%, sc4 −23.6% / +22.7%,
+sc5 −29.5% / +17.1%.
 
-- R-BurstHADS dominates Burst-HADS on both axes (cell means) in **78 of
-  80** cells, and in 81% of individual seeded runs. The two exceptions
-  are both at DF=0.25 and marginal: sc3 n=100 (makespan −0.6%, cost
-  +0.1%) and sc4 n=300 (makespan +0.1%, cost −10.7%).
-- Burst-HADS costs more than HADS in every cell (+1.1% to +119.1%).
-- R-BurstHADS's cost against HADS ranges from −33.8% (sc3 n=50 DF=2.0) to
-  +37.3% (sc1 n=300 DF=2.0); it is cheaper than HADS in 37% of runs. Its
-  premium shrinks with slack and reverses at DF=2.0.
-- HADS misses no deadline in any cell. Burst-HADS and R-BurstHADS miss a
-  few (Open items).
+- R-BurstHADS dominates Burst-HADS on both axes in 48 of 55 cells and in
+  66% of seeded runs. The 7 exceptions are six DF=0.5 cells and one DF=1.0
+  cell, all at n ≥ 200 in sc2, sc4 and sc5; in the two sc2 cells it is 14%
+  faster but 2% dearer.
+- Burst-HADS costs more than HADS in every cell (+2.9% to +113.5%).
+  R-BurstHADS ranges from −41.8% (sc3 n=50 DF=2.0) to +60.4% (sc4 n=50
+  DF=1.0), and is no more expensive than HADS in 34% of runs.
+- HADS's makespan is 56–164% of D; it exceeds D in 11 cells, all at
+  DF ≤ 1.0.
 
-**The contribution statement this supports:** against Burst-HADS the
-result is robust — R-BurstHADS is both faster and cheaper in 78 of 80
-cells, by about 18% and 20% on average. Against HADS it is a trade:
-about 26% shorter makespan for about 6% more cost on average, with the
-cost gap at +16% under the tightest deadlines, closing as slack grows and
-reversing (−6.5%) at DF=2.0. Burst-HADS's own premium over HADS (+35%) is
-mostly, not entirely, handed back. The makespan gain grows with slack,
-and because the baselines satisfice, part of it is slack HADS leaves
-unused rather than work R-BurstHADS does faster.
+**Deadline misses** (feasible runs):
 
-The 15-cell checkpoint table used before the sweep (R-BurstHADS −34.7% /
-+2.5% vs HADS, 15/15 dominance, no misses anywhere) was a favourable
-subset. Quote the sweep.
+| | runs with a miss | missed tasks (share of all tasks) | misses per run at DF=0.5 |
+|---|---|---|---|
+| HADS | 11.0% | 7629 (2.68%) | 16.91 |
+| Burst-HADS | 7.8% | 5545 (1.95%) | 12.32 |
+| R-BurstHADS | 8.3% | 3425 (1.20%) | 7.58 |
+
+Misses are concentrated at DF=0.5 and worst in sc2 (kh=5, no resume): at
+n=300 HADS misses 98.5 tasks per run (makespan 164% of D), Burst-HADS
+88.0, R-BurstHADS 57.1. At DF=1.0 HADS misses in 4 runs, R-BurstHADS in 12
+(never more than 0.13 per run in a cell), Burst-HADS in none; nobody
+misses at DF=2.0.
+
+**The contribution statement this supports:** Burst-HADS buys −18.2%
+makespan for +42.1% cost over HADS. R-BurstHADS delivers −34.0% for
++15.4% — about 1.9× the makespan benefit at about 37% of the premium —
+dominates Burst-HADS on both axes in 48 of 55 feasible cells, and misses
+the fewest deadline tasks (1.20% against 1.95% and 2.68%), though it
+misses in slightly more runs than Burst-HADS. Its cost against HADS
+depends on slack: +33.8% at DF=0.5, +20.9% at DF=1.0, −3.8% at DF=2.0. It
+does not make any infeasible cell feasible; within the reference's
+limits no scheduler can. Lead with the sweep.
+
+**Subset vs full grid — one honest sentence for the methodology.** The
+five checkpoint cells have misled in both directions: before fixes 11–12
+they gave R-BurstHADS −34.7% / +2.5% against HADS where the full uncapped
+grid gave −26.3% / +5.9%, and on the current code they give −32.6% /
++26.9% (dominance 11/15) where the 55 feasible cells give −34.0% / +15.4%
+(48/55).
 
 Claims that are **dead** and must not reappear: "cheaper and faster than
-everything"; **an average cost advantage over HADS**, or "roughly HADS's
-cost" as a general statement (+5.9% over the sweep, +15.8% at DF=0.25);
-the checkpoint headline (−34.7% / +2.5%, 15/15); "no scheduler misses a
-deadline"; the −41.5% / −5.1% table; "HADS misses deadlines and the
-others do not" (fix 8 artefact — the sweep shows the reverse, on a small
-scale); HADS degrading with more slack; the ILS explanation for HADS's
-misses (HADS has no ILS); sc1's premium being Theorem 1 not pricing idle
-time; a ~33% Burst-HADS premium "in every cell" (+34.6% on average,
-positive in every cell but as low as +1.1%); and the old −52%/−74% figures
-(the speed artefact).
+everything"; any average cost advantage over HADS, or "roughly HADS's
+cost"; the uncapped sweep headline (−26.3% / +5.9%, dominance 78/80, sweep
+`fb931f79c624`) and the framing built on it ("2.2× the makespan benefit at
+about a sixth of the premium"); every checkpoint headline (−41.5% / −5.1%,
+−34.7% / +2.5%, 15/15); "no scheduler misses a deadline"; "HADS misses
+deadlines and the others do not" (fix 8 artefact); Burst-HADS's residual
+misses as a property (fix 11 artefact); risk-aware WRR weighting;
+risk-awareness as a source of benefit; the ILS explanation for HADS's
+misses (HADS has no ILS); sc1's premium being unpriced idle time; and the
+old −52% / −74% figures (the speed artefact).
 
 ## Open items
 
-- **Theorem 1's horizon — owner's decision.** The docstring states
-  `P(v hibernates) = 1 − exp(−λ_v D)`; the code computes it over one
-  average task, `e_avg / speed`. Measured as variant `thm1_D` on the
-  post-fix-9 code (`experiments/thm1_rb_variants.txt`): no change at
-  DF 0.5 / 1.0 or at n=100; at DF=2.0 n=300 R-BurstHADS becomes 27–51%
-  faster and 2–25% cheaper (15-cell average −37.6% makespan, −0.5% cost vs
-  HADS). The effect comes from c5's declared 0.04/hr rate — which
-  `main.py` calls illustrative — crossing the 5% threshold once
-  D > 4616 s (c5.large: 6155 s), after which Theorem 1 can also buy
-  replacements for c5 VMs. In the sweep grid D exceeds 4616 s only at
-  n=200 and n=300, DF=2.0. The stated formula is arguably the consistent
-  one (C_reactive prices all n_v tasks, so P should cover the time they
-  are exposed, not one task), but adopting it moves the result in our
-  favour on an illustrative constant crossing an arbitrary threshold.
-  **Not adopted.** Decide; if adopted, re-run the sweep and disclose the
-  threshold behaviour in the paper.
-- **Deadline satisfaction — a small result against us, cause not
-  diagnosed.** Over the sweep HADS misses nothing in any of the 80 cells.
-  Burst-HADS misses in 22 cells and R-BurstHADS in 21, all at DF ≤ 0.5
-  and mostly DF=0.25; the worst is sc2 n=300 DF=0.25, 1.80 and 1.63 tasks
-  of 300 per run. R-BurstHADS never misses more than Burst-HADS in a cell.
-  At n=200 DF=0.25 the count is 0.23 in all five scenarios, pointing at
-  Burst-HADS's primary schedule; at n=300 DF=0.25 it varies by scenario
-  (0.37–1.80), so hibernation handling contributes there. Diagnose with
-  the same attribution approach as `diag_hads_misses.py` before the paper
-  states a cause. More broadly, the on-demand pool is unlimited, so every
-  deadline above the longest task can be bought and misses stay near
-  zero. A genuinely infeasible region, where deadline satisfaction
-  discriminates the way both source papers present it, needs a capacity
-  constraint — CCScheduler caps on-demand per instance type
-  (`limits_ondemand`, see the `hads.py` docstring). That is a model change
-  and the **owner's decision**; it has not been made.
-- **sc1 is the weakest regime against HADS, and its recorded cause was
-  wrong.** Sweep: R-BurstHADS +10.0% cost vs HADS averaged over sc1
-  (+25.8 / +9.6 / +16.6 / +37.3% at n=300, DF 0.25 → 2.0), while still
-  cheaper than Burst-HADS in every sc1 cell. The claim that Theorem 1's
-  failure to price the replacement's expected idle time causes this is
-  **refuted** (`diag_rb_provisioning.*`, `diag_rb_replacement_use.*`,
-  both run on the post-fix-9 code): the three replacements are 68–86%
-  utilised in sc1 (busy / billed core-seconds), and switching Theorem 1
-  off makes R-BurstHADS slower *and* more expensive in every sc1 cell
-  (+12% to +78% cost). In sc1 the replacements are 12–21% of
-  R-BurstHADS's bill (at n=300, $0.050–0.069 per run against a premium
-  over HADS of $0.020–0.093); everything else it pays for is 29–56% below
-  Burst-HADS's total. An idle-time term would provision less, toward the
-  arm that measures worse on both axes, so it was **not implemented**.
-  Report sc1 as a limitation: R-BurstHADS keeps Burst-HADS's
-  spread-for-makespan cost structure and recovers most, not all, of its
-  premium when interruptions are rare.
-- **What Theorem 1's replacements actually do.** Framed as hibernation
-  insurance, they are both insurance and early capacity. Hibernation
-  rescue is 15–84% of their busy time and Algorithm 5 work stealing
-  16–85%: rescue is the majority at DF=0.5 in every scenario except sc3,
-  stealing the majority at DF=2.0 in every scenario, and at DF=1.0 it
-  splits (stealing leads in sc1, sc3, sc5). Describe them that way in the
-  paper.
-- **The baselines satisfice.** HADS lands at 56–100% of D across the
-  sweep, and at 85–100% at n=300, because it only escalates when D is
-  threatened. Makespan percentages are therefore partly a statement about
-  how much slack D granted. This is why results are reported across a DF
-  span and why the `mk/D` column exists. State it in the paper; do not
-  hide it.
+- **Declared per-type risk is untested in every Table 9 cell — a
+  limitation to state, not a benefit to claim.** Table 9 hibernates every
+  spot VM at kh/D, so the c5 / m5.xlarge risk differential R-BurstHADS
+  reasons about is never instantiated. Theorem 1's three replacements
+  exist because of m5.xlarge's illustrative declared rate, and the
+  template survival filter never changes the choice. Nothing in the
+  results may be attributed to risk-awareness.
+- **Theorem 1's horizon — resolved in the docs, sensitivity recorded.**
+  The code takes P(hibernation) over one average task; the principled
+  exposure is v's planned busy period, between one task and D. One task is
+  the lower bound and is kept, because any longer horizon only adds
+  provisioning, through the illustrative c5 rate. Measured on the
+  post-fix-9 code (`thm1_rb_variants.txt`): with horizon D, R-BurstHADS at
+  DF=2.0 n=300 becomes 27–51% faster and 2–25% cheaper, once D > 4616 s
+  pushes c5's P over the 5% threshold. **Behaviour at DF=2.0, n ≥ 200
+  depends on c5's illustrative 0.04/hr rate and on this choice.** Not
+  re-measured under fixes 11–12.
+- **Pool size against the limit.** The baselines' pool holds 3 spot VMs
+  per type; the limit allows 5, and R-BurstHADS can launch up to it, so it
+  can still use 2 c5.xlarge per type the baselines' planners never see.
+  `SPOT_COPIES = 3` was chosen to reproduce the paper's reported gap.
+  Setting it to 5 would equalise access; that is a model change and the
+  owner's decision.
+- **Migration at a spent limit deviates from the reference** (task placed
+  on the soonest-finishing active VM instead of left unallocated). Check
+  `limit_overrides` stays 0 in the sweep.
+- **sc1 and replacement-use diagnostics predate fixes 11–12**
+  (`diag_rb_provisioning.*`, `diag_rb_replacement_use.*`, run on the
+  post-fix-9 uncapped code). Their conclusions — replacements 68–86%
+  utilised in sc1, switching Theorem 1 off costs more, rescue vs work
+  stealing split — must be re-run before they are cited.
+- **The baselines satisfice.** HADS lands close to D wherever it can buy
+  its way there. Report across DF and keep the `mk/D` column.
 - **Work stealing onto a baseline-mode burstable is not slack-checked**
-  the way a burst-mode rescue is. On the n=40 trace it put the
-  makespan-defining task on the slowest machine in the fleet.
-- **`paper/` is entirely pre-fix.** `paper.tex` still claims 14.3–64.3%
-  cost savings and a 26.0–39.8% makespan reduction for R-BurstHADS; all of
-  it predates fixes 1–10. The sweep it should be rebuilt from now exists,
-  but either owner decision above (Theorem 1 horizon, on-demand cap)
-  changes the code and requires re-running the sweep (~8 minutes) first.
+  the way a burst-mode rescue is.
+- **`paper/` is entirely pre-fix.** Rebuild from the sweep below, leading
+  with it, and state in the methodology that the 15-cell checkpoint grid
+  and the full grid disagree (see Where the result stands).
 - Figures: the owner has a separate unresolved issue with graph
   generation. **Do not generate figures until they raise it.**
 
 ## Commands
 
 ```powershell
-# small sweep, 150 runs, ~13 s on 20 workers (measured 2026-09-13)
+# 5-cell sweep, 150 runs, ~13 s on 20 workers
 python experiments\checkpoint.py --tag NAME_df0.5 --df 0.5
 python experiments\checkpoint.py --tag NAME_df1.0 --df 1.0
 python experiments\checkpoint.py --tag NAME_df2.0 --df 2.0
 
-# the same with a counterfactual patch from experiments\variants.py --
-# measure a candidate fix BEFORE editing the simulator, then check the
-# adopted code reproduces the variant checkpoint bit-for-bit
+# measure a candidate fix BEFORE editing the simulator:
 python experiments\checkpoint.py --tag NAME_df1.0 --df 1.0 --variant thm1_D
+python experiments\variant_sweep.py --variant cap_od --seeds 0-9 --base-fp <fp>
+# then check the adopted code reproduces the variant bit-for-bit
 
-# one config, three billing policies, fast
-python experiments\billing_audit.py --n 300 --seed 0 --kh 5 --kr 0
-
-# forced instance type x VM-count cap
-python experiments\template_ab.py --workers 18 --seeds 5
-
-# the full sweep, 7200 runs, ~8 min on 20 workers. Bare command = plan
-# (prints what would run, runs nothing). Results go to
-# sweep_raw_<code fingerprint>.jsonl, so a code change can never resume
-# into rows from older code. The 28 Aug results_dynamic_comparison*.json[l]
-# are pre-fix and never read.
+# the full sweep, 7200 runs. Bare command = plan (runs nothing). Results go
+# to sweep_raw_<code fingerprint>.jsonl, so a code change can never resume
+# into rows from older code.
 python experiments\dynamic_comparison.py
 python experiments\dynamic_comparison.py run
 python experiments\dynamic_comparison.py summarize
-python experiments\sweep_analysis.py      # verifies against checkpoint_fix10 first
+python experiments\sweep_analysis.py --checkpoint-tag fix12   # verifies first
 ```
 
-Always run all three DF points together. A single DF point is not
-trustworthy on its own — that is the lesson of the deadline sweep.
+Always run all DF points together. A single DF point is not trustworthy on
+its own — that is the lesson of the deadline sweep.
