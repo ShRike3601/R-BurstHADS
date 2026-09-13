@@ -318,12 +318,21 @@ class RBurstHADS(BurstHADS):
             # specified 7.65e-4. Preemptive provisioning never fired and
             # R-BurstHADS's output was bit-identical to Burst-HADS's.
             #
-            # This restores the documented expression. A fuller model
-            # would also price the replacement's EXPECTED IDLE time --
-            # it is billed from boot whether or not the hibernation it
-            # anticipates ever arrives -- which would raise C_proactive
-            # again in the low-risk regime. That is a real refinement and
-            # it is left as stated future work rather than invented here.
+            # This restores the documented expression.
+            #
+            # It does not price the replacement's idle time, and that
+            # omission was once recorded as the cause of R-BurstHADS's
+            # cost premium over HADS in sc1 (kh=1), on the reasoning that
+            # a replacement is billed from boot whether or not the
+            # hibernation it anticipates arrives. Measured, the premise
+            # does not hold: the replacements are 68-86% utilised in sc1
+            # (busy / billed core-seconds), most of it through Algorithm 5
+            # work stealing, and switching this test off makes
+            # R-BurstHADS slower AND more expensive in every sc1 cell
+            # (experiments/diag_rb_provisioning.*,
+            # diag_rb_replacement_use.*). An idle-time term would only
+            # provision less, in the direction that measures worse on
+            # both axes, so it is deliberately not added.
             EPSILON = 0.0
             c_reactive  = n_v * e_avg * (od_rate/theta_od - s_rate/theta_s)
             c_proactive = STARTUP_LATENCY * s_rate + EPSILON
@@ -518,7 +527,12 @@ class RBurstHADS(BurstHADS):
         self-correcting, which is why no safety-margin fudge factor is
         applied here.
         """
-        W = sum(t.remaining_time for t in tasks if not t.completed)
+        # W carries (1 + checkpoint_overhead), the factor execution charges
+        # on every task, so W / T is the throughput the queue really needs.
+        # Leaving it out is the planner error fix 8 removed from HADS and
+        # Burst-HADS, here in this scheduler's own sizing.
+        W = sum(t.remaining_time * (1.0 + t.checkpoint_overhead)
+                for t in tasks if not t.completed)
         if W <= 0:
             return 0
 
@@ -669,10 +683,17 @@ class RBurstHADS(BurstHADS):
         # reason tier 0 was missing it -- a brand-new spot VM carries no
         # queued work, so "the longest task scheduled to vmj including
         # ti" is just ti itself.
+        #
+        # Both finish predictions carry (1 + checkpoint_overhead), the
+        # factor execution charges, as estimate_finish_time does (fix 8
+        # removed the same omission from the baselines' planners). The
+        # spare-time margin keeps exec_time / speed, as
+        # BurstHADS._check_migration does for the paper's rule.
+        ovh = 1.0 + task.checkpoint_overhead
         if slack > STARTUP_LATENCY * SLACK_MULTIPLIER:
             spot_speed = self._spot_tpl["speed"]
             finish     = (current_time + STARTUP_LATENCY
-                          + task.remaining_time / spot_speed)
+                          + task.remaining_time / spot_speed * ovh)
             spare      = self.D - finish
             longest    = task.exec_time / spot_speed
             if finish <= self.D and spare > longest:
@@ -683,7 +704,7 @@ class RBurstHADS(BurstHADS):
                 return vm
 
         # Try burstable
-        if (current_time + task.remaining_time / BURST_SPEED) <= self.D:
+        if (current_time + task.remaining_time / BURST_SPEED * ovh) <= self.D:
             vm = self._create_vm(
                 BURST_TYPE, BURST_SPEED, BURST_RATE,
                 BURST_MEM_GB, 0.0, BURST_VCPU,
