@@ -295,8 +295,122 @@ def _rb_predictors(with_overhead):
     return apply_patch
 
 
+def _burst_primary(order, sentinel):
+    """Burst-HADS's primary-schedule predictions and Eq 9 scoring.
+
+    order="id"    list-schedule each VM's tasks in task-id order, as
+                  _compute_vm_load and _solution_task_finish_times do on
+                  disk (they bucket by iterating all_tasks)
+    order="exec"  list-schedule them memory-descending, the order
+                  _apply_solution queues them and start_next_if_free
+                  runs them (the greedy already plans in this order)
+
+    sentinel="disk"  Eq 9 exactly as on disk: infeasible scores 1.0, cost
+                     normalised by max SPOT rate x Dspot x |spot VMs|
+    sentinel="inf"   infeasible scores +inf, as the reference IPDPS.py
+                     does; feasible scores unchanged
+    sentinel="norm"  infeasible scores 1.0, and the cost normaliser covers
+                     every VM the search can place a task on: the spot
+                     pool plus the on-demand VMs of the initial solution
+                     (the ILS never adds on-demand VMs), at the dearest
+                     rate among them -- the bound the paper's 1.0 relies on
+
+    ("id", "disk") reproduces the code on disk and exists to prove these
+    copies are faithful.
+    """
+    from models.vm import VM
+    from scheduler.burst_hads import BurstHADS
+
+    def _bucket(self, solution):
+        vm_map, buckets = {vm.id: vm for vm in self.all_vms}, {}
+        for task in self.all_tasks:
+            vid = solution.allocation.get(task.task_id)
+            if vid is not None:
+                buckets.setdefault(vid, []).append(task)
+        for vid, tasks in buckets.items():
+            if order == "exec":
+                tasks.sort(key=lambda t: t.memory_req, reverse=True)
+        return vm_map, buckets
+
+    def _compute_vm_load(self, solution):
+        vm_map, buckets = _bucket(self, solution)
+        vm_load = {}
+        for vm_id, tasks in buckets.items():
+            vm = vm_map.get(vm_id)
+            if vm is None:
+                continue
+            vm_load[vm_id] = self._vm_makespan_static(tasks, vm)
+        return vm_load
+
+    def _solution_task_finish_times(self, solution):
+        vm_map, buckets = _bucket(self, solution)
+        finish = {}
+        for vid, tasks in buckets.items():
+            vm = vm_map.get(vid)
+            if vm is None:
+                continue
+            cores = [0.0] * vm.vcpu_count
+            for t in tasks:
+                idx = cores.index(min(cores))
+                cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
+                finish[t] = cores[idx]
+        return finish
+
+    orig_ils = BurstHADS._iterated_local_search
+
+    def _iterated_local_search(self, initial, *a, **k):
+        self._eq9_ondemand = [v for v in initial.selected_vms
+                              if v.market == VM.ONDEMAND]
+        return orig_ils(self, initial, *a, **k)
+
+    def _fitness(self, solution, dspot):
+        makespan, cost = self._evaluate(solution)
+        if sentinel == "norm":
+            pool = list(self.spot_vms) + list(getattr(self, "_eq9_ondemand", []))
+            max_cost = (max(v.cost_rate for v in pool) * dspot * len(pool)
+                        if pool else 0)
+        elif self.spot_vms:
+            max_cost = (max(v.cost_rate for v in self.spot_vms)
+                        * dspot * len(self.spot_vms))
+        else:
+            max_cost = 0
+        if makespan > dspot:
+            return float("inf") if sentinel == "inf" else 1.0
+        norm_cost     = cost / max_cost    if max_cost > 0 else 0
+        norm_makespan = makespan / dspot   if dspot    > 0 else 0
+        return (self.alpha * norm_cost
+                + (1 - self.alpha) * norm_makespan)
+
+    def apply_patch():
+        _patch(BurstHADS, "_compute_vm_load", _compute_vm_load)
+        _patch(BurstHADS, "_solution_task_finish_times",
+               _solution_task_finish_times)
+        _patch(BurstHADS, "_iterated_local_search", _iterated_local_search)
+        _patch(BurstHADS, "_fitness", _fitness)
+    return apply_patch
+
+
+def _limits(markets):
+    """Instance limits on (models/limits.py) for the given markets. Needs
+    code that has the limits module; on older code apply() raises
+    ImportError rather than silently measuring nothing."""
+    def apply_patch():
+        import models.limits as lim
+        _patch(lim, "ENABLED", True)
+        _patch(lim, "MARKETS", tuple(markets))
+    return apply_patch
+
+
 VARIANTS = {
     "base":             [],
+    "cap_od":           [lambda: _limits(("ondemand",))()],
+    "cap_all":          [lambda: _limits(("ondemand", "spot"))()],
+    "b_copy":           [lambda: _burst_primary("id", "disk")()],
+    "b_order":          [lambda: _burst_primary("exec", "disk")()],
+    "b_inf":            [lambda: _burst_primary("id", "inf")()],
+    "b_norm":           [lambda: _burst_primary("id", "norm")()],
+    "b_order_inf":      [lambda: _burst_primary("exec", "inf")()],
+    "b_order_norm":     [lambda: _burst_primary("exec", "norm")()],
     "plan_ovh":         [_plan_ovh],
     "repl_t9":          [_repl_t9],
     "plan_ovh+repl_t9": [_plan_ovh, _repl_t9],

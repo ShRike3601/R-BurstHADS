@@ -257,6 +257,8 @@ class BurstHADS:
             vm = vm_map.get(vid)
             if vm is None:
                 continue
+            # Execution order, for the reason given in _compute_vm_load.
+            tasks.sort(key=lambda t: t.memory_req, reverse=True)
             cores = [0.0] * vm.vcpu_count
             for t in tasks:
                 idx = cores.index(min(cores))
@@ -531,6 +533,12 @@ class BurstHADS:
                                 swap_rate=0.10,
                                 max_failed=20,
                                 relaxed_rate=0.25):
+        # On-demand VMs the search can use: those of the initial solution
+        # (Phase 3). Local search only ever moves tasks among selected VMs
+        # and unused spot VMs, so this set is fixed for the whole search
+        # and _fitness's normaliser is the same for every candidate.
+        self._eq9_ondemand = [v for v in initial.selected_vms
+                              if v.market == VM.ONDEMAND]
         current  = self._local_search(initial, max_attempt,
                                       swap_rate, self.Dspot)
         best     = current.clone()
@@ -796,14 +804,26 @@ class BurstHADS:
         makespan, cost = self._evaluate(solution)
 
         # Eq 1 normalization (paper prose, one paragraph before Eq 9):
-        # cost divided by the most expensive spot VM's cost over
-        # Dspot periods times the max number of deployable VMs;
-        # makespan divided by Dspot. On-demand and burstable VMs are
-        # never candidates in the ILS's own search space, so they
-        # don't belong in the cost normalizer.
-        if self.spot_vms:
-            max_cost = (max(v.cost_rate for v in self.spot_vms)
-                       * dspot * len(self.spot_vms))
+        # cost divided by the most expensive VM's cost over Dspot periods
+        # times the max number of deployable VMs; makespan divided by
+        # Dspot.
+        #
+        # WHY THE BOUND FAILED. The flat infeasibility score is sound only
+        # while every feasible score is <= 1, i.e. while normalised cost
+        # is <= 1. The normaliser used to cover spot VMs alone, on the
+        # premise that nothing else is in the search space -- but
+        # _initial_solution's Phase 3 places tasks on on-demand VMs, their
+        # cost enters _evaluate, and feasible scores can then exceed 1.0,
+        # at which point the ILS prefers an infeasible candidate (one whose
+        # makespan exceeds even D) and nothing downstream re-checks it.
+        #
+        # The normaliser therefore covers every VM the search can place a
+        # task on: the spot pool plus the on-demand VMs of the initial
+        # solution (the ILS never adds on-demand VMs), at the dearest rate
+        # among them. That restores the bound the paper's 1.0 relies on.
+        pool = list(self.spot_vms) + list(getattr(self, "_eq9_ondemand", []))
+        if pool:
+            max_cost = (max(v.cost_rate for v in pool) * dspot * len(pool))
         else:
             max_cost = 0
 
@@ -845,10 +865,19 @@ class BurstHADS:
             buckets.setdefault(vm_id, []).append(task)
 
         vm_load = {}
+        # List-schedule each VM's tasks in EXECUTION order: memory
+        # descending, the order _apply_solution queues them and
+        # start_next_if_free starts them (and the order _initial_solution
+        # already plans in). Bucketing by iterating all_tasks lists them
+        # in task-id order, and list scheduling across vcpu_count cores is
+        # order-dependent, so without this sort the ILS scored -- and the
+        # proactive burstable step chose violators from -- a schedule
+        # other than the one that runs.
         for vm_id, tasks in buckets.items():
             vm = vm_map.get(vm_id)
             if vm is None:
                 continue
+            tasks.sort(key=lambda t: t.memory_req, reverse=True)
             vm_load[vm_id] = self._vm_makespan_static(tasks, vm)
         return vm_load
 
