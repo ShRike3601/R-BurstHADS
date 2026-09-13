@@ -1,0 +1,46 @@
+22 cells with Burst-HADS/R-BurstHADS misses; 1320 runs on 20 workers
+done in 113s
+
+VERIFY: 1320 runs, 0 with a miss count that differs from sweep fb931f79c624
+
+=== Burst-HADS: 213 late tasks in 91 of 660 runs
+  never moved off planned VM: 213  (planned market {'burstable': 100, 'spot': 2, 'ondemand': 111}, planned VM hibernated 0)
+    plan_id <= D < plan_exec (queue order mismatch): 33/213
+    plan_exec > D: 213   finish / plan_exec: 0.915
+  moved: 0
+  runs whose planned queues end <= D in id order but > D in execution order: 12/660
+  first late tasks (history: kind, t, vm, market, baseline, est/finish, speed):
+    task 44 exec=198 finish=640.6 late_by=300.9 plan_id=640.5882352941176 plan_exec=640.5882352941176
+        ('plan', 0.0, 10008, 'burstable', True, None, None)
+        ('start', 0, 10008, 'burstable', True, 640.6, 0.3)
+    task 44 exec=198 finish=640.6 late_by=300.9 plan_id=640.5882352941176 plan_exec=640.5882352941176
+        ('plan', 0.0, 10008, 'burstable', True, None, None)
+        ('start', 0, 10008, 'burstable', True, 640.6, 0.3)
+    task 82 exec=322 finish=602.4 late_by=4.0 plan_id=440.00000000000006 plan_exec=602.4117647058824
+        ('plan', 0.0, 5, 'spot', False, None, None)
+        ('start', 394.1, 5, 'spot', False, 602.4, 1.7)
+    task 144 exec=195 finish=630.9 late_by=32.5 plan_id=630.8823529411765 plan_exec=630.8823529411765
+        ('plan', 0.0, 10012, 'burstable', True, None, None)
+        ('start', 0, 10012, 'burstable', True, 630.9, 0.3)
+
+=== R-BurstHADS: 181 late tasks in 90 of 660 runs
+  never moved off planned VM: 181  (planned market {'burstable': 100, 'ondemand': 80, 'spot': 1}, planned VM hibernated 0)
+    plan_id <= D < plan_exec (queue order mismatch): 26/181
+    plan_exec > D: 181   finish / plan_exec: 0.918
+  moved: 0
+  runs whose planned queues end <= D in id order but > D in execution order: 12/660
+  first late tasks (history: kind, t, vm, market, baseline, est/finish, speed):
+    task 44 exec=198 finish=640.6 late_by=300.9 plan_id=640.5882352941176 plan_exec=640.5882352941176
+        ('plan', 0.0, 10008, 'burstable', True, None, None)
+        ('start', 0, 10008, 'burstable', True, 640.6, 0.3)
+    task 44 exec=198 finish=640.6 late_by=300.9 plan_id=640.5882352941176 plan_exec=640.5882352941176
+        ('plan', 0.0, 10008, 'burstable', True, None, None)
+        ('start', 0, 10008, 'burstable', True, 640.6, 0.3)
+    task 144 exec=195 finish=630.9 late_by=32.5 plan_id=630.8823529411765 plan_exec=630.8823529411765
+        ('plan', 0.0, 10012, 'burstable', True, None, None)
+        ('start', 0, 10012, 'burstable', True, 630.9, 0.3)
+    task 155 exec=186 finish=601.8 late_by=3.4 plan_id=601.7647058823529 plan_exec=601.7647058823529
+        ('plan', 0.0, 10012, 'burstable', True, None, None)
+        ('start', 0, 10012, 'burstable', True, 601.8, 0.3)
+
+wrote C:\my folder\projects\Improvement on Burst HADS\experiments\diag_burst_misses.json

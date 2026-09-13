@@ -1,0 +1,24 @@
+480 primary schedules on 20 workers
+done in 65s
+
+   n    DF | best>D feas>1 maxfeas bestfit  normC odVMs | plan late (burst) | sweep miss B      R
+  50  0.25 |  15/30  25/30   1.061   1.000   2.84   6.6 |      1.33    0.03 |         0.08   0.08
+  50  0.50 |  15/30  25/30   1.061   1.000   2.84   6.6 |      1.33    0.03 |         0.08   0.08
+  50  1.00 |   0/30   0/30   0.779   0.652   0.52   0.0 |      0.00    0.00 |         0.00   0.00
+  50  2.00 |   0/30   0/30   0.577   0.250   0.20   0.0 |      0.00    0.00 |         0.00   0.00
+ 100  0.25 |  30/30   2/30   0.108   1.000   6.99  16.5 |      4.90    0.00 |         0.00   0.00
+ 100  0.50 |   0/30   0/30   0.916   1.000   1.21   3.0 |      0.00    0.00 |         0.01   0.01
+ 100  1.00 |   0/30   0/30   0.699   0.485   0.38   0.0 |      0.00    0.00 |         0.00   0.00
+ 100  2.00 |   0/30   0/30   0.562   0.216   0.17   0.0 |      0.00    0.00 |         0.00   0.00
+ 200  0.25 |  30/30   0/30   0.000   1.000   3.69  13.4 |      5.43    0.23 |         0.23   0.23
+ 200  0.50 |   0/30   0/30   0.791   0.966   0.74   0.0 |      0.00    0.00 |         0.00   0.00
+ 200  1.00 |   0/30   0/30   0.664   0.425   0.33   0.0 |      0.00    0.00 |         0.00   0.00
+ 200  2.00 |   0/30   0/30   0.557   0.203   0.16   0.0 |      0.00    0.00 |         0.00   0.00
+ 300  0.25 |  30/30   3/30   0.152   1.000   2.78  11.2 |      5.23    0.37 |         1.01   0.81
+ 300  0.50 |   0/30   0/30   0.818   0.817   0.67   0.0 |      0.00    0.00 |         0.00   0.00
+ 300  1.00 |   0/30   0/30   0.654   0.408   0.31   0.0 |      0.00    0.00 |         0.00   0.00
+ 300  2.00 |   0/30   0/30   0.553   0.197   0.15   0.0 |      0.00    0.00 |         0.00   0.00
+
+(n, DF, seed) units: planned-late AND a sweep miss in some scenario: 19; planned-late but no sweep miss: 101; sweep miss but nothing planned late: 1
+columns: best>D = ILS result's planned makespan exceeds D; feas>1 = a feasible Eq 9 score above 1.0 occurred; maxfeas = largest feasible score; bestfit = result's score at Dspot; normC = result's normalised cost; odVMs = on-demand VMs in the result; plan late = tasks the final plan finishes after D (burst = of which on a burstable); sweep miss = mean over the 5 scenarios
+wrote C:\my folder\projects\Improvement on Burst HADS\experiments\diag_ils_feasibility.json
