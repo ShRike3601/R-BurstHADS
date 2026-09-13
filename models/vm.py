@@ -37,9 +37,11 @@ class VM:
                            no equivalent in that paper -- Teylo et al.
                            do not differentiate hibernation risk by
                            instance type. That per-type differentiation
-                           is this thesis's own extension, used to make
-                           R-BurstHADS's risk-aware WRR weighting
-                           observable; it is not a claim about measured
+                           is this thesis's own assumption, read only by
+                           R-BurstHADS's Theorem 1 and template filter (no
+                           WRR weight uses it, and Table 9 scenarios apply
+                           kh/D to every spot VM instead); it is not a
+                           claim about measured
                            real-world AWS interruption-rate differences
                            between these instance types.
                            0.0 for burstable and on-demand VMs.

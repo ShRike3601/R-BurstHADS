@@ -32,36 +32,38 @@ HIBERNATION RATE CALIBRATION -- read this before citing these numbers:
   Teylo's sc2 exactly. c5.large/c5.xlarge's rate (0.03-0.04/hr) has no
   equivalent in Teylo's paper -- the paper does not differentiate
   hibernation risk by instance type at all. That differentiation is
-  this thesis's OWN extension on top of the paper: R-BurstHADS's WRR
-  weighting is risk-aware BY INSTANCE TYPE, which only produces a
-  measurable effect if some spot VMs are modeled as riskier than
-  others. The resulting gap between m5.xlarge and c5.large here is a
-  deliberately large, illustrative contrast chosen to make that
-  mechanism observable in a short simulated run -- it is not a claim
-  about real-world AWS interruption-frequency differences between
-  these two instance types.
+  this thesis's OWN assumption. The gap between m5.xlarge and c5.large
+  is a deliberately large, illustrative contrast -- not a claim about
+  real-world AWS interruption-frequency differences between these types.
 
-KEY DESIGN PRINCIPLE:
-  m5.xlarge is modeled with a much higher hibernation rate than
-  c5.large (illustrative contrast, see above -- not AWS-measured).
-  R-BurstHADS detects this via risk-adjusted WRR weights and
-  assigns long tasks preferentially to c5/c5.xlarge over m5.xlarge.
-  BurstHADS is blind to this difference.
+WHERE THE DECLARED RATES ARE USED (verified 2026-09-14):
+  - Table 9 scenarios (run_simulation with kh set) do NOT use them.
+    Every spot VM of every type, in the pool or provisioned mid-run, is
+    hibernated at lambda_h = kh/D and resumed at lambda_r = kr/D, so in
+    sc1-sc5 c5.large, c5.xlarge and m5.xlarge face the SAME rate.
+  - No scheduler's WRR weight reads them. Equation 8's weight
+    (BurstHADS.wrr_weight, inherited by R-BurstHADS, and HADS.wrr_weight)
+    is speed * vcpu_count / cost_rate, with no risk term. An earlier
+    version of this docstring said R-BurstHADS "detects this via
+    risk-adjusted WRR weights and assigns long tasks preferentially to
+    c5/c5.xlarge over m5.xlarge"; no such mechanism exists in the code.
+  - R-BurstHADS reads them in exactly two places. Theorem 1
+    (_preemptive_provision) fires only for m5.xlarge, whose declared rate
+    gives P(hibernation) ~0.22 over one average task against ~0.001 for
+    the c5 types, so the three replacements it buys exist because of this
+    illustrative number. The template survival filter
+    (_resolve_spot_template) excludes m5.xlarge but never changes the
+    choice in this catalogue: c5.xlarge leads on capacity per dollar
+    (130.7 against m5.xlarge's 97.1) with or without it.
+  So in every Table 9 cell R-BurstHADS reasons about a risk differential
+  the experiment does not instantiate. Its risk-awareness is untested
+  there and must not be claimed as a source of any reported benefit.
 
-  When we inject explicit hibernation of m5.xlarge:
-  - BurstHADS is caught off-guard (assigned long tasks there)
-  - R-BurstHADS already moved long tasks away from it
-  This produces measurable cost/makespan differences -- but only
-  because the labeled risk was made real for this specific run; see
-  the "none" (no-hibernation) scenario for what happens when it isn't.
-
-HIBERNATION INJECTION:
-  We deterministically inject hibernation of the VM currently labeled
-  highest-risk (m5.xlarge) at a controlled time. This targeting is OUR
-  extension, not Teylo et al.'s -- their Poisson model does not single
-  out a specific instance type. It lets us test whether R-BurstHADS's
-  risk-aware WRR weighting actually pays off when the labeled risk
-  materializes, and what it costs when it doesn't.
+HIBERNATION INJECTION (supplementary hand-built scenarios only):
+  Outside Table 9, run_simulation can hibernate the VM labelled
+  highest-risk at a controlled time (hibernate_target="highest_risk") or
+  every spot VM (all_spot). That targeting is our extension, not Teylo
+  et al.'s -- their Poisson model does not single out an instance type.
 """
 
 import random
@@ -124,8 +126,8 @@ def build_vms_burst():
     BurstHADS / P-BurstHADS pool: 5 VMs total.
     m5.xlarge is modeled with a much higher hibernation rate than
     c5.large -- an illustrative contrast, not an AWS-measured
-    differential (see module docstring). R-BurstHADS exploits this
-    via WRR; BurstHADS is blind to it.
+    differential (see module docstring). Legacy pool, not used by the
+    sweep; no scheduler's WRR weight reads the hibernation rate.
     """
     return [
         # Spot — low hibernation risk

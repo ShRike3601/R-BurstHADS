@@ -21,9 +21,15 @@ THEOREM 1 — Preemptive Provisioning Decision:
   Provision preemptively for VM v if:
     P(v hibernates) * C_reactive > C_proactive
 
-  P(v hibernates) = 1 - exp(-lambda_v * D)
-  C_reactive  = n_v * e_avg * (r_od/s_od - r_s/s_s)
-  C_proactive = T_startup * r_s + epsilon
+  P(v hibernates) = 1 - exp(-lambda_v * e_avg / s_v)
+  C_reactive  = n_v * e_avg * (r_od/theta_od - r_s/theta_s)
+  C_proactive = T_startup * r_s + epsilon,   epsilon = 0
+
+  lambda_v is v's DECLARED per-type rate (main.py), s_v its per-core
+  speed, theta = speed * vcpu_count. The exposure horizon is one average
+  task on v. This docstring used to state it as the deadline D, which the
+  code never computed; _preemptive_provision explains why the one-task
+  horizon is kept and what results are sensitive to it.
 
 THEOREM 2 — Adaptive VM Count:
   At hibernation time t with n_rescued tasks:
@@ -209,6 +215,14 @@ class RBurstHADS(BurstHADS):
         # accidental: a c5.xlarge is two c5.larges at twice the price, so
         # equal efficiency is the correct answer and something else has to
         # decide.
+        #
+        # In THIS catalogue the filter never binds: c5.large and c5.xlarge
+        # score 130.7 per dollar-hour against m5.xlarge's 97.1, so
+        # c5.xlarge is chosen with or without it at every deadline in the
+        # study (verified 2026-09-14). Under Table 9 the declared rates it
+        # reads are also not the rates any VM is hibernated at -- every
+        # spot VM faces kh/D. It guards other catalogues; it is not a
+        # mechanism behind any reported result.
         SURVIVAL_FLOOR = 0.5      # more likely than not to still be there
         viable = [v for v in cands if survival(v) >= SURVIVAL_FLOOR]
         if not viable:
@@ -237,9 +251,38 @@ class RBurstHADS(BurstHADS):
 
     def _preemptive_provision(self):
         """
-        Theorem 1: for each high-risk spot VM, provision one replacement
-        c5.xlarge spot VM if expected reactive rescue cost exceeds
+        Theorem 1: for each spot VM v, provision one replacement of the
+        pool-resolved template if expected reactive rescue cost exceeds
         proactive provisioning cost.
+
+        HORIZON. P(v hibernates) is taken over one average task on v,
+        1 - exp(-lambda_v * e_avg / s_v). It was once documented as
+        1 - exp(-lambda_v * D), which the code never computed. On
+        principle neither is exact: C_reactive prices re-running all n_v
+        tasks, so the matching exposure is v's own planned busy period,
+        which lies between one task and D. The one-task horizon is the
+        lower bound -- it understates the chance a rescue is needed, so it
+        provisions no more than the exact form would -- and it is kept
+        because any longer horizon can only add provisioning, and would
+        add it through a declared rate this study calls illustrative.
+
+        SENSITIVITY, measured on the post-fix-9 code (variant thm1_D,
+        experiments/thm1_rb_variants.txt): with the horizon at D nothing
+        changes at DF 0.5 / 1.0 or at n=100, but at DF=2.0 n=300
+        R-BurstHADS becomes 27-51% faster and 2-25% cheaper. The switch is
+        c5's declared 0.04/hr rate crossing PREEMPTIVE_RISK_THRESHOLD once
+        the horizon exceeds ~4616 s, after which replacements are also
+        bought for c5 VMs. Behaviour at DF=2.0 with n >= 200 therefore
+        depends on that illustrative rate and on this horizon choice.
+
+        DECLARED RATES. lambda_v is the per-type rate from main.py, not
+        the scenario's kh/D. Under Table 9 every spot VM is hibernated at
+        kh/D, so this test makes the same decision in every scenario: it
+        fires for the three m5.xlarge (P ~0.22) and for no c5 VM
+        (P ~0.001). Switching it off makes R-BurstHADS slower and more
+        expensive in most cells (experiments/diag_rb_provisioning.*), but
+        what triggers it is the illustrative m5.xlarge rate, not a risk
+        the experiment instantiates.
         """
         if not self.all_tasks:
             return
