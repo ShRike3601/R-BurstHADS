@@ -694,6 +694,198 @@ def _ac_cycles(counted):
     return lambda: _patch(VM, "start_ac", start_ac)
 
 
+def _sat17(a, b, c):
+    """Fix 17: R-BurstHADS's saturation response (Theorem 2,
+    RBurstHADS._respond_to_saturation), a copy of the frozen code
+    (freeze-round-b) with three independent switches. All off reproduces the
+    frozen method. Interpretations fixed before any run
+    (experiments/fix17_plan.md):
+
+      a  deadline test and fallback: a target is eligible only if it passes
+         _check_migration(task, vm, t, D, burst_mode=vm.is_burstable), the test
+         tier 0 applies; the earliest estimated finish among eligible targets
+         wins; if none is eligible the task goes to Algorithm 4's on-demand
+         attempt (_attempt_ondemand_fallback) instead of the late placement.
+      b  no reshuffle without capacity: if not even one VM of the kind the
+         response would launch (spot template when use_spot, else t3.large)
+         is within its instance limit, return before removing queued tasks.
+      c  trigger on real saturation: act only when no spot VM in spot_vms is
+         active (the condition the code's own comment states), instead of
+         whenever one is down."""
+    from models.vm import VM
+    import scheduler.r_burst_hads as rb
+
+    def _respond_to_saturation(self, current_time):
+        n_now_hibernated = sum(
+            1 for v in self.spot_vms
+            if v.state in (VM.HIBERNATED, VM.TERMINATED)
+        )
+        if n_now_hibernated > self._n_hibernated_vms:
+            self._n_hibernated_vms   = n_now_hibernated
+            self._saturation_handled = False
+        if self._saturation_handled:
+            return
+        active_spot = [v for v in self.spot_vms
+                       if v.state not in (VM.HIBERNATED, VM.TERMINATED)]
+        if c:
+            if active_spot:
+                return
+        elif len(active_spot) >= len(self.spot_vms):
+            return
+        self._saturation_handled = True
+
+        all_queued = []
+        for vm in self.provisioned_vms:
+            if vm.state not in (VM.HIBERNATED, VM.TERMINATED):
+                for task in vm.tasks:
+                    if not task.completed:
+                        all_queued.append(task)
+
+        slack    = self.D - current_time
+        use_spot = slack > rb.STARTUP_LATENCY * rb.SLACK_MULTIPLIER
+        startup  = rb.STARTUP_LATENCY if use_spot else 0.0
+
+        active_prov = [v for v in self.provisioned_vms
+                       if v.state not in (VM.HIBERNATED, VM.TERMINATED)]
+
+        n_extra = self._vms_needed_for_deadline(
+            all_queued, current_time, active_prov, use_spot, startup)
+        n_extra = min(rb.MAX_VMS_PER_EVENT, n_extra)
+
+        if n_extra <= 0:
+            return
+
+        if b:
+            room = (self._launches.can_launch_type("spot", self._spot_tpl["vm_type"])
+                    if use_spot else
+                    self._launches.can_launch_type("ondemand", rb.BURST_TYPE))
+            if not room:
+                return
+
+        tasks_to_move = []
+        for vm in active_prov:
+            waiting = [t for t in vm.tasks if t not in vm.running]
+            if waiting:
+                for t in waiting:
+                    vm.tasks.remove(t)
+                    vm.release_memory(t)
+                tasks_to_move.extend(waiting)
+
+        if not tasks_to_move:
+            return
+
+        new_vms = []
+        for _ in range(n_extra):
+            if use_spot:
+                if not self._launches.can_launch_type(
+                        "spot", self._spot_tpl["vm_type"]):
+                    break
+                new_vm = self._create_spot_vm(
+                    ready_time=current_time + rb.STARTUP_LATENCY,
+                )
+            else:
+                if not self._launches.can_launch_type("ondemand", rb.BURST_TYPE):
+                    break
+                new_vm = self._create_vm(
+                    rb.BURST_TYPE, rb.BURST_SPEED, rb.BURST_RATE,
+                    rb.BURST_MEM_GB, 0.0, rb.BURST_VCPU,
+                    ready_time=current_time,
+                    extra_credits=rb.BURST_CREDITS_INIT,
+                    baseline_fraction=rb.BURST_BASELINE_FRAC,
+                )
+            new_vms.append(new_vm)
+            self.provisioned_vms.append(new_vm)
+
+        all_targets = active_prov + new_vms
+        tasks_to_move.sort(key=lambda t: t.remaining_time, reverse=True)
+
+        for task in tasks_to_move:
+            best_vm     = None
+            best_finish = float('inf')
+            for vm in all_targets:
+                if vm.state in (VM.HIBERNATED, VM.TERMINATED):
+                    continue
+                if not vm.can_fit_task(task):
+                    continue
+                if a and not self._check_migration(task, vm, current_time, self.D,
+                                                   burst_mode=vm.is_burstable):
+                    continue
+                finish = vm.estimate_finish_time(task, current_time)
+                if finish < best_finish:
+                    best_finish = finish
+                    best_vm     = vm
+            if best_vm is None:
+                best_vm = (self._attempt_ondemand_fallback(task, current_time)
+                           if a else all_targets[0])
+            task.baseline_mode = False
+            best_vm.tasks.append(task)
+            best_vm.reserve_memory(task)
+            task.assigned_vm = best_vm
+            if self.event_engine:
+                best_vm.start_next_if_free(current_time, self.event_engine)
+
+    return lambda: _patch(rb.RBurstHADS, "_respond_to_saturation", _respond_to_saturation)
+
+
+def _checkpoint(exact):
+    """Checkpoint credit at hibernation (Task.save_checkpoint).
+    exact=False reproduces the frozen code: work done = elapsed * speed.
+    exact=True credits the progress execution actually made: execution runs a
+    task at speed / (1 + checkpoint_overhead) (VM.start_next_if_free charges the
+    overhead on the whole remaining time), so work done = elapsed * speed /
+    (1 + ovh). Hibernation only hits spot VMs, so speed is the VM's speed."""
+    from models.task import Task
+
+    def save_checkpoint(self, current_time):
+        if self.exec_start_on_current_vm is not None and self.assigned_vm:
+            elapsed = current_time - self.exec_start_on_current_vm
+            work_done = elapsed * self.assigned_vm.speed
+            if exact:
+                work_done /= (1.0 + self.checkpoint_overhead)
+            self.checkpointed_remaining = max(0.0, self.remaining_time - work_done)
+        else:
+            self.checkpointed_remaining = self.remaining_time
+
+    return lambda: _patch(Task, "save_checkpoint", save_checkpoint)
+
+
+def _boot(wait):
+    """Boot delay of VMs R-BurstHADS provisions (RBurstHADS._create_vm, whose
+    ProvisioningEvent fires at ready_time). On the frozen code a task placed on
+    such a VM starts at once, before the VM is ready.
+    wait=False only records ready_time on the VM (reproduces the frozen code).
+    wait=True: VM.start_next_if_free starts nothing before ready_time (the
+    ProvisioningEvent then starts the queue), and VM.estimate_finish_time
+    counts from ready_time on a VM that is not ready yet."""
+    from models.vm import VM
+    from scheduler.r_burst_hads import RBurstHADS
+    o_create, o_start, o_est = RBurstHADS._create_vm, VM.start_next_if_free, VM.estimate_finish_time
+
+    def create(self, *args, **kw):
+        vm = o_create(self, *args, **kw)
+        vm._boot_ready_at = kw["ready_time"] if "ready_time" in kw else args[6]
+        return vm
+
+    def start(self, current_time, engine):
+        ra = getattr(self, "_boot_ready_at", None)
+        if ra is not None and current_time < ra:
+            return
+        return o_start(self, current_time, engine)
+
+    def est(self, task, current_time, task_speed=None):
+        ra = getattr(self, "_boot_ready_at", None)
+        if ra is not None and current_time < ra:
+            return o_est(self, task, ra, task_speed)
+        return o_est(self, task, current_time, task_speed)
+
+    def apply_patch():
+        _patch(RBurstHADS, "_create_vm", create)
+        if wait:
+            _patch(VM, "start_next_if_free", start)
+            _patch(VM, "estimate_finish_time", est)
+    return apply_patch
+
+
 def _u10(with_overhead):
     """U10 counterfactual (post-freeze diagnostic): the on-demand fallback's
     new-VM deadline test in HADS and Burst-HADS (R-BurstHADS inherits it).
@@ -771,6 +963,16 @@ def _grid_variants():
 VARIANTS = {
     "base":             [],
     "nocap+ac_copy":         [lambda: _nocap()(), _ac_cycles(False)],
+    "f17_copy":              [lambda: _sat17(False, False, False)()],
+    "f17a":                  [lambda: _sat17(True, False, False)()],
+    "f17b":                  [lambda: _sat17(False, True, False)()],
+    "f17c":                  [lambda: _sat17(False, False, True)()],
+    "f17ab":                 [lambda: _sat17(True, True, False)()],
+    "f17abc":                [lambda: _sat17(True, True, True)()],
+    "ckpt_copy":             [lambda: _checkpoint(False)()],
+    "ckpt_exec":             [lambda: _checkpoint(True)()],
+    "boot_copy":             [lambda: _boot(False)()],
+    "boot_wait":             [lambda: _boot(True)()],
     "u10_copy":              [lambda: _u10(False)()],
     "u10_ovh":               [lambda: _u10(True)()],
     "nocap+mig_launched+launch_bill": [lambda: _nocap()(), lambda: _migrate_to_launched(True)(),

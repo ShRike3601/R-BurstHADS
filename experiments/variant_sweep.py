@@ -151,6 +151,9 @@ def main():
     ap.add_argument("--ns")
     ap.add_argument("--dfs")
     ap.add_argument("--seeds", default="0-9")
+    ap.add_argument("--keys", default=",".join(KEYS),
+                    help="comma list of schedulers to run (default all); a variant that "
+                         "patches one scheduler only needs that one")
     ap.add_argument("--workers", type=int, default=os.cpu_count() or 4)
     ap.add_argument("--report-only", action="store_true",
                     help="re-read the existing variant file instead of running")
@@ -162,7 +165,7 @@ def main():
     fp = dc.code_fingerprint()
     scenarios, ns, dfs, seeds = dc._grid(a)
     units = [(sc, n, df, s, k, fp, a.variant) for sc in scenarios for n in ns
-             for df in dfs for s in seeds for k in KEYS]
+             for df in dfs for s in seeds for k in a.keys.split(",")]
     path = HERE / f"sweep_variant_{a.variant}_{fp}.jsonl"
     print(f"variant {a.variant}: {len(units)} units on {a.workers} workers -> "
           f"{path.name}{' (report only)' if a.report_only else ''}", flush=True)
@@ -190,6 +193,9 @@ def main():
                and b["misses"] == r["misses"])
     print(f"identical to base {a.base_fp}: {same}/{len(rows)} units "
           f"(base rows found: {len(base_sel)})")
+    if set(a.keys.split(",")) != set(KEYS):
+        print("scheduler subset: cross-scheduler summary skipped")
+        return
     report(summarize(base_sel, "base"), summarize(rows, a.variant),
            f"variant {a.variant} vs base, mean of cells (% vs HADS unless R/B); "
            f"cells with any infeasible run excluded")
