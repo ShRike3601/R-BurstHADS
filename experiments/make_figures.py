@@ -17,11 +17,17 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
 import matplotlib
+import matplotlib.ticker
 matplotlib.rcParams["pdf.fonttype"] = 42    # TrueType, not Type 3: IEEE PDF eXpress rejects Type 3
 matplotlib.rcParams["ps.fonttype"] = 42
 from ieee_figs import single, save, grouped_bars, trend, zero_line, legend_above, C, INK, INK_SOFT
 
-PACK = (ROOT / "RESULTS_PACK.md").read_text(encoding="utf-8")
+import argparse
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--pack", default="RESULTS_PACK.md", help="results pack to read, relative to the project root")
+_ap.add_argument("--outdir", default="paper/fig", help="output directory, relative to the project root")
+_ARGS = _ap.parse_args()
+PACK = (ROOT / _ARGS.pack).read_text(encoding="utf-8")
 
 
 def table(ident):
@@ -48,7 +54,7 @@ T1 = {r["group"]: r for r in table("T1")}
 T5 = table("T5")
 
 B, R = "Burst-HADS", "R-BurstHADS"
-OUT = ROOT / "paper" / "fig"
+OUT = ROOT / _ARGS.outdir
 made = []
 
 
@@ -134,6 +140,7 @@ for k, name in enumerate(series):
     off = (k - 1) * (w + g)
     label_bars(ax, [0 + off, 1 + off], vals[name], "{:d}")
 ax.set_ylim(0, max(max(v) for v in vals.values()) * 1.18)
+ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=True))   # counts: no fractional ticks
 legend_above(fig, ax)
 made.append(save(fig, "fig6_missed_tasks", outdir=str(OUT)))
 

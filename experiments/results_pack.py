@@ -37,6 +37,29 @@ SRC = {
     "a_norel":   "experiments/diag_cost_gap_nocap_no_release_c3.json",
     "adopt_val": "experiments/diag_cost_gap_rb1_verify_c3.json",
     "adopt_sweep": "experiments/sweep_variant_base_2c6576897779.jsonl",
+    # Round B-era frozen baseline (freeze-round-b), used by historical tables
+    "raw_rb":    "experiments/sweep_raw_4f08f48ac35c.jsonl",
+    "val_rb":    "experiments/diag_cost_gap_freeze_nocap_c3.json",
+    # U10 diagnostic, fix 17 and fixes 18-20 (post-freeze round)
+    "u10_trace": "experiments/diag_u10.json",
+    "u10_window": "experiments/diag_u10_window.txt",
+    "adopt2_verify": "experiments/fix17a_18_20_adoption_verify.txt",
+    "u10_verify": "experiments/diag_u10_verify.txt",
+    "overcredit": "experiments/diag_overcredit_boot.json",
+    "f17a": "experiments/sweep_variant_f17a_4f08f48ac35c.jsonl",
+    "f17b": "experiments/sweep_variant_f17b_4f08f48ac35c.jsonl",
+    "f17c": "experiments/sweep_variant_f17c_4f08f48ac35c.jsonl",
+    "f17ab": "experiments/sweep_variant_f17ab_4f08f48ac35c.jsonl",
+    "f17abc": "experiments/sweep_variant_f17abc_4f08f48ac35c.jsonl",
+    "boot_wait": "experiments/sweep_variant_boot_wait_4f08f48ac35c.jsonl",
+    "ckpt_exec": "experiments/sweep_variant_ckpt_exec_4f08f48ac35c.jsonl",
+    "u10_ovh": "experiments/sweep_variant_u10_ovh_4f08f48ac35c.jsonl",
+    "boot_u10": "experiments/sweep_variant_boot_u10_4f08f48ac35c.jsonl",
+    "fx_all": "experiments/sweep_variant_fx_all_4f08f48ac35c.jsonl",
+    "fx_no17a": "experiments/sweep_variant_fx_no17a_4f08f48ac35c.jsonl",
+    "fx_no18": "experiments/sweep_variant_fx_no18_4f08f48ac35c.jsonl",
+    "fx_no19": "experiments/sweep_variant_fx_no19_4f08f48ac35c.jsonl",
+    "fx_no20": "experiments/sweep_variant_fx_no20_4f08f48ac35c.jsonl",
     "tcc23":     "experiments/tcc23_tables.py",
     "devs":      "DEVIATIONS.md",
     "cat_sweep": "main.py",
@@ -260,7 +283,11 @@ def limit_reached(r):
 
 
 def attribution_table(d_on, d_off):
-    w("### T7. R-BurstHADS's misses under limits: are they the cap?")
+    w("### T7. Launch limits reached, in runs with and without a missed task")
+    w()
+    w("Reaching a launch limit does not identify the cause of a miss. At `freeze-round-b` (`4f08f48ac35c`) the placement "
+      "trace attributes R-BurstHADS's 109 misses to its own saturation response, which reaching a limit triggers (T21); "
+      "fix 17a removes 108 of them (T18).")
     w()
     w(f"Sources: `{SRC['on']}`, `{SRC['off']}`. A run 'reached a limit' if some instance type hit its per-type launch "
       f"limit ({lim.PER_TYPE}) or a market hit its global limit ({lim.GLOBAL}); launches are counted per run in the "
@@ -410,7 +437,9 @@ def audit_trajectory(pub):
     w("|---|---|---|---|---|---|---|---|")
     rows = [("before Round B (fixes 1–12)", "a_pre"), ("+ launched-only migration (U6/H2)", "a_mig"),
             ("+ billing from launch (B1)", "a_bill"), ("+ Allocation Cycles over uptime (E10) = Round B part 1", "vgrid_g1e1"),
-            ("+ on-demand catalogue (E1/E3) = freeze", "val_off")]
+            ("+ on-demand catalogue (E1/E3) = freeze-round-b", "val_rb")]
+    if SRC["val_off"] != SRC["val_rb"]:
+        rows.append(("+ fixes 17a, 18, 19, 20 = current baseline", "val_off"))
     out = {}
     for name, key in rows:
         s = vstats(diag_by(SRC[key]))
@@ -474,10 +503,10 @@ def guard_tables():
 def part2_table(d_on):
     w("### T13. Effect of the three-type on-demand catalogue alone (DEVIATIONS E1/E3), main sweep, limits on, seeds 0–9")
     w()
-    w(f"Sources: `{SRC['grid_g1e1']}` (Round B part 1 only) and `{SRC['on']}` restricted to seeds 0–9 (part 1 + part 2 = frozen code).")
+    w(f"Sources: `{SRC['grid_g1e1']}` (Round B part 1 only) and `{SRC['raw_rb']}` restricted to seeds 0–9 (part 1 + part 2 = freeze-round-b code). Historical.")
     w()
     a = load_jsonl(SRC["grid_g1e1"])
-    b = {u: r for u, r in d_on.items() if u[3] <= 9}
+    b = {u: r for u, r in load_jsonl(SRC["raw_rb"]).items() if u[3] <= 9}
     keys = sorted(set(a) & set(b))
     w("| state | infeasible runs H / B / R | missed tasks H / B / R | missed tasks at DF=0.5 H / B / R |")
     w("|---|---|---|---|")
@@ -569,7 +598,7 @@ def economics_table():
 
 
 def adoption_table():
-    w("### T17. Adopted code reproduces the pre-registered variant, row for row (Round B part 1)")
+    w("### T17. Adopted code reproduces the pre-registered variant, row for row (Round B part 1; fixes 17a–20)")
     w()
     w(f"Sources: `{SRC['adopt_val']}` (adopted code, commit 42bff94's code, validation catalogue) against "
       f"`{SRC['vgrid_g1e1']}` (the variant it adopts); `{SRC['adopt_sweep']}` (adopted code, sweep catalogue, seeds 0–9) "
@@ -589,6 +618,21 @@ def adoption_table():
     w("|---|---|")
     w(f"| validation | {vsame} / {len(vb)} |")
     w(f"| sweep | {ssame} / {len(sb)} |")
+    w()
+    if not (ROOT / SRC["adopt2_verify"]).exists():
+        return
+    w("Fixes 17a, 18, 19, 20 (post-freeze round): the adoption patches `experiments/fix17_adopt_patch.py --a` and "
+      "`experiments/fix18_20_adopt_patch.py` applied to a clean export reproduce the combined variant, and the full "
+      f"baseline sweep on the adopted code reproduces it for every seed. Sources: `{SRC['adopt2_verify']}`; `{SRC['on']}` "
+      f"against `{SRC['fx_all']}`.")
+    w()
+    tv = [l.strip() for l in (ROOT / SRC["adopt2_verify"]).read_text(encoding="utf-8").splitlines() if "rows identical" in l]
+    base, var = load_jsonl(SRC["on"]), load_jsonl(SRC["fx_all"])
+    same = sum(1 for u in var if u in base and _same_row(base[u], var[u]))
+    w("| check | rows identical |")
+    w("|---|---|")
+    w(f"| adopted code in a clean export, seeds 0–9, all schedulers | {tv[0].split(' rows')[0] if tv else 'n/a'} |")
+    w(f"| baseline sweep `{FP}`, seeds 0–29, all schedulers | {same} / {len(var)} |")
     w()
 
 
@@ -624,6 +668,217 @@ def deviations_table():
     w()
 
 
+def _merged(label, sets, cache):
+    """Rows of a variant set, filling schedulers the variant file lacks."""
+    if label in cache:
+        return cache[label]
+    src, fill = sets[label]
+    d = dict(_merged(fill, sets, cache)) if fill else {}
+    d.update(load_jsonl(SRC[src]))
+    cache[label] = d
+    return d
+
+
+def _set_metrics(d):
+    cells = cells_of(d)
+    comp = [c for c in sorted(cells) if complete(cells[c])]
+    g = group_row({c: cell_stats(cells[c]) for c in comp}, comp)
+    for k in KEYS:
+        fe = [r for u, r in d.items() if u[4] == k and ok(r)]
+        g[f"miss_{k}"] = sum(r["misses"] for r in fe)
+        g[f"runs_{k}"] = sum(1 for r in fe if r["misses"] > 0)
+    return g
+
+
+def _same_row(a, b, exact=False):
+    """Runs changed: makespan within 1e-9 s, cost within 1e-12 $, same misses (the
+    convention of experiments/fix17_compare.py; a few runs differ only in float
+    rounding). exact=True for reproduction checks."""
+    if bool(a.get("infeasible")) != bool(b.get("infeasible")) or a.get("error") != b.get("error"):
+        return False
+    if a.get("infeasible"):
+        return True
+    if exact:
+        return a["mk"] == b["mk"] and a["cost"] == b["cost"] and a["misses"] == b["misses"]
+    return abs(a["mk"] - b["mk"]) < 1e-9 and abs(a["cost"] - b["cost"]) < 1e-12 and a["misses"] == b["misses"]
+
+
+def fix17_table():
+    w("### T18. Fix 17 sub-fixes (R-BurstHADS saturation response), each measured against the freeze-round-b baseline")
+    w()
+    w(f"Sources: `{SRC['raw_rb']}` (baseline) and the R-BurstHADS-only variant files `{SRC['f17a']}`, `{SRC['f17b']}`, "
+      f"`{SRC['f17c']}`, `{SRC['f17ab']}`, `{SRC['f17abc']}` (HADS and Burst-HADS rows from the baseline). Interpretations "
+      "pre-registered in `experiments/fix17_plan.md` (commit 12e6749). Limits on, 30 seeds; cell aggregates over the cells "
+      "where every scheduler is feasible in every seed.")
+    w()
+    base = load_jsonl(SRC["raw_rb"])
+    sets = {"baseline": ("raw_rb", None), "17a": ("f17a", "baseline"), "17b": ("f17b", "baseline"),
+            "17c": ("f17c", "baseline"), "17a+17b": ("f17ab", "baseline"), "17a+17b+17c": ("f17abc", "baseline")}
+    decision = {"baseline": "—", "17a": "adopted", "17b": "rejected", "17c": "rejected",
+                "17a+17b": "rejected (contains 17b)", "17a+17b+17c": "rejected (contains 17b, 17c)"}
+    cache = {}
+    w("| set | R-BurstHADS runs changed | R missed tasks | R runs with a miss | R $ vs B | R mk vs B | R dominates B | R sig. cheaper / dearer than B | R sig. faster / slower than B | decision |")
+    w("|---|---|---|---|---|---|---|---|---|---|")
+    for lb in sets:
+        d = _merged(lb, sets, cache)
+        g = _set_metrics(d)
+        ch = sum(1 for u in d if u[4] == "rburst" and not _same_row(d[u], base[u]))
+        w(f"| {lb} | {ch}/2400 | {g['miss_rburst']} | {g['runs_rburst']} | {g['rbc']:+.1f}% | {g['rbmk']:+.1f}% | "
+          f"{g['dom']}/{g['cells']} | {g['cheap']} / {g['dear']} | {g['fast']} / {g['slow']} | {decision[lb]} |")
+    w()
+
+
+def fix18_20_table():
+    w("### T19. Fixes 17a, 18, 19, 20: individual effects and contributions within the combined set")
+    w()
+    w(f"Sources: `{SRC['raw_rb']}` (freeze-round-b baseline) and variant files `{SRC['f17a']}` (17a), `{SRC['boot_wait']}` (18), "
+      f"`{SRC['ckpt_exec']}` (19), `{SRC['u10_ovh']}` (20), `{SRC['boot_u10']}` (18+20), `{SRC['fx_all']}` (all four), "
+      f"`{SRC['fx_no17a']}`, `{SRC['fx_no18']}`, `{SRC['fx_no19']}`, `{SRC['fx_no20']}` (all four without one). Files holding "
+      "only R-BurstHADS rows take HADS and Burst-HADS from the set they extend. Design pre-registered in "
+      "`experiments/fix18_20_plan.md` (commit af467a6). Individual effect = set minus baseline; contribution = all four minus "
+      "all four without the fix. No additivity assumed.")
+    w()
+    sets = {"baseline": ("raw_rb", None), "17a": ("f17a", "baseline"), "18": ("boot_wait", "baseline"),
+            "19": ("ckpt_exec", "baseline"), "20": ("u10_ovh", "baseline"), "18+20": ("boot_u10", "20"),
+            "ALL": ("fx_all", "baseline"), "ALL-17a": ("fx_no17a", "ALL"), "ALL-18": ("fx_no18", "ALL"),
+            "ALL-19": ("fx_no19", "baseline"), "ALL-20": ("fx_no20", "baseline")}
+    cache = {}
+    M = {lb: _set_metrics(_merged(lb, sets, cache)) for lb in sets}
+    cols = [("R $ vs B", "rbc", "%"), ("R mk vs B", "rbmk", "%"), ("R $ vs H", "rc", "%"), ("R mk vs H", "rmk", "%"),
+            ("B $ vs H", "bc", "%"), ("R dominates B", "dom", "n"), ("R sig. cheaper", "cheap", "n"),
+            ("R sig. dearer", "dear", "n"), ("R sig. faster", "fast", "n"), ("R sig. slower", "slow", "n"),
+            ("missed H", "miss_hads", "n"), ("missed B", "miss_burst", "n"), ("missed R", "miss_rburst", "n"),
+            ("runs w/ miss R", "runs_rburst", "n")]
+    fmt = lambda v, t: f"{v:+.1f}%" if t == "%" else f"{v:d}"
+    dfm = lambda v, t: f"{v:+.2f}" if t == "%" else f"{v:+d}"
+    w("Levels:")
+    w()
+    w("| set | cells | " + " | ".join(c[0] for c in cols) + " |")
+    w("|---|---|" + "---|" * len(cols))
+    for lb in sets:
+        w(f"| {lb} | {M[lb]['cells']} | " + " | ".join(fmt(M[lb][k], t) for _, k, t in cols) + " |")
+    w()
+    w("Individual effects (points / counts) and contributions within the combined set:")
+    w()
+    w("| fix | effect | " + " | ".join(c[0] for c in cols) + " |")
+    w("|---|---|" + "---|" * len(cols))
+    for x in ("17a", "18", "19", "20"):
+        w(f"| {x} | alone vs baseline | " + " | ".join(dfm(M[x][k] - M['baseline'][k], t) for _, k, t in cols) + " |")
+        w(f"| {x} | ALL vs ALL-{x} | " + " | ".join(dfm(M['ALL'][k] - M['ALL-' + x][k], t) for _, k, t in cols) + " |")
+    w(f"| all four | ALL vs baseline | " + " | ".join(dfm(M['ALL'][k] - M['baseline'][k], t) for _, k, t in cols) + " |")
+    w()
+    w("Runs changed by fix 20 (U10), per scheduler:")
+    w()
+    w("| comparison | HADS | Burst-HADS | R-BurstHADS |")
+    w("|---|---|---|---|")
+    for name, a, b in (("20 alone vs baseline", "20", "baseline"), ("18+20 vs 18", "18+20", "18"), ("ALL vs ALL-20", "ALL", "ALL-20")):
+        da, db = _merged(a, sets, cache), _merged(b, sets, cache)
+        w(f"| {name} | " + " | ".join(f"{sum(1 for u in da if u[4] == k and not _same_row(da[u], db[u]))}/2400" for k in KEYS) + " |")
+    w()
+    w("Per-scheduler effect of fix 19 (checkpoint credits executed progress):")
+    w()
+    w("| comparison | scheduler | runs changed | missed tasks | mean makespan change | mean cost change |")
+    w("|---|---|---|---|---|---|")
+    for name, a, b in (("19 alone vs baseline", "19", "baseline"), ("ALL vs ALL-19", "ALL", "ALL-19")):
+        da, db = _merged(a, sets, cache), _merged(b, sets, cache)
+        for k in KEYS:
+            us = [u for u in da if u[4] == k]
+            both = [u for u in us if ok(da[u]) and ok(db[u])]
+            ch = sum(1 for u in us if not _same_row(da[u], db[u]))
+            w(f"| {name} | {LAB[k]} | {ch}/{len(us)} | {M[b]['miss_' + k]} -> {M[a]['miss_' + k]} | "
+              f"{mean(pct(da[u]['mk'], db[u]['mk']) for u in both):+.2f}% | {mean(pct(da[u]['cost'], db[u]['cost']) for u in both):+.2f}% |")
+    w()
+
+
+def overcredit_table():
+    w("### T20. Checkpoint over-credit per scheduler and early starts, freeze-round-b code (before fixes 18, 19)")
+    w()
+    w(f"Source: `{SRC['overcredit']}` (record-only probe over all 7,200 limits-on runs; every run reproduced its baseline row). "
+      "Credited = elapsed × speed at each hibernation of a running task; executed = elapsed × speed / (1 + overhead).")
+    w()
+    res = json.load(open(ROOT / SRC["overcredit"], encoding="utf-8"))
+    fe = lambda x: x["row"].get("error") is None and not x["row"].get("infeasible")
+    w("| scheduler | feasible runs | displaced running tasks / run | over-credit / run (work units) | over-credit, % of workload |")
+    w("|---|---|---|---|---|")
+    for k in KEYS:
+        xs = [x for x in res if x["unit"][4] == k and fe(x)]
+        oc = sum(x["credited"] - x["executed"] for x in xs)
+        w(f"| {LAB[k]} | {len(xs)} | {mean(x['disp_running'] for x in xs):.2f} | {oc / len(xs):.1f} | "
+          f"{100 * oc / sum(x['work'] for x in xs):.3f}% |")
+    xs = [x for x in res if x["unit"][4] == "rburst" and fe(x)]
+    es, eb = sum(x["early_starts_spot"] for x in xs), sum(x["early_starts_burstable"] for x in xs)
+    w()
+    w(f"Tasks started on an R-BurstHADS-provisioned VM before its ready time: {es} on spot VMs "
+      f"(in {sum(1 for x in xs if x['early_starts_spot'])} of {len(xs)} runs), {eb} on burstables; mean head start "
+      f"{sum(x['early_seconds'] for x in xs) / max(1, es + eb):.1f} s.")
+    w()
+
+
+def entry_route_table():
+    w("### T21. How the freeze-round-b baseline's missed R-BurstHADS tasks were placed")
+    w()
+    w(f"Sources: `{SRC['u10_trace']}` (placement trace of the 104 missing runs; every traced run reproduced its baseline row) "
+      f"and `{SRC['u10_verify']}` (independent re-check of every attribution from a reservation log with an explicit context "
+      "stack).")
+    w()
+    res = json.load(open(ROOT / SRC["u10_trace"], encoding="utf-8"))
+    rows = [m for x in res for m in x["missed"]]
+    lab = lambda e: e["path"] + (f" / {e['tier']}" if e["tier"] else "")
+    last = defaultdict(int)
+    entry = defaultdict(int)
+    late_pred = 0
+    fresh_ok = 0
+    steal = 0
+    for m in rows:
+        h = m["history"]
+        f = h[-1]
+        last[f"{lab(f)} -> {f['market']}:{f['type']}"] += 1
+        if f["market"] == "burstable":
+            i = next(k for k, e in enumerate(h) if e["vm"] == f["vm"])
+            entry[lab(h[i])] += 1
+            steal += any(e["path"] == "work stealing" and e["market"] == "burstable" for e in h)
+        late_pred += int(f["predicted"] is not None and f["predicted"] > m["deadline"] + 1e-6)
+        fresh_ok += int(f["best_fresh_in_limit"] is not None and f["best_fresh_in_limit"] <= m["deadline"] + 1e-6)
+    w(f"Missed tasks: {len(rows)}. Last placement placed with the placer's own predicted finish already past D: {late_pred}. "
+      f"A fresh on-demand VM within the launch limits could still have finished by D from that moment: {fresh_ok}. "
+      f"Moved onto a burstable by work stealing (Algorithm 5): {steal}.")
+    w()
+    w("| last placement | missed tasks |")
+    w("|---|---|")
+    for k, v in sorted(last.items(), key=lambda kv: -kv[1]):
+        w(f"| {k} | {v} |")
+    w()
+    w("| first placement onto the burstable the task missed on | missed tasks |")
+    w("|---|---|")
+    for k, v in sorted(entry.items(), key=lambda kv: -kv[1]):
+        w(f"| {k} | {v} |")
+    w()
+    vt = (ROOT / SRC["u10_verify"]).read_text(encoding="utf-8").splitlines()
+    for l in vt:
+        if l.startswith(("Re-runs", "Missed tasks last", "Agreeing", "Disagreeing")):
+            w(f"- {l}")
+    w()
+
+
+def u10_window_table():
+    w("### T22. Why fix 20 (U10) changes no run: the fresh-VM deadline test with and without the overhead")
+    w()
+    w(f"Source: `{SRC['u10_window']}` (record-only probe, `experiments/diag_u10_window.py`, variants u10_ovh and fx_all, "
+      "7,200 runs each). A walk is a call of the on-demand fallback that draws a fresh VM from M^o; for each, both tests "
+      "are evaluated on the same state. Fix 20 can change a decision only in the column 'a type passes only without the overhead'.")
+    w()
+    prev_table = False
+    for l in (ROOT / SRC["u10_window"]).read_text(encoding="utf-8").splitlines()[1:]:
+        if not l.strip():
+            continue
+        is_table = l.startswith("|")
+        if is_table != prev_table:
+            w()               # markdown needs a blank line between a paragraph and a table
+        w(l)
+        prev_table = is_table
+    w()
+
+
 def sources_table():
     w("## Sources")
     w()
@@ -641,12 +896,24 @@ def sources_table():
 
 
 def main():
+    import argparse
+    global FP
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--fp", default=FP, help="code fingerprint of the baseline sweep")
+    ap.add_argument("--tag", default="freeze-round-b", help="git tag of that baseline")
+    ap.add_argument("--val", default="freeze", help="validation run tag: diag_cost_gap_<val>_{nocap,capped}_c3.json")
+    ap.add_argument("--out", default="RESULTS_PACK.md")
+    args = ap.parse_args()
+    FP = args.fp
+    SRC.update(on=f"experiments/sweep_raw_{FP}.jsonl", off=f"experiments/sweep_variant_nocap_{FP}.jsonl",
+               val_off=f"experiments/diag_cost_gap_{args.val}_nocap_c3.json",
+               val_on=f"experiments/diag_cost_gap_{args.val}_capped_c3.json")
     d_on, d_off = load_jsonl(SRC["on"]), load_jsonl(SRC["off"])
     assert len(d_on) == 7200 and len(d_off) == 7200, (len(d_on), len(d_off))
     body = OUT
     w("# R-BurstHADS results pack")
     w()
-    w(f"Frozen simulator: tag `freeze-round-b`, code fingerprint `{FP}`. Generated by `experiments/results_pack.py` "
+    w(f"Frozen simulator: tag `{args.tag}`, code fingerprint `{FP}`. Generated by `experiments/results_pack.py` "
       "from committed result files only (see Sources at the end). Table 9 scenarios sc1–sc5 × n 50/100/200/300 × "
       "DF 0.25/0.5/1.0/2.0 × 30 seeds × 3 schedulers = 7,200 runs per limit setting. Instance limits = the reference "
       f"implementation's account limits: {lim.PER_TYPE['ondemand']} on-demand and {lim.PER_TYPE['spot']} spot launches per "
@@ -673,6 +940,13 @@ def main():
     economics_table()
     deviations_table()
     adoption_table()
+    w("## Post-freeze round: the saturation response, fixes 17a–20, checkpoint credit and boot delay")
+    w()
+    fix17_table()
+    fix18_20_table()
+    overcredit_table()
+    entry_route_table()
+    u10_window_table()
     w("## Per-cell means and 95% confidence intervals")
     w()
     cell_ci_table(d_on, "T3", "Per cell, instance limits ON", SRC["on"])
@@ -705,9 +979,9 @@ def main():
         "",
     ]
     final = OUT[:3] + key + OUT[3:]
-    (ROOT / "RESULTS_PACK.md").write_text("\n".join(final) + "\n", encoding="utf-8")
+    (ROOT / args.out).write_text("\n".join(final) + "\n", encoding="utf-8")
     print("\n".join(key))
-    print(f"wrote RESULTS_PACK.md ({len(final)} lines)")
+    print(f"wrote {args.out} ({len(final)} lines)")
 
 
 if __name__ == "__main__":
