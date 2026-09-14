@@ -1,0 +1,45 @@
+Frozen sweep 4f08f48ac35c; miss-producing cells (frozen R-BurstHADS missed a task): 22
+
+## LEAD — R-BurstHADS vs Burst-HADS, miss-producing cells (limits on)
+| variant | cells | R $ vs B | R mk vs B | R dominates B | R $ vs H | B $ vs H | R mk vs H | R sig. cheaper / dearer than B |
+|---|---|---|---|---|---|---|---|---|
+| frozen | 21 | +2.9% | -1.6% | 4/21 | +21.5% | +18.2% | -8.5% | 3 / 7 |
+| f17a | 21 | +2.7% | -1.8% | 4/21 | +21.2% | +18.2% | -8.7% | 3 / 7 |
+| f17b | 21 | +2.9% | -1.5% | 4/21 | +21.4% | +18.2% | -8.5% | 3 / 7 |
+| f17c | 21 | +2.9% | -1.5% | 4/21 | +21.5% | +18.2% | -8.4% | 3 / 7 |
+| f17ab | 21 | +2.9% | -1.5% | 4/21 | +21.4% | +18.2% | -8.5% | 3 / 7 |
+| f17abc | 21 | +2.9% | -1.5% | 4/21 | +21.4% | +18.2% | -8.5% | 3 / 7 |
+
+## Against frozen, miss-producing cells
+| variant | scheduler | runs changed | missed tasks | runs with a miss | mean makespan change | mean cost change | R provisioned VMs / run | t3.large / c5.xlarge-spot launches / run |
+|---|---|---|---|---|---|---|---|---|
+| frozen | HADS | 0/660 | 0 | 0 | +0.00% | +0.00% | 0.00 | 0.00 / 2.50 |
+| frozen | Burst-HADS | 0/660 | 1 | 1 | +0.00% | +0.00% | 0.00 | 2.27 / 3.00 |
+| frozen | R-BurstHADS | 0/660 | 109 | 104 | +0.00% | +0.00% | 3.61 | 3.93 / 4.96 |
+| f17a | R-BurstHADS | 157/660 | 1 | 1 | -0.25% | -0.17% | 3.61 | 3.92 / 4.96 |
+| f17b | R-BurstHADS | 306/660 | 1 | 1 | +0.01% | -0.02% | 3.61 | 3.93 / 4.96 |
+| f17c | R-BurstHADS | 249/660 | 73 | 71 | +0.07% | +0.04% | 3.60 | 3.92 / 4.95 |
+| f17ab | R-BurstHADS | 306/660 | 1 | 1 | +0.01% | -0.02% | 3.61 | 3.93 / 4.96 |
+| f17abc | R-BurstHADS | 308/660 | 1 | 1 | +0.01% | -0.02% | 3.60 | 3.92 / 4.95 |
+
+## LEAD — R-BurstHADS vs Burst-HADS, full sweep (limits on)
+| variant | cells | R $ vs B | R mk vs B | R dominates B | R $ vs H | B $ vs H | R mk vs H | R sig. cheaper / dearer than B |
+|---|---|---|---|---|---|---|---|---|
+| frozen | 75 | -5.4% | -12.7% | 44/75 | +12.9% | +21.3% | -27.9% | 29 / 7 |
+| f17a | 75 | -5.5% | -12.8% | 44/75 | +12.9% | +21.3% | -28.0% | 29 / 7 |
+| f17b | 75 | -5.4% | -12.7% | 43/75 | +13.0% | +21.3% | -27.9% | 29 / 7 |
+| f17c | 75 | -5.3% | -12.6% | 43/75 | +13.0% | +21.3% | -27.9% | 27 / 7 |
+| f17ab | 75 | -5.4% | -12.7% | 43/75 | +13.0% | +21.3% | -27.9% | 29 / 7 |
+| f17abc | 75 | -5.4% | -12.6% | 43/75 | +13.0% | +21.3% | -27.9% | 27 / 7 |
+
+## Against frozen, full sweep
+| variant | scheduler | runs changed | missed tasks | runs with a miss | mean makespan change | mean cost change | R provisioned VMs / run | t3.large / c5.xlarge-spot launches / run |
+|---|---|---|---|---|---|---|---|---|
+| frozen | HADS | 0/2400 | 0 | 0 | +0.00% | +0.00% | 0.00 | 0.00 / 1.86 |
+| frozen | Burst-HADS | 0/2400 | 1 | 1 | +0.00% | +0.00% | 0.00 | 2.76 / 3.00 |
+| frozen | R-BurstHADS | 0/2400 | 109 | 104 | +0.00% | +0.00% | 2.39 | 3.35 / 4.80 |
+| f17a | R-BurstHADS | 162/2400 | 1 | 1 | -0.07% | -0.05% | 2.38 | 3.35 / 4.80 |
+| f17b | R-BurstHADS | 337/2400 | 1 | 1 | +0.02% | +0.01% | 2.39 | 3.35 / 4.80 |
+| f17c | R-BurstHADS | 282/2400 | 73 | 71 | +0.07% | +0.05% | 2.38 | 3.35 / 4.79 |
+| f17ab | R-BurstHADS | 337/2400 | 1 | 1 | +0.02% | +0.01% | 2.39 | 3.35 / 4.80 |
+| f17abc | R-BurstHADS | 352/2400 | 1 | 1 | +0.05% | +0.03% | 2.38 | 3.35 / 4.79 |

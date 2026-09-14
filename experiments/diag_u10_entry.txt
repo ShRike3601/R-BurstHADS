@@ -1,0 +1,28 @@
+Missed tasks: 109; last placed on a burstable: 108
+
+Path that first put the task on the burstable it missed on:
+    71  saturation redistribution
+    37  hibernation rescue / tier 0 (replacement VM)
+
+Path that first put the task on any burstable:
+    96  hibernation rescue / tier 0 (replacement VM)
+    12  saturation redistribution
+
+VM the task came from just before that entry:
+    60  burstable:t3.large
+    35  spot:c5.xlarge
+     7  spot:c5.large
+     6  spot:m5.xlarge
+
+Owner of that burstable:
+   108  R-BurstHADS-provisioned (id 100-9999)
+
+Baseline mode at its starts on that burstable:
+   108  [False]
+
+Missed tasks ever moved onto a burstable by work stealing (Algorithm 5): 0
+
+Placements onto a VM whose ProvisioningEvent had not yet run:
+    44  hibernation rescue / tier 0 (replacement VM) -> burstable:t3.large
+    26  hibernation rescue / tier 0 (replacement VM) -> spot:c5.xlarge
+    14  saturation redistribution -> burstable:t3.large

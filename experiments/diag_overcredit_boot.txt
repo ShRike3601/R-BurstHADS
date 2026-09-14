@@ -1,0 +1,23 @@
+# Checkpoint over-credit and starts before ready (frozen code 4f08f48ac35c, limits on)
+
+Probed runs reproducing their frozen row: 7200 / 7200
+
+## Checkpoint over-credit per scheduler, all cells
+
+| scheduler | feasible runs | displaced running tasks / run | displaced queued tasks / run | progress credited / run | executed / run | over-credit / run (work units) | over-credit, % of workload | runs with any over-credit |
+|---|---|---|---|---|---|---|---|---|
+| hads | 2390 | 17.40 | 83.44 | 1963.8 | 1785.3 | 178.5 | 0.490% | 2196 |
+| burst | 2400 | 25.23 | 77.03 | 2822.2 | 2565.6 | 256.6 | 0.705% | 2362 |
+| rburst | 2400 | 27.88 | 73.88 | 3154.9 | 2868.0 | 286.8 | 0.788% | 2339 |
+
+## Checkpoint over-credit per scheduler, the 22 miss-producing cells
+
+| scheduler | feasible runs | displaced running tasks / run | displaced queued tasks / run | progress credited / run | executed / run | over-credit / run (work units) | over-credit, % of workload | runs with any over-credit |
+|---|---|---|---|---|---|---|---|---|
+| hads | 658 | 27.42 | 146.35 | 3198.0 | 2907.3 | 290.7 | 0.671% | 647 |
+| burst | 660 | 35.68 | 161.62 | 4164.0 | 3785.5 | 378.5 | 0.874% | 660 |
+| rburst | 660 | 40.65 | 162.13 | 4768.2 | 4334.7 | 433.5 | 1.001% | 660 |
+
+## Tasks started before their R-BurstHADS-provisioned VM was ready
+
+R-BurstHADS, 2400 feasible runs: early starts on spot VMs 6661 (in 1276 runs), on burstables 0; total head start 178906 s (mean 26.9 s per early start). HADS and Burst-HADS provision no such VMs.

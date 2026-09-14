@@ -1,0 +1,17 @@
+# Fix 17 adoption check: experiments/fix17_adopt_patch.py applied to a clean export of 12e6749, R-BurstHADS, seeds 0-9 of the full grid,
+# compared row for row (infeasible, error, makespan, cost, misses) with the variant f17<cfg>. Project scheduler not modified.
+===== adopt a
+adopted a: fingerprint c8474bdd8669
+  adopted vs variant, seeds 0-9: 800/800 rows identical
+===== adopt b
+adopted b: fingerprint f8344d2cd0b1
+  adopted vs variant, seeds 0-9: 800/800 rows identical
+===== adopt c
+adopted c: fingerprint 861ac86c2ece
+  adopted vs variant, seeds 0-9: 800/800 rows identical
+===== adopt ab
+adopted ab: fingerprint ada4d7a65d19
+  adopted vs variant, seeds 0-9: 800/800 rows identical
+===== adopt abc
+adopted abc: fingerprint a4c9ff262685
+  adopted vs variant, seeds 0-9: 800/800 rows identical

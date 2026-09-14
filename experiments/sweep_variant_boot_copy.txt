@@ -1,0 +1,5 @@
+variant boot_copy: 800 units on 20 workers -> sweep_variant_boot_copy_4f08f48ac35c.jsonl
+infeasible runs: 0
+done in 93s, 0 errors
+identical to base 4f08f48ac35c: 800/800 units (base rows found: 800)
+scheduler subset: cross-scheduler summary skipped
