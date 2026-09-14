@@ -631,8 +631,95 @@ def _t9_deployed():
     return apply_patch
 
 
+def _launch_billing():
+    """B1: bill every VM from its launch (TCC23 section 3.1: "When a new vmj
+    is launched, the user is charged cj for each period of time").
+
+    On disk, billing opens at a VM's first task (VM.start_next_if_free), so a
+    launched VM that never runs a task costs nothing. Here LaunchCounter.
+    commit, the single point where every scheduler launches a VM, opens the
+    billing interval at the engine clock (0 before the engine starts, i.e.
+    the primary schedule). start_billing is idempotent, so later dispatch
+    changes nothing. Side effect, faithful to the paper: a launched VM is
+    now `is_deployed`, so start_execution gives an idle one an Allocation
+    Cycle."""
+    from simulation.event_engine import EventEngine
+    import models.limits as lim
+    orig_run, orig_commit = EventEngine.run, lim.LaunchCounter.commit
+
+    def run(self):
+        _T9["billing_engine"] = self
+        return orig_run(self)
+
+    def commit(self, vm):
+        if vm.id not in self._ids:
+            eng = _T9.get("billing_engine")
+            vm.start_billing(float(eng.time) if eng is not None else 0.0)
+        return orig_commit(self, vm)
+
+    def apply_patch():
+        _patch(EventEngine, "run", run)
+        _patch(lim.LaunchCounter, "commit", commit)
+    return apply_patch
+
+
+def _ac_cycles(counted):
+    """E10: where an idle VM's Allocation Cycle ends.
+
+    counted=False reproduces VM.start_ac on disk through the same patch
+    point: a fresh 900 s from the moment the VM goes idle. Exists to prove
+    the patch is faithful.
+    counted=True follows TCC23 section 3.3 ("the allocation time is logically
+    divided into units denoted Allocation Cycles (ACs). A vmj that reaches
+    the end of its current AC ... in idle state, is terminated") and the
+    reference Dispatcher.next_period_end: periods = ceil(uptime / AC), end =
+    start_time + periods * AC + hibernated time, uptime excluding
+    hibernation. Billed seconds are exactly that uptime (billing stops on
+    hibernation), so the current cycle ends at now + ceil(u/AC)*AC - u, one
+    period at least."""
+    import math
+    from models.vm import VM
+
+    def start_ac(self, current_time):
+        if not counted:
+            self.current_ac_start = current_time
+            self.ac_termination_time = current_time + self.allocation_cycle
+            return
+        ac = self.allocation_cycle
+        u = self.billed_seconds(current_time)
+        periods = max(1, math.ceil(u / ac - 1e-9))
+        self.current_ac_start = current_time - (u - (periods - 1) * ac)
+        self.ac_termination_time = current_time + (periods * ac - u)
+
+    return lambda: _patch(VM, "start_ac", start_ac)
+
+
+# Round A closing grid: guard (U5) on/off x Allocation Cycle boundaries (E10)
+# off/on, on the state Round B adopts (migration fix U6/H2, billing from launch
+# B1). "nocap+" = validation catalogue setting, bare = capped sweep setting.
+_GRID = {
+    "g1e0": [],
+    "g0e0": [_burst_fill(False)],
+    "g1e1": [_ac_cycles(True)],
+    "g0e1": [_burst_fill(False), _ac_cycles(True)],
+}
+
+
+def _grid_variants():
+    out = {}
+    for cell, extra in _GRID.items():
+        core = [lambda: _migrate_to_launched(True)(), lambda: _launch_billing()()] + list(extra)
+        out[f"grid_{cell}"] = core
+        out[f"nocap+grid_{cell}"] = [lambda: _nocap()()] + core
+    return out
+
+
 VARIANTS = {
     "base":             [],
+    "nocap+ac_copy":         [lambda: _nocap()(), _ac_cycles(False)],
+    "nocap+mig_launched+launch_bill": [lambda: _nocap()(), lambda: _migrate_to_launched(True)(),
+                                       lambda: _launch_billing()()],
+    **_grid_variants(),
     "nocap+t9_deployed":     [lambda: _nocap()(), lambda: _t9_deployed()()],
     "nocap+mig_launched+t9_deployed": [lambda: _nocap()(), lambda: _migrate_to_launched(True)(),
                                        lambda: _t9_deployed()()],

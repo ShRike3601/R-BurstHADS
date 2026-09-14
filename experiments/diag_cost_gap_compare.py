@@ -120,6 +120,19 @@ def main():
             print(f"  {n:{w}s} " + " ".join(
                 f"{s[f'prem_sc_{k}'][sc]:+5.0f}% {s[f'hib_sc_{k}'][sc]:4.1f}h" for sc in HIB))
 
+    print("\nDEADLINE MISSES AND MAKESPAN (D = 2700 s). missed tasks summed over all runs; runs with any miss;"
+          " mean makespan without / with hibernation")
+    print(f"  {'state':{w}s} {'missed H':>9s} {'missed B':>9s} {'runs H':>7s} {'runs B':>7s} |"
+          f" {'mk H none':>9s} {'mk H hib':>9s} {'mk B none':>9s} {'mk B hib':>9s}")
+    for t in tags:
+        _, byt = load(t)
+        allr = lambda k: [r for (j, sc, kk), rs in byt.items() if kk == k for r in rs]
+        mk = lambda k, hib: mean(r["mk"] for (j, sc, kk), rs in byt.items()
+                                 if kk == k and (sc != "none") == hib for r in rs)
+        print(f"  {t:{w}s} {sum(r['misses'] for r in allr('hads')):9d} {sum(r['misses'] for r in allr('burst')):9d}"
+              f" {sum(1 for r in allr('hads') if r['misses']):7d} {sum(1 for r in allr('burst') if r['misses']):7d} |"
+              f" {mk('hads', False):9.0f} {mk('hads', True):9.0f} {mk('burst', False):9.0f} {mk('burst', True):9.0f}")
+
     print("\nHIBERNATIONS PER RUN, mean over sc1-sc5 (TCC23: one column; ours: HADS / Burst-HADS runs)")
     print(f"  {'state':{w}s} " + " ".join(f"{j:>13s}" for j in JOBS) + f" {'spot VMs billed w/o hib H/B':>28s}")
     for n, s in rows:
