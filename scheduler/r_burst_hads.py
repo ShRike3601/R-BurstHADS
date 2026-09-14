@@ -289,8 +289,10 @@ class RBurstHADS(BurstHADS):
 
         n_tasks = len(self.all_tasks)
         e_avg   = sum(t.exec_time for t in self.all_tasks) / n_tasks
-        od_rate = (min(self.ondemand_vms, key=lambda v: v.cost_rate
-                      ).cost_rate if self.ondemand_vms else 0.085/3600)
+        if not self._od_catalogue:
+            return
+        od_tpl  = self._od_catalogue[0]     # cheapest on-demand type (E3)
+        od_rate = od_tpl["cost_rate"]
 
         for vm in list(self.spot_vms):
             if vm.hibernation_rate <= 0:
@@ -336,9 +338,7 @@ class RBurstHADS(BurstHADS):
             s_speed  = self._spot_tpl["speed"]
             theta_s  = s_speed * self._spot_tpl["vcpu"]
 
-            od_vm    = (min(self.ondemand_vms, key=lambda v: v.cost_rate)
-                        if self.ondemand_vms else None)
-            theta_od = ((od_vm.speed * od_vm.vcpu_count) if od_vm else 4.0)
+            theta_od = od_tpl["speed"] * od_tpl["vcpu"]
 
             # C_proactive is the OVERHEAD of buying early, which this
             # module's own Theorem 1 states as

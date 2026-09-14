@@ -29,6 +29,7 @@ import math
 import random
 import copy
 from models.vm import VM
+from models.catalogue import catalogue, make_vm
 from models.limits import LaunchCounter, NoFeasibleSchedule
 from simulation.provisioning_event import STARTUP_LATENCY
 
@@ -70,6 +71,10 @@ class BurstHADS:
         self.spot_vms      = [v for v in vms if v.market == VM.SPOT]
         self.burstable_vms = [v for v in vms if v.market == VM.BURSTABLE]
         self.ondemand_vms  = [v for v in vms if v.market == VM.ONDEMAND]
+        # M^o's and M^b's types, fixed at start (models/catalogue.py,
+        # DEVIATIONS E3).
+        self._od_catalogue    = catalogue(vms, VM.ONDEMAND)
+        self._burst_catalogue = catalogue(vms, VM.BURSTABLE)
 
         # Deadline
         if deadline is not None:
@@ -408,15 +413,19 @@ class BurstHADS:
             if scheduled:
                 continue
 
-            template_type = (self.ondemand_vms[0].vm_type
-                             if self.ondemand_vms else "c5.large")
-            if not self._launches.can_launch_type("ondemand", template_type):
+            # A new VM of the cheapest on-demand type, within its instance
+            # limit, that can take the task before D.
+            in_limit = [t for t in self._od_catalogue
+                        if self._launches.can_launch_type("ondemand", t["vm_type"])]
+            if not in_limit:
                 raise NoFeasibleSchedule(
                     f"BurstHADS: no placement for task {task.task_id} within "
                     f"D={self.D:.1f}s and the instance limits.")
-            new_vm = self._launch_new_ondemand_vm(0.0)
-            if self._check_schedule(task, new_vm, vm_tasks, vm_memory,
-                                    self.D):
+            tpl = next((t for t in in_limit
+                        if self._check_schedule(task, make_vm(t, -1), vm_tasks,
+                                                vm_memory, self.D)), None)
+            if tpl is not None:
+                new_vm = self._launch_new_ondemand_vm(0.0, tpl)
                 allocation[task.task_id] = new_vm.id
                 vm_tasks.setdefault(new_vm.id, []).append(task)
                 vm_memory[new_vm.id] = (vm_memory.get(new_vm.id, 0)
@@ -748,24 +757,15 @@ class BurstHADS:
         idle termination -- until the end of the run: TCC23's burstables are
         a sunk cost, which is what makes a rescue onto one free at the margin.
         """
-        template   = self.burstable_vms[0] if self.burstable_vms else None
-        vm_type    = template.vm_type          if template else "t3.large"
-        speed      = template.speed            if template else 2
-        cost_rate  = template.cost_rate        if template else 0.0832 / 3600
-        memory_gb  = template.memory_gb        if template else 8.0
-        baseline_f = (template.baseline_fraction
-                      if template else 0.20)
+        if not self._burst_catalogue:
+            return []
+        tpl = self._burst_catalogue[0]
 
         launched = []
         for _ in range(n):
-            if not self._launches.can_launch_type("ondemand", vm_type):
+            if not self._launches.can_launch_type("ondemand", tpl["vm_type"]):
                 break                   # IPDPS: "Not fullfill N_burst"
-            new_vm = VM(
-                vm_id=self._next_new_vm_id, vm_type=vm_type,
-                market=VM.BURSTABLE, speed=speed, cost_rate=cost_rate,
-                memory_gb=memory_gb, baseline_fraction=baseline_f,
-                hibernation_rate=0.0,
-            )
+            new_vm = make_vm(tpl, self._next_new_vm_id)
             self._next_new_vm_id += 1
             new_vm.state = VM.IDLE
 
@@ -1119,20 +1119,22 @@ class BurstHADS:
                 self._launches.commit(vm)
                 return vm
 
-        template_type = (self.ondemand_vms[0].vm_type
-                         if self.ondemand_vms else "c5.large")
-        if not self._launches.can_launch_type("ondemand", template_type):
+        in_limit = [t for t in self._od_catalogue
+                    if self._launches.can_launch_type("ondemand", t["vm_type"])]
+        if not in_limit:
             return self._capped_fallback(task, current_time)
 
-        # Draw a fresh VM from M^o. Same deadline test as the paper's
-        # Attempt 3 (start + exec_time + deployment overhead < D);
-        # STARTUP_LATENCY stands in for the paper's omega (time to
-        # deploy a new VM).
-        new_vm = self._launch_new_ondemand_vm(current_time)
-        finish = (current_time + STARTUP_LATENCY
-                  + task.remaining_time / new_vm.speed)
-        if new_vm.can_fit_task(task) and finish <= deadline:
-            return new_vm
+        # Draw a fresh VM from M^o: "sort by price(Mo); for each vmj in Mo:
+        # if start + eij + omega < D: start vm". STARTUP_LATENCY stands in
+        # for omega (time to deploy a new VM). Types walked cheapest first,
+        # each within its instance limit.
+        for tpl in in_limit:
+            probe = make_vm(tpl, -1)
+            finish = (current_time + STARTUP_LATENCY
+                      + task.remaining_time / probe.speed)
+            if probe.can_fit_task(task) and finish <= deadline:
+                return self._launch_new_ondemand_vm(current_time, tpl)
+        new_vm = self._launch_new_ondemand_vm(current_time, in_limit[0])
 
         # Even a brand-new on-demand VM can't make the deadline -- the
         # task is already unsavable. Not part of Algorithm 4: rather
@@ -1140,25 +1142,14 @@ class BurstHADS:
         # as a deadline miss instead of vanishing from the simulation.
         return new_vm
 
-    def _launch_new_ondemand_vm(self, current_time):
+    def _launch_new_ondemand_vm(self, current_time, tpl=None):
         """
         Pull one VM out of M^o -- same type/speed/price/vcpu_count as
         whatever on-demand VM(s) are already in the pool. Billed from this
         launch (LaunchCounter.commit).
         """
-        template  = self.ondemand_vms[0] if self.ondemand_vms else None
-        vm_type   = template.vm_type    if template else "c5.large"
-        speed     = template.speed      if template else 2
-        cost_rate = template.cost_rate  if template else 0.085 / 3600
-        memory_gb = template.memory_gb  if template else 4.0
-        vcpu      = template.vcpu_count if template else 2
-
-        new_vm = VM(
-            vm_id=self._next_new_vm_id, vm_type=vm_type,
-            market=VM.ONDEMAND, speed=speed, cost_rate=cost_rate,
-            memory_gb=memory_gb, hibernation_rate=0.0,
-            vcpu_count=vcpu,
-        )
+        # `tpl`: an entry of self._od_catalogue; default the cheapest type.
+        new_vm = make_vm(tpl or self._od_catalogue[0], self._next_new_vm_id)
         self._next_new_vm_id += 1
         new_vm.state = VM.IDLE
 

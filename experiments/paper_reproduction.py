@@ -98,10 +98,15 @@ def build_vms_paper(copies=6):
                   cost_rate=0.0832/3600, memory_gb=8.0,
                   baseline_fraction=0.20, hibernation_rate=0.0,
                   vcpu_count=2)); vid += 1
-    # on-demand fallback (M^o template): cheapest on-demand in Table 4
-    vms.append(VM(vid, "c4.large", VM.ONDEMAND, speed=CORE_SPEED,
-                  cost_rate=0.100/3600, memory_gb=3.75,
-                  hibernation_rate=0.0, vcpu_count=2))
+    # on-demand types (M^o), TCC23 Table 3's on-demand prices; Attempt 3
+    # walks them by price, each within its instance limit
+    for t, vcpu, mem, rate in (("c4.large",  2, 3.75, 0.100),
+                               ("c3.large",  2, 3.75, 0.105),
+                               ("c3.xlarge", 4, 7.50, 0.199)):
+        vms.append(VM(vid, t, VM.ONDEMAND, speed=CORE_SPEED,
+                      cost_rate=rate/3600, memory_gb=mem,
+                      hibernation_rate=0.0, vcpu_count=vcpu))
+        vid += 1
     return vms
 
 

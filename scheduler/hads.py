@@ -87,6 +87,7 @@ proposed.
 """
 
 from models.vm import VM
+from models.catalogue import catalogue, make_vm
 from models.limits import LaunchCounter, NoFeasibleSchedule
 from simulation.provisioning_event import STARTUP_LATENCY
 
@@ -139,6 +140,8 @@ class HADS:
         self.spot_vms      = [v for v in vms if v.market == VM.SPOT]
         self.burstable_vms = []
         self.ondemand_vms  = [v for v in vms if v.market == VM.ONDEMAND]
+        # M^o's types, fixed at start (models/catalogue.py, DEVIATIONS E3).
+        self._od_catalogue = catalogue(vms, VM.ONDEMAND)
 
         # Algorithm 5 (work stealing) is a BURST-HADS contribution, not
         # part of HADS. Teylo et al. describe the 2021 work as "a dynamic
@@ -433,15 +436,19 @@ class HADS:
             if placed:
                 continue
 
-            template_type = (self.ondemand_vms[0].vm_type
-                             if self.ondemand_vms else "c5.large")
-            if not self._launches.can_launch_type("ondemand", template_type):
+            # A new queue of the cheapest on-demand type, within its
+            # instance limit, that can take the task before D.
+            in_limit = [t for t in self._od_catalogue
+                        if self._launches.can_launch_type("ondemand", t["vm_type"])]
+            if not in_limit:
                 raise NoFeasibleSchedule(
                     f"HADS: no placement for task {task.task_id} within "
                     f"D={self.D:.1f}s and the instance limits.")
-            new_vm = self._launch_new_ondemand_vm(0.0)
-            if self._check_schedule(task, new_vm, vm_tasks, vm_memory,
-                                    self.D):
+            tpl = next((t for t in in_limit
+                        if self._check_schedule(task, make_vm(t, -1), vm_tasks,
+                                                vm_memory, self.D)), None)
+            if tpl is not None:
+                new_vm = self._launch_new_ondemand_vm(0.0, tpl)
                 ondemand_sorted.append(new_vm)
                 ondemand_sorted.sort(key=lambda v: v.cost_rate)
                 allocation[task.task_id] = new_vm.id
@@ -621,15 +628,19 @@ class HADS:
         (time to deploy a new VM), same as BurstHADS's own fallback.
         """
         deadline = self.D
-        template_type = (self.ondemand_vms[0].vm_type
-                         if self.ondemand_vms else "c5.large")
-        if not self._launches.can_launch_type("ondemand", template_type):
+        # backup_heuristic: on-demand types by price, each within its limit;
+        # the first that meets D, else the cheapest within its limit.
+        in_limit = [t for t in self._od_catalogue
+                    if self._launches.can_launch_type("ondemand", t["vm_type"])]
+        if not in_limit:
             return self._capped_fallback(task, current_time)
-        new_vm = self._launch_new_ondemand_vm(current_time)
-        finish = (current_time + STARTUP_LATENCY
-                  + task.remaining_time / new_vm.speed)
-        if new_vm.can_fit_task(task) and finish <= deadline:
-            return new_vm
+        for tpl in in_limit:
+            probe = make_vm(tpl, -1)
+            finish = (current_time + STARTUP_LATENCY
+                      + task.remaining_time / probe.speed)
+            if probe.can_fit_task(task) and finish <= deadline:
+                return self._launch_new_ondemand_vm(current_time, tpl)
+        new_vm = self._launch_new_ondemand_vm(current_time, in_limit[0])
 
         # Even a brand-new on-demand VM can't make the deadline -- the
         # task is already unsavable. Not part of CCScheduler.migrate:
@@ -638,7 +649,7 @@ class HADS:
         # simulation, matching BurstHADS's own fallback behavior here.
         return new_vm
 
-    def _launch_new_ondemand_vm(self, current_time):
+    def _launch_new_ondemand_vm(self, current_time, tpl=None):
         """
         Pull one VM out of M^o -- same type/speed/price/vcpu_count as
         whatever on-demand VM(s) are already in the pool. Unlimited
@@ -646,19 +657,8 @@ class HADS:
         on M^o beyond the underlying instance-type limits, which this
         simulator doesn't model at the fleet-size level).
         """
-        template  = self.ondemand_vms[0] if self.ondemand_vms else None
-        vm_type   = template.vm_type    if template else "c5.large"
-        speed     = template.speed      if template else 2
-        cost_rate = template.cost_rate  if template else 0.085 / 3600
-        memory_gb = template.memory_gb  if template else 4.0
-        vcpu      = template.vcpu_count if template else 2
-
-        new_vm = VM(
-            vm_id=self._next_new_vm_id, vm_type=vm_type,
-            market=VM.ONDEMAND, speed=speed, cost_rate=cost_rate,
-            memory_gb=memory_gb, hibernation_rate=0.0,
-            vcpu_count=vcpu,
-        )
+        # `tpl`: an entry of self._od_catalogue; default the cheapest type.
+        new_vm = make_vm(tpl or self._od_catalogue[0], self._next_new_vm_id)
         self._next_new_vm_id += 1
         new_vm.state = VM.IDLE
 

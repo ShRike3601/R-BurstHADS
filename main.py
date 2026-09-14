@@ -251,12 +251,19 @@ def build_vms_dburst():
                   cost_rate=0.0832/3600, memory_gb=8.0,
                   baseline_fraction=0.20, hibernation_rate=0.0,
                   vcpu_count=2)); vid += 1
-    # On-demand template for the elastic M^o pool (unlimited, Algorithm 4
-    # Attempt 3).
-    vms.append(VM(vid, "c5.large", VM.ONDEMAND,
-                  speed=PER_CORE_SPEED["c5.large"],
-                  cost_rate=0.085/3600, memory_gb=4.0,
-                  hibernation_rate=0.0, vcpu_count=2))
+    # On-demand types for the elastic M^o pool, one template each (Algorithm
+    # 4 Attempt 3 walks them by price, each within its instance limit, so the
+    # on-demand ceiling is min(5 x 3, 20) = 15). The same three non-burstable
+    # types as the spot market, as in TCC23 Table 3. AWS us-east-1 Linux
+    # on-demand prices (instances.vantage.sh, 2026-09-14); the spot prices
+    # above are 36% of these.
+    for t, vc, rate, mem in (("c5.large",  2, 0.085, 4.0),
+                             ("c5.xlarge", 4, 0.170, 8.0),
+                             ("m5.xlarge", 4, 0.192, 16.0)):
+        vms.append(VM(vid, t, VM.ONDEMAND, speed=PER_CORE_SPEED[t],
+                      cost_rate=rate/3600, memory_gb=mem,
+                      hibernation_rate=0.0, vcpu_count=vc))
+        vid += 1
     return vms
 
 
