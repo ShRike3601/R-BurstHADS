@@ -1,0 +1,169 @@
+# U10 diagnostic: R-BurstHADS's missed tasks under limits (frozen code 4f08f48ac35c)
+
+Traced runs reproducing their sweep row (makespan, cost, misses): 104 / 104
+Missed tasks traced: 109 in 104 runs
+
+## Split requested: (a) U10 / (b) no machine could make D / (c) neither
+
+| | missed tasks |
+|---|---|
+| (c) not U10, and a fresh in-limit on-demand VM could still have finished by D from its last placement | 108 |
+| (b) no in-limit fresh on-demand VM could finish by D from its last placement | 1 |
+
+## Last placement: path, tier and VM
+
+| | missed tasks |
+|---|---|
+| saturation redistribution -> burstable:t3.large (1 slot) | 108 |
+| hibernation rescue / tier 4 (on-demand fallback) -> ondemand:m5.xlarge (4 slot) | 1 |
+
+## Mechanism at the last placement
+
+| | missed tasks |
+|---|---|
+| placed with the placer's own predicted finish already past D | 109 |
+
+## Displacements before the last placement
+
+| | missed tasks |
+|---|---|
+| 2 hibernation displacement(s) before the last placement | 47 |
+| 3 hibernation displacement(s) before the last placement | 28 |
+| 1 hibernation displacement(s) before the last placement | 27 |
+| 4 hibernation displacement(s) before the last placement | 4 |
+| 5 hibernation displacement(s) before the last placement | 3 |
+
+## Times the saturation response moved or re-queued the task
+
+| | missed tasks |
+|---|---|
+| 2 saturation move(s) | 34 |
+| 1 saturation move(s) | 33 |
+| 3 saturation move(s) | 20 |
+| 4 saturation move(s) | 18 |
+| 5 saturation move(s) | 3 |
+| 0 saturation move(s) | 1 |
+
+Missed tasks that ever reached tier 4: 1 of 109.
+- ('sc2', 100, 0.25, 25) task 59: slack 162 s, remaining 291, branch new on-demand, chosen m5.xlarge, frozen-test choice None, overhead-corrected choice None, in-limit types ['m5.xlarge'], types whose execution meets D none; per type c5.large: test 368, corrected 383, execution 338 (D 340); c5.xlarge: test 368, corrected 383, execution 338 (D 340); m5.xlarge: test 394, corrected 411, execution 366 (D 340)
+
+Re-done work at checkpoint restarts: 0 by construction (a checkpoint credits elapsed * speed). Progress credited minus progress executed, summed per missed task: min 0.0, max 21.8, mean 8.0 work units (over-credit).
+
+## Saturation responses (Theorem 2) in the 104 runs
+
+Responses that moved tasks: 253; tasks moved or re-queued: 6879; of them onto burstables 5592, re-queued onto the same VM 4284, with the response's own predicted finish past D 222; of those, a fresh in-limit on-demand VM could have made D for 222.
+Launch room at those responses: spot template 0 / 253, t3.large 7 / 253; VMs launched by them: 1.
+
+## Per missed task
+
+| unit (sc n DF seed) | task | late s | displ. before last | over-credit | sat. moves | last placement | slack s | remaining | last VM | predicted / actual finish | last start: wait s, speed | fresh in-limit od finish (D) | tier 4 | split | mechanism |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| sc1 200 0.5 4 | 96 | 9.3 | 1 | 6.6 | 4 | saturation redistribution (same VM) | 582 | 81 | burstable:t3.large | 1206 / 1206 | 539, 1.70 | 659 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc1 300 0.5 3 | 55 | 16.7 | 2 | 0.0 | 2 | saturation redistribution (same VM) | 133 | 109 | burstable:t3.large | 1812 / 1812 | 79, 1.70 | 1723 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc1 300 0.5 7 | 53 | 6.3 | 2 | 8.6 | 4 | saturation redistribution (same VM) | 417 | 96 | burstable:t3.large | 1801 / 1801 | 361, 1.70 | 1431 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 50 1.0 14 | 48 | 4.3 | 2 | 21.4 | 2 | saturation redistribution (same VM) | 261 | 44 | burstable:t3.large | 603 / 603 | 237, 1.70 | 362 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 50 1.0 16 | 0 | 14.2 | 3 | 11.5 | 2 | saturation redistribution (same VM) | 470 | 66 | burstable:t3.large | 613 / 613 | 442, 1.70 | 165 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 50 1.0 26 | 8 | 0.3 | 1 | 21.3 | 1 | saturation redistribution | 389 | 57 | burstable:t3.large | 599 / 599 | 352, 1.70 | 241 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.25 25 | 59 | 26.2 | 1 | 0.0 | 0 | hibernation rescue / tier 4 (on-demand fallback) | 162 | 291 | ondemand:m5.xlarge | 366 / 366 | 0, 1.70 | 366 (340) | slack 162, new on-demand, chose m5.xlarge, test None, corrected None, meets D: none | (b) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 3 | 10 | 16.8 | 2 | 0.0 | 2 | saturation redistribution (same VM) | 381 | 138 | burstable:t3.large | 615 / 615 | 308, 1.70 | 293 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 5 | 74 | 6.9 | 2 | 10.2 | 4 | saturation redistribution (same VM) | 255 | 73 | burstable:t3.large | 605 / 605 | 215, 1.70 | 384 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 9 | 46 | 6.6 | 1 | 13.5 | 3 | saturation redistribution (same VM) | 325 | 98 | burstable:t3.large | 605 / 605 | 268, 1.70 | 328 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 13 | 82 | 1.6 | 2 | 14.7 | 2 | saturation redistribution (same VM) | 372 | 46 | burstable:t3.large | 600 / 600 | 344, 1.70 | 252 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 16 | 99 | 3.1 | 2 | 10.0 | 2 | saturation redistribution (same VM) | 470 | 75 | burstable:t3.large | 602 / 602 | 425, 1.70 | 170 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 26 | 43 | 4.6 | 2 | 4.9 | 1 | saturation redistribution (same VM) | 389 | 66 | burstable:t3.large | 603 / 603 | 351, 1.70 | 246 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 27 | 39 | 2.3 | 2 | 4.8 | 4 | saturation redistribution (same VM) | 222 | 101 | burstable:t3.large | 601 / 601 | 159, 1.70 | 432 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 0.5 28 | 28 | 18.2 | 2 | 0.0 | 4 | saturation redistribution (same VM) | 490 | 165 | burstable:t3.large | 617 / 617 | 401, 1.70 | 200 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 1.0 0 | 99 | 23.6 | 2 | 19.6 | 1 | saturation redistribution | 706 | 132 | burstable:t3.large | 1220 / 1220 | 645, 1.70 | 563 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 1.0 1 | 6 | 7.0 | 3 | 0.0 | 1 | saturation redistribution | 702 | 107 | burstable:t3.large | 1204 / 1204 | 640, 1.70 | 554 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 1.0 4 | 5 | 15.0 | 1 | 21.8 | 2 | saturation redistribution (same VM) | 598 | 55 | burstable:t3.large | 1212 / 1212 | 578, 1.70 | 629 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 1.0 9 | 72 | 13.9 | 2 | 5.5 | 3 | saturation redistribution (same VM) | 650 | 63 | burstable:t3.large | 1211 / 1211 | 623, 1.70 | 582 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 1.0 16 | 40 | 3.6 | 3 | 20.0 | 2 | saturation redistribution (same VM) | 940 | 48 | burstable:t3.large | 1200 / 1200 | 912, 1.70 | 283 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 100 2.0 7 | 35 | 0.5 | 4 | 10.5 | 1 | saturation redistribution (same VM) | 1890 | 26 | burstable:t3.large (not yet ready) | 2394 / 2394 | 1873, 1.70 | 518 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 0 | 28 | 14.2 | 2 | 20.2 | 1 | saturation redistribution | 706 | 100 | burstable:t3.large | 1211 / 1211 | 656, 1.70 | 545 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 2 | 125 | 17.6 | 1 | 0.0 | 1 | saturation redistribution (same VM) | 404 | 105 | burstable:t3.large | 1214 / 1214 | 354, 1.70 | 851 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 7 | 119 | 11.4 | 2 | 2.7 | 4 | saturation redistribution (same VM) | 945 | 77 | burstable:t3.large | 1208 / 1208 | 906, 1.70 | 294 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 9 | 19 | 1.5 | 1 | 0.0 | 3 | saturation redistribution (same VM) | 650 | 122 | burstable:t3.large | 1198 / 1198 | 572, 1.70 | 614 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 10 | 171 | 11.9 | 2 | 7.9 | 4 | saturation redistribution (same VM) | 782 | 62 | burstable:t3.large | 1209 / 1209 | 753, 1.70 | 449 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 13 | 75 | 16.2 | 3 | 14.3 | 2 | saturation redistribution (same VM) | 744 | 70 | burstable:t3.large | 1213 / 1213 | 715, 1.70 | 491 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 16 | 81 | 5.9 | 2 | 19.5 | 3 | saturation redistribution (same VM) | 940 | 77 | burstable:t3.large | 1203 / 1203 | 896, 1.70 | 299 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 17 | 69 | 9.0 | 1 | 18.6 | 3 | saturation redistribution (same VM) | 423 | 57 | burstable:t3.large | 1206 / 1206 | 395, 1.70 | 805 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 18 | 20 | 7.2 | 1 | 15.1 | 3 | saturation redistribution | 893 | 71 | burstable:t3.large | 1204 / 1204 | 854, 1.70 | 343 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 21 | 14 | 5.5 | 2 | 0.0 | 4 | saturation redistribution (same VM) | 802 | 108 | burstable:t3.large | 1202 / 1202 | 738, 1.70 | 454 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 21 | 135 | 21.2 | 2 | 0.0 | 4 | saturation redistribution (same VM) | 802 | 105 | burstable:t3.large | 1218 / 1218 | 755, 1.70 | 453 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 0.5 24 | 95 | 6.9 | 3 | 11.6 | 3 | saturation redistribution (same VM) | 713 | 84 | burstable:t3.large | 1204 / 1204 | 666, 1.70 | 530 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 0 | 153 | 1.0 | 2 | 8.1 | 1 | saturation redistribution (same VM) | 1458 | 81 | burstable:t3.large | 2395 / 2395 | 1406, 1.70 | 981 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 1 | 6 | 6.1 | 3 | 6.9 | 1 | saturation redistribution (same VM) | 1449 | 31 | burstable:t3.large | 2400 / 2400 | 1434, 1.70 | 962 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 8 | 77 | 0.7 | 3 | 10.0 | 1 | saturation redistribution | 779 | 76 | burstable:t3.large (not yet ready) | 2394 / 2394 | 731, 1.70 | 1656 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 9 | 39 | 8.3 | 3 | 5.5 | 3 | saturation redistribution (same VM) | 1299 | 63 | burstable:t3.large | 2402 / 2402 | 1267, 1.70 | 1129 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 10 | 125 | 3.8 | 3 | 17.1 | 2 | saturation redistribution (same VM) | 1563 | 50 | burstable:t3.large | 2397 / 2397 | 1534, 1.70 | 858 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 24 | 85 | 4.0 | 3 | 0.0 | 1 | saturation redistribution | 1472 | 120 | burstable:t3.large (not yet ready) | 2398 / 2398 | 1398, 1.70 | 988 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 200 1.0 26 | 100 | 2.8 | 2 | 4.3 | 2 | saturation redistribution (same VM) | 1677 | 56 | burstable:t3.large | 2396 / 2396 | 1643, 1.70 | 748 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 5 | 297 | 3.5 | 3 | 15.4 | 5 | saturation redistribution (same VM) | 764 | 49 | burstable:t3.large | 1799 / 1799 | 736, 1.70 | 1058 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 6 | 131 | 3.9 | 3 | 19.8 | 2 | saturation redistribution (same VM) | 1131 | 71 | burstable:t3.large | 1799 / 1799 | 1088, 1.70 | 704 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 15 | 221 | 27.8 | 1 | 0.9 | 3 | saturation redistribution (same VM) | 254 | 97 | burstable:t3.large | 1823 / 1823 | 219, 1.70 | 1595 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 16 | 102 | 1.3 | 2 | 0.0 | 3 | saturation redistribution (same VM) | 1410 | 105 | burstable:t3.large | 1797 / 1797 | 1344, 1.70 | 443 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 19 | 49 | 3.3 | 1 | 0.0 | 3 | saturation redistribution (same VM) | 1198 | 104 | burstable:t3.large | 1799 / 1799 | 1134, 1.70 | 654 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 21 | 236 | 7.7 | 2 | 6.0 | 5 | saturation redistribution (same VM) | 1203 | 39 | burstable:t3.large | 1803 / 1803 | 1186, 1.70 | 614 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 22 | 295 | 4.1 | 1 | 11.4 | 2 | saturation redistribution (same VM) | 610 | 56 | burstable:t3.large | 1799 / 1799 | 578, 1.70 | 1216 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 0.5 28 | 275 | 14.1 | 1 | 0.0 | 5 | saturation redistribution (same VM) | 1469 | 105 | burstable:t3.large | 1809 / 1809 | 1415, 1.70 | 384 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 1.0 8 | 107 | 18.4 | 3 | 0.0 | 1 | saturation redistribution | 1192 | 120 | burstable:t3.large (not yet ready) | 3609 / 3609 | 1132, 1.70 | 2465 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 1.0 10 | 299 | 2.3 | 3 | 3.0 | 2 | saturation redistribution (same VM) | 2345 | 99 | burstable:t3.large | 3593 / 3593 | 2283, 1.70 | 1300 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 1.0 12 | 185 | 13.2 | 4 | 3.1 | 1 | saturation redistribution | 2397 | 98 | burstable:t3.large | 3604 / 3604 | 2347, 1.70 | 1248 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 1.0 21 | 109 | 21.8 | 3 | 0.0 | 2 | saturation redistribution (same VM) | 2406 | 102 | burstable:t3.large | 3612 / 3612 | 2362, 1.70 | 1241 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 1.0 22 | 101 | 1.9 | 2 | 7.9 | 1 | saturation redistribution (same VM) | 1265 | 72 | burstable:t3.large | 3592 / 3592 | 1221, 1.70 | 2365 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc2 300 1.0 27 | 10 | 1.0 | 4 | 7.5 | 1 | saturation redistribution (same VM) | 1330 | 37 | burstable:t3.large (not yet ready) | 3591 / 3591 | 1307, 1.70 | 2281 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc3 200 0.5 1 | 130 | 3.7 | 3 | 6.3 | 1 | saturation redistribution | 799 | 80 | burstable:t3.large (not yet ready) | 1201 / 1201 | 751, 1.70 | 442 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 100 0.5 3 | 95 | 0.8 | 2 | 0.0 | 1 | saturation redistribution | 517 | 133 | burstable:t3.large | 599 / 599 | 432, 1.70 | 154 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 100 0.5 8 | 94 | 19.2 | 2 | 8.1 | 2 | saturation redistribution (same VM) | 518 | 104 | burstable:t3.large | 618 / 618 | 470, 1.70 | 138 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 100 0.5 12 | 46 | 2.2 | 2 | 8.3 | 2 | saturation redistribution (same VM) | 77 | 27 | burstable:t3.large | 601 / 601 | 61, 1.70 | 537 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 100 0.5 13 | 24 | 0.1 | 2 | 17.6 | 1 | saturation redistribution | 446 | 111 | burstable:t3.large | 598 / 598 | 374, 1.70 | 213 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 100 1.0 9 | 78 | 5.8 | 2 | 5.2 | 1 | saturation redistribution (same VM) | 1003 | 50 | burstable:t3.large | 1203 / 1203 | 976, 1.70 | 221 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 100 1.0 17 | 14 | 0.4 | 3 | 10.8 | 2 | saturation redistribution (same VM) | 869 | 20 | burstable:t3.large | 1197 / 1197 | 857, 1.70 | 339 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 0 | 33 | 10.5 | 1 | 0.0 | 2 | saturation redistribution (same VM) | 210 | 136 | burstable:t3.large | 1207 / 1207 | 132, 1.70 | 1062 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 4 | 118 | 13.1 | 2 | 0.0 | 1 | saturation redistribution | 774 | 103 | burstable:t3.large | 1210 / 1210 | 721, 1.70 | 479 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 5 | 31 | 26.4 | 1 | 14.9 | 1 | saturation redistribution | 660 | 91 | burstable:t3.large | 1223 / 1223 | 628, 1.70 | 586 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 11 | 103 | 15.7 | 3 | 0.0 | 2 | saturation redistribution (same VM) | 907 | 108 | burstable:t3.large | 1213 / 1213 | 853, 1.70 | 349 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 12 | 46 | 0.6 | 2 | 2.9 | 2 | saturation redistribution | 871 | 87 | burstable:t3.large | 1197 / 1197 | 815, 1.70 | 374 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 19 | 28 | 5.5 | 5 | 17.8 | 3 | saturation redistribution (same VM) | 690 | 21 | burstable:t3.large | 1202 / 1202 | 681, 1.70 | 519 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 23 | 175 | 7.8 | 1 | 0.0 | 2 | saturation redistribution (same VM) | 365 | 100 | burstable:t3.large | 1205 / 1205 | 308, 1.70 | 887 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 24 | 85 | 5.6 | 1 | 0.0 | 4 | saturation redistribution (same VM) | 727 | 120 | burstable:t3.large | 1202 / 1202 | 655, 1.70 | 536 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 25 | 88 | 1.7 | 1 | 3.9 | 4 | saturation redistribution (same VM) | 705 | 67 | burstable:t3.large | 1199 / 1199 | 664, 1.70 | 528 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 27 | 20 | 2.4 | 3 | 7.0 | 1 | saturation redistribution (same VM) | 667 | 48 | burstable:t3.large | 1199 / 1199 | 639, 1.70 | 556 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 0.5 28 | 54 | 9.8 | 2 | 13.3 | 3 | saturation redistribution (same VM) | 249 | 46 | burstable:t3.large | 1207 / 1207 | 229, 1.70 | 973 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 1.0 17 | 30 | 10.7 | 2 | 3.9 | 2 | saturation redistribution (same VM) | 1738 | 58 | burstable:t3.large | 2404 / 2404 | 1711, 1.70 | 687 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 200 1.0 21 | 173 | 10.5 | 3 | 0.0 | 1 | saturation redistribution | 1220 | 107 | burstable:t3.large | 2404 / 2404 | 1161, 1.70 | 1233 (2394) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 0 | 49 | 7.3 | 3 | 0.0 | 1 | saturation redistribution | 838 | 117 | burstable:t3.large | 1803 / 1803 | 770, 1.70 | 1021 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 0 | 180 | 10.4 | 2 | 0.0 | 1 | saturation redistribution (same VM) | 838 | 109 | burstable:t3.large | 1806 / 1806 | 778, 1.70 | 1017 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 2 | 123 | 4.3 | 2 | 10.6 | 1 | saturation redistribution | 628 | 36 | burstable:t3.large | 1800 / 1800 | 610, 1.70 | 1186 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 2 | 261 | 0.9 | 2 | 18.0 | 1 | saturation redistribution (same VM) | 628 | 37 | burstable:t3.large (not yet ready) | 1796 / 1796 | 606, 1.70 | 1187 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 5 | 23 | 4.0 | 2 | 15.8 | 3 | saturation redistribution | 990 | 99 | burstable:t3.large | 1799 / 1799 | 930, 1.70 | 860 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 5 | 204 | 4.8 | 1 | 0.0 | 3 | saturation redistribution (same VM) | 990 | 103 | burstable:t3.large | 1800 / 1800 | 928, 1.70 | 862 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 9 | 25 | 5.0 | 4 | 14.7 | 3 | saturation redistribution (same VM) | 1511 | 34 | burstable:t3.large | 1800 / 1800 | 1493, 1.70 | 304 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 18 | 87 | 1.2 | 2 | 14.7 | 4 | saturation redistribution (same VM) | 669 | 26 | burstable:t3.large | 1796 / 1796 | 653, 1.70 | 1141 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 20 | 183 | 2.3 | 1 | 5.8 | 1 | saturation redistribution | 903 | 52 | burstable:t3.large | 1798 / 1798 | 871, 1.70 | 921 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 21 | 170 | 1.0 | 1 | 11.0 | 2 | saturation redistribution (same VM) | 903 | 64 | burstable:t3.large | 1796 / 1796 | 863, 1.70 | 927 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 21 | 241 | 2.5 | 5 | 8.0 | 3 | saturation redistribution (same VM) | 903 | 67 | burstable:t3.large | 1798 / 1798 | 863, 1.70 | 928 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 23 | 226 | 1.0 | 3 | 15.1 | 2 | saturation redistribution (same VM) | 548 | 41 | burstable:t3.large | 1796 / 1796 | 522, 1.70 | 1270 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 25 | 107 | 3.4 | 2 | 15.7 | 4 | saturation redistribution (same VM) | 1058 | 65 | burstable:t3.large | 1799 / 1799 | 1019, 1.70 | 773 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 26 | 249 | 5.4 | 1 | 0.0 | 1 | saturation redistribution (same VM) | 1071 | 107 | burstable:t3.large | 1801 / 1801 | 1007, 1.70 | 783 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 0.5 28 | 210 | 18.6 | 3 | 0.0 | 3 | saturation redistribution (same VM) | 374 | 106 | burstable:t3.large | 1814 / 1814 | 324, 1.70 | 1479 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc4 300 1.0 17 | 245 | 2.0 | 2 | 8.4 | 3 | saturation redistribution (same VM) | 2607 | 12 | burstable:t3.large | 3592 / 3592 | 2602, 1.70 | 990 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 100 0.5 3 | 68 | 9.9 | 2 | 19.0 | 3 | saturation redistribution (same VM) | 155 | 49 | burstable:t3.large | 608 / 608 | 133, 1.70 | 470 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 100 0.5 14 | 11 | 15.0 | 2 | 10.9 | 2 | saturation redistribution (same VM) | 483 | 72 | burstable:t3.large | 613 / 613 | 452, 1.70 | 155 (598) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 200 0.5 18 | 31 | 7.6 | 3 | 18.1 | 4 | saturation redistribution (same VM) | 391 | 32 | burstable:t3.large | 1204 / 1204 | 378, 1.70 | 824 (1197) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 0 | 131 | 12.8 | 2 | 0.0 | 1 | saturation redistribution (same VM) | 584 | 111 | burstable:t3.large | 1808 / 1808 | 525, 1.70 | 1273 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 1 | 58 | 8.3 | 1 | 13.2 | 2 | saturation redistribution (same VM) | 606 | 71 | burstable:t3.large | 1803 / 1803 | 568, 1.70 | 1229 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 3 | 97 | 7.0 | 2 | 10.2 | 2 | saturation redistribution (same VM) | 465 | 56 | burstable:t3.large | 1802 / 1802 | 436, 1.70 | 1361 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 6 | 177 | 1.0 | 2 | 11.7 | 4 | saturation redistribution (same VM) | 682 | 16 | burstable:t3.large | 1796 / 1796 | 673, 1.70 | 1122 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 7 | 191 | 0.5 | 3 | 8.2 | 4 | saturation redistribution (same VM) | 239 | 76 | burstable:t3.large | 1796 / 1796 | 190, 1.70 | 1598 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 8 | 89 | 8.3 | 1 | 0.0 | 4 | saturation redistribution (same VM) | 1092 | 113 | burstable:t3.large | 1804 / 1804 | 1027, 1.70 | 766 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 14 | 157 | 12.2 | 2 | 13.7 | 2 | saturation redistribution (same VM) | 1450 | 44 | burstable:t3.large | 1807 / 1807 | 1433, 1.70 | 370 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 17 | 158 | 3.1 | 2 | 0.0 | 2 | saturation redistribution (same VM) | 1147 | 131 | burstable:t3.large | 1798 / 1798 | 1066, 1.70 | 720 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 18 | 72 | 1.0 | 3 | 9.6 | 4 | saturation redistribution (same VM) | 593 | 39 | burstable:t3.large | 1796 / 1796 | 568, 1.70 | 1224 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 19 | 214 | 2.2 | 5 | 21.2 | 2 | saturation redistribution (same VM) | 497 | 28 | burstable:t3.large | 1797 / 1797 | 481, 1.70 | 1314 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 20 | 286 | 6.1 | 2 | 10.9 | 1 | saturation redistribution | 338 | 69 | burstable:t3.large | 1801 / 1801 | 299, 1.70 | 1496 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 24 | 61 | 30.2 | 1 | 0.0 | 2 | saturation redistribution (same VM) | 991 | 104 | burstable:t3.large | 1825 / 1825 | 954, 1.70 | 861 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 26 | 17 | 18.0 | 1 | 0.0 | 1 | saturation redistribution (same VM) | 899 | 107 | burstable:t3.large | 1813 / 1813 | 848, 1.70 | 955 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 27 | 207 | 12.2 | 3 | 0.0 | 2 | saturation redistribution (same VM) | 403 | 142 | burstable:t3.large | 1807 / 1807 | 323, 1.70 | 1471 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 0.5 29 | 245 | 6.4 | 3 | 13.8 | 2 | saturation redistribution (same VM) | 1155 | 72 | burstable:t3.large | 1802 / 1802 | 1115, 1.70 | 680 (1795) | not reached | (c) | placed with the placer's own predicted finish already past D |
+| sc5 300 1.0 14 | 200 | 9.2 | 1 | 14.0 | 1 | saturation redistribution | 2899 | 84 | burstable:t3.large | 3600 / 3600 | 2854, 1.70 | 737 (3590) | not reached | (c) | placed with the placer's own predicted finish already past D |

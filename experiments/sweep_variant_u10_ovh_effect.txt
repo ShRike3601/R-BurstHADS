@@ -1,0 +1,4 @@
+hads: units changed 0/2400; missed tasks frozen 0 -> with overhead 0; runs with a miss 0 -> 0
+burst: units changed 0/2400; missed tasks frozen 1 -> with overhead 1; runs with a miss 1 -> 1
+rburst: units changed 0/2400; missed tasks frozen 109 -> with overhead 109; runs with a miss 104 -> 104
+the 104 missing R-BurstHADS units: missed tasks 109 -> 109; units changed 0

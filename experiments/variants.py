@@ -694,6 +694,60 @@ def _ac_cycles(counted):
     return lambda: _patch(VM, "start_ac", start_ac)
 
 
+def _u10(with_overhead):
+    """U10 counterfactual (post-freeze diagnostic): the on-demand fallback's
+    new-VM deadline test in HADS and Burst-HADS (R-BurstHADS inherits it).
+
+    with_overhead=False reproduces the frozen code through the same patch
+    point: finish = t + omega + remaining / speed. Exists to prove the patch
+    is faithful. with_overhead=True multiplies the execution term by
+    (1 + checkpoint_overhead), as execution charges it."""
+    from models.vm import VM
+    from models.catalogue import make_vm
+    from simulation.provisioning_event import STARTUP_LATENCY
+    from scheduler.hads import HADS
+    from scheduler.burst_hads import BurstHADS
+    k = lambda task: (1.0 + task.checkpoint_overhead) if with_overhead else 1.0
+
+    def walk(self, task, current_time, in_limit):
+        for tpl in in_limit:
+            probe = make_vm(tpl, -1)
+            finish = (current_time + STARTUP_LATENCY
+                      + task.remaining_time / probe.speed * k(task))
+            if probe.can_fit_task(task) and finish <= self.D:
+                return self._launch_new_ondemand_vm(current_time, tpl)
+        return self._launch_new_ondemand_vm(current_time, in_limit[0])
+
+    def burst_fallback(self, task, current_time):
+        deadline = self.D
+        candidates = sorted(
+            [v for v in self.ondemand_vms
+             if v.state not in (VM.HIBERNATED, VM.TERMINATED)],
+            key=lambda v: v.cost_rate)
+        for vm in candidates:
+            if (self._launches.can_launch(vm)
+                    and self._check_migration(task, vm, current_time, deadline)):
+                self._launches.commit(vm)
+                return vm
+        in_limit = [t for t in self._od_catalogue
+                    if self._launches.can_launch_type("ondemand", t["vm_type"])]
+        if not in_limit:
+            return self._capped_fallback(task, current_time)
+        return walk(self, task, current_time, in_limit)
+
+    def hads_fallback(self, task, current_time):
+        in_limit = [t for t in self._od_catalogue
+                    if self._launches.can_launch_type("ondemand", t["vm_type"])]
+        if not in_limit:
+            return self._capped_fallback(task, current_time)
+        return walk(self, task, current_time, in_limit)
+
+    def apply_patch():
+        _patch(BurstHADS, "_attempt_ondemand_fallback", burst_fallback)
+        _patch(HADS, "_attempt_ondemand_fallback", hads_fallback)
+    return apply_patch
+
+
 # Round A closing grid: guard (U5) on/off x Allocation Cycle boundaries (E10)
 # off/on, on the state Round B adopts (migration fix U6/H2, billing from launch
 # B1). "nocap+" = validation catalogue setting, bare = capped sweep setting.
@@ -717,6 +771,8 @@ def _grid_variants():
 VARIANTS = {
     "base":             [],
     "nocap+ac_copy":         [lambda: _nocap()(), _ac_cycles(False)],
+    "u10_copy":              [lambda: _u10(False)()],
+    "u10_ovh":               [lambda: _u10(True)()],
     "nocap+mig_launched+launch_bill": [lambda: _nocap()(), lambda: _migrate_to_launched(True)(),
                                        lambda: _launch_billing()()],
     **_grid_variants(),
