@@ -1,0 +1,8 @@
+# Independent check of diag_u10 entry routes (reservation log with explicit context stack)
+
+Re-runs reproducing the traced row: 104 / 104
+Missed tasks last placed on a burstable, checked: 108 (all of them, not a sample)
+Agreeing on final VM, entry routine and tier, entry time, no work stealing, burst mode, ownership: 108
+    71  saturation redistribution
+    37  hibernation rescue / tier 0 (replacement VM)
+Disagreeing: 0
