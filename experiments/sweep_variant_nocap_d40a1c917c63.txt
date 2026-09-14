@@ -1,0 +1,17 @@
+variant nocap: 7200 units on 20 workers -> sweep_variant_nocap_d40a1c917c63.jsonl
+infeasible runs: 0
+done in 826s, 0 errors
+identical to base d40a1c917c63: 3698/7200 units (base rows found: 7200)
+
+variant nocap vs base, mean of cells (% vs HADS unless R/B); cells with any infeasible run excluded
+  group              cells | Burst mk  Burst $ |    R mk     R $ |  R/B mk   R/B $ |   dom | miss cells H/B/R   miss total H/B/R
+  all           base  75 |    -19.0    +21.2 |   -27.6   +13.7 |   -12.4    -4.7 | 42/75 |            0/0/0     0.00/0.00/0.00
+  all        variant  75 |    -19.1    +22.4 |   -32.2    +3.6 |   -18.2   -14.2 | 68/75 |            0/0/0     0.00/0.00/0.00
+  DF=0.25       base  15 |     -7.1    +10.0 |    -8.5    +9.1 |    -1.7    -0.9 |  7/15 |            0/0/0     0.00/0.00/0.00
+  DF=0.25    variant  15 |     -7.1    +13.0 |    -9.5    +8.8 |    -2.7    -3.7 | 12/15 |            0/0/0     0.00/0.00/0.00
+  DF=0.5        base  20 |     -6.3    +18.1 |    -7.3   +19.0 |    -1.3    +0.7 |  9/20 |            0/0/0     0.00/0.00/0.00
+  DF=0.5     variant  20 |     -6.5    +20.1 |   -12.7    +0.1 |    -6.6   -16.2 | 18/20 |            0/0/0     0.00/0.00/0.00
+  DF=1.0        base  20 |    -13.2    +24.1 |   -26.4   +18.0 |   -15.3    -3.5 |  9/20 |            0/0/0     0.00/0.00/0.00
+  DF=1.0     variant  20 |    -13.2    +24.6 |   -32.9    +4.8 |   -22.7   -15.0 | 18/20 |            0/0/0     0.00/0.00/0.00
+  DF=2.0        base  20 |    -46.5    +29.6 |   -63.3    +7.8 |   -28.5   -14.3 | 17/20 |            0/0/0     0.00/0.00/0.00
+  DF=2.0     variant  20 |    -46.5    +29.6 |   -67.9    +2.0 |   -36.8   -19.3 | 20/20 |            0/0/0     0.00/0.00/0.00

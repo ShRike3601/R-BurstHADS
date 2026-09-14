@@ -1,0 +1,12 @@
+# Fix 20 (U10): the fresh-VM deadline test with and without the overhead, on the same state
+
+Probed runs reproducing their variant row: 14400 / 14400
+
+| variant | scheduler | runs with a walk | calls | capped | running on-demand VM | walks | picked type passes both tests | no type passes either test (unsavable) | a type passes only without the overhead | picked type differs between the tests | launched type differs from the with-overhead walk | smallest (D - finish) / (exec x ovh) | walks with that ratio < 2 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| u10_ovh | hads | 1791 | 5699 | 0 | 0 | 5699 | 5691 | 3 | 5 | 0 | 0 | 2.29 | 0 |
+| u10_ovh | burst | 643 | 2967 | 0 | 1430 | 1537 | 1372 | 143 | 22 | 0 | 0 | 0.18 | 21 |
+| u10_ovh | rburst | 388 | 1567 | 0 | 725 | 842 | 705 | 131 | 6 | 0 | 0 | 0.19 | 6 |
+| fx_all | hads | 1794 | 5767 | 0 | 0 | 5767 | 5760 | 4 | 3 | 0 | 0 | 2.24 | 0 |
+| fx_all | burst | 663 | 3044 | 0 | 1455 | 1589 | 1416 | 151 | 22 | 0 | 0 | 0.05 | 29 |
+| fx_all | rburst | 414 | 1835 | 0 | 902 | 933 | 784 | 140 | 9 | 0 | 0 | 0.18 | 9 |

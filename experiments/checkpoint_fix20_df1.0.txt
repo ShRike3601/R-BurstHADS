@@ -1,0 +1,56 @@
+checkpoint 'fix20_df1.0' (DF=1.0, variant=base): 150 runs (5 cells x 10 seeds x 3 schedulers) on 20 workers
+  25/150 done
+  50/150 done
+  75/150 done
+  100/150 done
+  125/150 done
+  150/150 done
+  wall time 38s
+
+==============================================================================
+sc2  n=300  kh=5 kr=0
+  scheduler      makespan    mk/D    cost A    cost B    cost C   miss   done%
+  HADS             3588.0   99.9%    0.4027    0.4027    0.4027   0.00  100.00
+  BurstHADS        3449.6   96.1%    0.5069    0.5069    0.5069   0.00  100.00
+  R-BurstHADS      3307.8   92.1%    0.5052    0.5052    0.5052   0.00  100.00
+  vs HADS:
+    BurstHADS     makespan    -3.9%   cost A:  +25.9%  B:  +25.9%  C:  +25.9%
+    R-BurstHADS   makespan    -7.8%   cost A:  +25.5%  B:  +25.5%  C:  +25.5%
+==============================================================================
+sc1  n=300  kh=1 kr=0
+  scheduler      makespan    mk/D    cost A    cost B    cost C   miss   done%
+  HADS             3544.4   98.7%    0.2671    0.2671    0.2671   0.00  100.00
+  BurstHADS        2169.8   60.4%    0.3065    0.3065    0.3065   0.00  100.00
+  R-BurstHADS      1859.0   51.8%    0.3233    0.3233    0.3233   0.00  100.00
+  vs HADS:
+    BurstHADS     makespan   -38.8%   cost A:  +14.8%  B:  +14.8%  C:  +14.8%
+    R-BurstHADS   makespan   -47.6%   cost A:  +21.1%  B:  +21.1%  C:  +21.1%
+==============================================================================
+sc4  n=300  kh=5 kr=5
+  scheduler      makespan    mk/D    cost A    cost B    cost C   miss   done%
+  HADS             3456.4   96.3%    0.4331    0.4331    0.4331   0.00  100.00
+  BurstHADS        2482.5   69.1%    0.3516    0.3516    0.3516   0.00  100.00
+  R-BurstHADS      2400.8   66.9%    0.3752    0.3752    0.3752   0.00  100.00
+  vs HADS:
+    BurstHADS     makespan   -28.2%   cost A:  -18.8%  B:  -18.8%  C:  -18.8%
+    R-BurstHADS   makespan   -30.5%   cost A:  -13.4%  B:  -13.4%  C:  -13.4%
+==============================================================================
+sc5  n=300  kh=3 kr=2.5
+  scheduler      makespan    mk/D    cost A    cost B    cost C   miss   done%
+  HADS             3497.7   97.4%    0.3710    0.3710    0.3710   0.00  100.00
+  BurstHADS        2564.5   71.4%    0.3281    0.3281    0.3281   0.00  100.00
+  R-BurstHADS      2238.1   62.3%    0.3399    0.3399    0.3399   0.00  100.00
+  vs HADS:
+    BurstHADS     makespan   -26.7%   cost A:  -11.6%  B:  -11.6%  C:  -11.6%
+    R-BurstHADS   makespan   -36.0%   cost A:   -8.4%  B:   -8.4%  C:   -8.4%
+==============================================================================
+sc2  n=100  kh=5 kr=0
+  scheduler      makespan    mk/D    cost A    cost B    cost C   miss   done%
+  HADS             1191.1   99.5%    0.1280    0.1280    0.1280   0.00  100.00
+  BurstHADS        1115.5   93.2%    0.1644    0.1644    0.1644   0.00  100.00
+  R-BurstHADS      1143.9   95.6%    0.1783    0.1783    0.1783   0.00  100.00
+  vs HADS:
+    BurstHADS     makespan    -6.3%   cost A:  +28.5%  B:  +28.5%  C:  +28.5%
+    R-BurstHADS   makespan    -4.0%   cost A:  +39.3%  B:  +39.3%  C:  +39.3%
+
+wrote C:\my folder\projects\Improvement on Burst HADS\experiments\checkpoint_fix20_df1.0.json
