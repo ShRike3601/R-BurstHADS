@@ -585,10 +585,14 @@ class HADS:
         """CCScheduler.migrate's cascade, entry point for one task."""
         deadline = self.D
 
+        # Stages 1-2 consider only dispatchers this run has launched:
+        # CCScheduler's idle and working dispatchers are running instances.
+        # Pool VMs no one launched used to qualify, so migration launched
+        # fresh spot VMs (DEVIATIONS H2).
         # Stage 1: idle dispatchers (any market).
         idle = [v for v in (self.spot_vms + self.ondemand_vms)
                 if v.state not in (VM.HIBERNATED, VM.TERMINATED)
-                and not v.tasks]
+                and not v.tasks and self._launches.is_launched(v)]
         for vm in sorted(idle, key=lambda v: v.cost_rate):
             if (self._launches.can_launch(vm)
                     and self._check_migration(task, vm, current_time, deadline)):
@@ -599,7 +603,7 @@ class HADS:
         # live queue.
         working = [v for v in (self.spot_vms + self.ondemand_vms)
                    if v.state not in (VM.HIBERNATED, VM.TERMINATED)
-                   and v.tasks]
+                   and v.tasks and self._launches.is_launched(v)]
         for vm in sorted(working, key=lambda v: v.cost_rate):
             if (self._launches.can_launch(vm)
                     and self._check_migration(task, vm, current_time, deadline)):

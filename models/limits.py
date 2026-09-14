@@ -63,6 +63,9 @@ class LaunchCounter:
     def __init__(self):
         self._ids = {}            # vm.id -> (market key, vm_type)
         self.overrides = 0        # launches forced past a spent limit
+        # Simulation clock, set by main.run_simulation once the event engine
+        # exists. Launches before that (the primary schedule) happen at t = 0.
+        self.now = lambda: 0.0
 
     def _room(self, key, vm_type):
         if not ENABLED or key not in MARKETS:
@@ -78,7 +81,16 @@ class LaunchCounter:
     def can_launch_type(self, key, vm_type):
         return self._room(key, vm_type)
 
+    def is_launched(self, vm):
+        return vm.id in self._ids
+
     def commit(self, vm):
+        """Launch `vm` (idempotent). Billing opens here: TCC23 section 3.1,
+        "When a new vmj is launched, the user is charged cj for each period
+        of time". It used to open at the VM's first task, so a launched VM
+        that never ran one cost nothing (DEVIATIONS B1)."""
+        if vm.id not in self._ids:
+            vm.start_billing(float(self.now()))
         self._ids.setdefault(vm.id, (_market_key(vm), vm.vm_type))
 
     def launched(self):

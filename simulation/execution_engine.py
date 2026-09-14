@@ -5,14 +5,10 @@ def start_execution(vms, current_time, event_engine):
     """
     Kick off execution across all VMs at simulation start.
 
-    Billing is NOT started here unconditionally. A VM only starts
-    being billed the instant it is actually handed a task to run
-    (see VM.start_next_if_free) -- matching the paper's own framing
-    of the spot/burstable/on-demand pools as VMs you SELECT and
-    LAUNCH, not machines that are already running by default.
-    Reserve burstable/on-demand VMs the initial solution never
-    touches stay unbilled until something (a reactive migration,
-    work stealing, proactive burst allocation) actually uses them.
+    Billing is NOT started here. A VM is billed from the moment a
+    scheduler launches it (LaunchCounter.commit, TCC23 section 3.1),
+    whether or not it ever runs a task. Pool VMs no scheduler launches
+    are never billed.
 
     This also fills every VM's free execution slots via the
     centralized multi-core dispatch (vm.start_next_if_free), so a VM
@@ -32,11 +28,8 @@ def start_execution(vms, current_time, event_engine):
 
         if not vm.tasks:
             # Only start an idle-termination clock on a VM that has
-            # actually been deployed (billed) at some point. A
-            # reserve VM that was never launched isn't "idle" in the
-            # billing sense -- it was never running -- so don't burn
-            # it out of the pool for a hibernation rescue that might
-            # need it later.
+            # been launched (is billing). A reserve VM that was never
+            # launched is not running, so it is not "idle".
             if (vm.state == VM.IDLE and vm.ac_termination_time is None
                     and vm.is_deployed):
                 from simulation.allocation_cycle_event import AllocationCycleEvent

@@ -743,10 +743,10 @@ class BurstHADS:
         """
         Pull n VMs out of M^b -- same type/speed/price as whatever
         burstable VM(s) are already in the pool. Mirrors
-        _launch_new_ondemand_vm's M^o handling. Billing for these is
-        handled uniformly by VM.start_next_if_free once
-        _apply_solution/start_execution actually dispatches a task to
-        them -- launching one here that ends up unused costs nothing.
+        _launch_new_ondemand_vm's M^o handling. Each is billed from this
+        launch (LaunchCounter.commit), used or not, and -- being exempt from
+        idle termination -- until the end of the run: TCC23's burstables are
+        a sunk cost, which is what makes a rescue onto one free at the margin.
         """
         template   = self.burstable_vms[0] if self.burstable_vms else None
         vm_type    = template.vm_type          if template else "t3.large"
@@ -1052,10 +1052,16 @@ class BurstHADS:
         """Algorithm 4, Attempts 1 and 2 (everything short of on-demand)."""
         deadline = self.D
 
+        # Attempts 1-2 take only VMs this run has launched. Algorithm 4's
+        # inputs are "the sets of idle, busy, and non-launched regular
+        # on-demand VMs (IR, BR and Mo)": IR and BR are running VMs, and
+        # non-launched capacity is Attempt 3's on-demand pool alone. Pool VMs
+        # no one launched used to qualify (DEVIATIONS U6).
         # Attempt 1 -- idle burstable VM with enough credits
         idle_burstable = [
             v for v in self.burstable_vms
             if v.state not in (VM.HIBERNATED, VM.TERMINATED) and not v.tasks
+            and self._launches.is_launched(v)
         ]
         for vm in sorted(idle_burstable, key=lambda v: v.cost_rate):
             if (self._launches.can_launch(vm)
@@ -1075,6 +1081,7 @@ class BurstHADS:
         active_nonburstable = [
             v for v in (self.spot_vms + self.ondemand_vms)
             if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+            and self._launches.is_launched(v)
         ]
         for vm in sorted(active_nonburstable, key=_k_sort_key):
             if (self._launches.can_launch(vm)
@@ -1136,10 +1143,8 @@ class BurstHADS:
     def _launch_new_ondemand_vm(self, current_time):
         """
         Pull one VM out of M^o -- same type/speed/price/vcpu_count as
-        whatever on-demand VM(s) are already in the pool. Unlimited
-        supply. Billing starts the moment it actually receives a task
-        (via VM.start_next_if_free, called immediately by whichever
-        caller uses this VM), not here at construction.
+        whatever on-demand VM(s) are already in the pool. Billed from this
+        launch (LaunchCounter.commit).
         """
         template  = self.ondemand_vms[0] if self.ondemand_vms else None
         vm_type   = template.vm_type    if template else "c5.large"

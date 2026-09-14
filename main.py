@@ -384,6 +384,9 @@ def run_simulation(scheduler_class, tasks, deadline,
 
     engine = EventEngine(scheduler)
     scheduler.event_engine = engine
+    if getattr(scheduler, "_launches", None) is not None:
+        # Launches from here on are billed from the engine clock (B1).
+        scheduler._launches.now = lambda: engine.time
     start_execution(vms, 0, engine)
 
     # Start proactive migration checker for P-BurstHADS

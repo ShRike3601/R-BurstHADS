@@ -12,10 +12,11 @@ Paper behavior (Section 3.3):
   credit balance, not torn down and rebuilt.
 
 In our simulation:
-- AC = 900 seconds (paper value, now proportional since tasks are 100-350s)
-- When a VM becomes idle, its AC timer starts
-- If still idle when AC expires → TERMINATED
-- If it receives a task before AC expires → AC timer cancelled
+- AC = 900 seconds (paper value)
+- When a VM becomes idle, the timer is armed for the end of the cycle it
+  is in, cycles counted over its billed uptime (VM.start_ac)
+- If still idle at the end of that cycle → TERMINATED
+- If it receives a task before then → the timer is ignored
 """
 
 from models.vm import VM

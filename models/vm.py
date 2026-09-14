@@ -268,9 +268,10 @@ class VM:
                        if t not in self.running and not t.completed]
             if not waiting:
                 break
-            # Billing begins the instant a task actually starts
-            # running here -- not at VM construction, not merely at
-            # task assignment. Idempotent: a no-op if already billing.
+            # Billing opens when the VM is launched (LaunchCounter.commit,
+            # TCC23 section 3.1). This call only matters for a VM running a
+            # task without having been launched through the counter, and is
+            # a no-op when an interval is already open.
             self.start_billing(current_time)
             task = waiting[0]
             self.running.append(task)
@@ -333,8 +334,25 @@ class VM:
     # ------------------------------------------------------------------
 
     def start_ac(self, current_time):
-        self.current_ac_start    = current_time
-        self.ac_termination_time = current_time + self.allocation_cycle
+        """Arm idle termination for the end of the CURRENT Allocation Cycle.
+
+        TCC23 section 3.3: "the allocation time is logically divided into
+        units denoted Allocation Cycles (ACs). A vmj that reaches the end of
+        its current AC ... in idle state, is terminated." The reference
+        (Dispatcher.next_period_end) counts cycles over uptime from the VM's
+        start, hibernated time excluded: ceil(uptime / AC) periods. Billed
+        seconds are that uptime, so the cycle in progress ends at
+        now + ceil(u / AC) * AC - u, at least one period.
+
+        This used to restart a full 900 s whenever the VM became idle, so
+        an idle VM was kept up to a whole cycle longer than the policy
+        allows (DEVIATIONS E10)."""
+        import math
+        ac = self.allocation_cycle
+        u = self.billed_seconds(current_time)
+        periods = max(1, math.ceil(u / ac - 1e-9))
+        self.current_ac_start    = current_time - (u - (periods - 1) * ac)
+        self.ac_termination_time = current_time + (periods * ac - u)
 
     def ac_expired(self, current_time):
         return (self.ac_termination_time is not None and
