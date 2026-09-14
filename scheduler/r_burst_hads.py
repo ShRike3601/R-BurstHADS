@@ -526,12 +526,25 @@ class RBurstHADS(BurstHADS):
                     continue
                 if not vm.can_fit_task(task):
                     continue
+                # Fix 17a: the same test tier 0 (_select_replacement_vm) and
+                # Burst-HADS's migration apply -- memory, finish by D, CPU
+                # credits for a burst-mode burstable, and the Section 3.4
+                # spare-time margin for a spot target. The frozen code took
+                # the earliest finish even when it lay past D; in the 104
+                # runs that missed a deadline that placed 108 of the 109
+                # missed tasks (experiments/diag_u10.txt).
+                if not self._check_migration(task, vm, current_time, self.D,
+                                             burst_mode=vm.is_burstable):
+                    continue
                 finish = vm.estimate_finish_time(task, current_time)
                 if finish < best_finish:
                     best_finish = finish
                     best_vm     = vm
             if best_vm is None:
-                best_vm = all_targets[0]
+                # No provisioned target makes D: Algorithm 4's on-demand
+                # attempt, as every other placement path ends, instead of a
+                # placement known to be late.
+                best_vm = self._attempt_ondemand_fallback(task, current_time)
             task.baseline_mode = False  # reactive rebalance -> burst mode
             best_vm.tasks.append(task)
             best_vm.reserve_memory(task)
@@ -634,6 +647,7 @@ class RBurstHADS(BurstHADS):
         new_vm = VM(**kwargs)
         new_vm.state = VM.IDLE
         self._launches.commit(new_vm)
+        new_vm.ready_time = ready_time     # fix 18: usable from ready_time
         if extra_credits is not None:
             new_vm.cpu_credits = extra_credits
 

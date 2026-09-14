@@ -68,6 +68,13 @@ class Task:
         if self.exec_start_on_current_vm is not None and self.assigned_vm:
             elapsed = current_time - self.exec_start_on_current_vm
             work_done = elapsed * self.assigned_vm.speed
+            # Fix 19: execution runs a task at speed / (1 + overhead)
+            # (VM.start_next_if_free charges the overhead on the whole
+            # remaining time), so that is the progress made. Crediting
+            # elapsed * speed over-credited 0.49% / 0.71% / 0.79% of the
+            # workload for HADS / Burst-HADS / R-BurstHADS
+            # (experiments/diag_overcredit_boot.txt).
+            work_done /= (1.0 + self.checkpoint_overhead)
             self.checkpointed_remaining = max(
                 0.0,
                 self.remaining_time - work_done

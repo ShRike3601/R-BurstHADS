@@ -1,0 +1,3 @@
+# Fixes 17a+18+19+20 adoption check: experiments/fix17_adopt_patch.py --a and experiments/fix18_20_adopt_patch.py applied to a clean export,
+# all three schedulers, seeds 0-9 of the full grid, compared row for row with variant fx_all (frozen code 4f08f48ac35c). Adopted fingerprint d40a1c917c63.
+  2400/2400 rows identical

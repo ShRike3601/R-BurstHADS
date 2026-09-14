@@ -99,6 +99,11 @@ class VM:
         # or termination, reopened on resume.
         self._billing_intervals = []
 
+        # Fix 18: when this VM becomes usable. None for a VM usable on
+        # creation; RBurstHADS._create_vm sets it for the VMs it provisions,
+        # whose ProvisioningEvent fires at this time.
+        self.ready_time = None
+
     # ------------------------------------------------------------------
     # MARKET TYPE PROPERTIES
     # ------------------------------------------------------------------
@@ -214,6 +219,10 @@ class VM:
         if task_speed is None:
             task_speed = self.speed
 
+        # Fix 18: nothing can start on this VM before it is ready.
+        if self.ready_time is not None and current_time < self.ready_time:
+            current_time = self.ready_time
+
         # One "free-at" time per core. A running task's real finish
         # time is already sitting on its TaskCompleteEvent; unused
         # cores are free right now.
@@ -262,6 +271,14 @@ class VM:
         consistent everywhere.
         """
         from simulation.events import TaskCompleteEvent
+
+        # Fix 18: a provisioned VM starts nothing before it is ready; its
+        # ProvisioningEvent calls this again at ready_time. Tasks used to
+        # start at once on a spot VM still booting: 6,661 early starts, 26.9 s
+        # early on average, all on R-BurstHADS's VMs
+        # (experiments/diag_overcredit_boot.txt).
+        if self.ready_time is not None and current_time < self.ready_time:
+            return
 
         while len(self.running) < self.vcpu_count:
             waiting = [t for t in self.tasks

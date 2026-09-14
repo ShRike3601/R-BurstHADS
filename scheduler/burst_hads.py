@@ -1130,8 +1130,10 @@ class BurstHADS:
         # each within its instance limit.
         for tpl in in_limit:
             probe = make_vm(tpl, -1)
+            # Fix 20 (U10): execution charges (1 + overhead) on every task.
             finish = (current_time + STARTUP_LATENCY
-                      + task.remaining_time / probe.speed)
+                      + task.remaining_time / probe.speed
+                      * (1.0 + task.checkpoint_overhead))
             if probe.can_fit_task(task) and finish <= deadline:
                 return self._launch_new_ondemand_vm(current_time, tpl)
         new_vm = self._launch_new_ondemand_vm(current_time, in_limit[0])
