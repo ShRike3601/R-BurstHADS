@@ -48,6 +48,18 @@ wants many comparison figures and tables.
    nearly produced a reported 31-point cost inflation that did not
    exist. This file once pinned post-fix numbers to a pre-fix
    observation. Check the live file.
+5. **Stopping rule (owner, 2026-09-14).** Round A: diagnose the shared
+   hibernation cost gap, adopting nothing until its cause is named.
+   Round B: adopt the settled fidelity fixes, rerun the sweep with and
+   without instance limits, then FREEZE the simulator and tag the commit.
+   Round C: final sweep, confidence intervals, write-up — no code changes.
+   After the freeze, a newly found defect goes into the paper's
+   limitations, not into the code. Between now and the freeze a baseline
+   change is allowed only for (a) an asymmetry, (b) a dimensional error,
+   (c) code contradicting its own specification, or (d) a defect that
+   makes a baseline worse than published — never because the baseline's
+   design is merely suboptimal. Every baseline change is recorded in
+   `DEVIATIONS.md` with its measured effect.
 
 ## Layout
 
@@ -404,8 +416,45 @@ old −52% / −74% figures (the speed artefact).
       current code on 1440/1440 runs. Not adopted: both restore the
       baselines' stated algorithm and both change the baselines -- owner's
       decision. `baseline_validation_variants_compare.txt`.
-  - Table 9's body is an image; the HADS values in
-    `paper_reproduction.PAPER` cannot be re-verified from the text.
+  - Table 9 has no text layer (the PDF draws it as glyph outlines). It is
+    now transcribed in `experiments/tcc23_tables.py` from a raster of the
+    page's vector paths, with a check: the 20 cells reproduce all four
+    section 4 aggregates to two decimals (25.87 / 40.10 / 10.24 / 1.92), and
+    every printed Diff matches its recomputation within 0.6 points of cost
+    rounding. The five `paper_reproduction.PAPER` cells agree with it.
+    Definitions, now verified: Diff HADS = (HADS − Burst-HADS)/HADS per
+    cell; the published aggregates are plain means over the 20 cells —
+    the same definition our harnesses use.
+  - **Round A outcome (2026-09-14): the hibernation cost gap is not
+    aggregation, not the billing rule and not EBS.**
+    `experiments/diag_cost_gap.py` (paper catalogue, Table 6 workload,
+    uncapped, 30 seeds; costs recomputed post hoc per VM under several
+    rules), summary in `diag_cost_gap_compare.txt`.
+    - *(a) Aggregation* — ruled out by Table 9 itself (above). Other
+      weightings of our runs: pooled totals +36.6%, per-run +41.8%, median
+      +42.4%, against mean-of-cells +38.7% (TCC23 +1.92%).
+    - *(b) Billing* — no rule closes it. 900 s quantised +30.1%; billed
+      from launch (TCC23 §3.1) +40.5%; the pre-fix-2/3 billing (variant
+      `nocap+no_release`, open intervals clamped at makespan) +22.9%, but it
+      wrecks Table 7 (J60 Burst-HADS $0.165 vs $0.112). Never-launched VMs
+      billed on resume are ≤ 2.9% of cost; removing them widens the gap.
+    - *(c) EBS while hibernated* — +38.7 → +37.5%.
+    - *What it is.* The gap is not shared. Hibernation cost premium vs the
+      same scheduler without hibernation, mean of 20 cells: HADS +111%
+      (TCC23 +95%), Burst-HADS +94% (TCC23 +25%). The no-hibernation cost
+      ratio is also near published on average (+55 vs +51%). Burst-HADS's
+      premium is the gap. Two measured contributors: migration onto
+      never-launched pool VMs (U6; fixed, +94 → +60%) and hibernation
+      exposure, which tracks the deployed spot pool (E8: our runs suffer
+      1.3–3.6× Table 9's hibernations per run, flat across jobs; at 2
+      copies with the migration fix Burst-HADS's premium is +24%). Pool size
+      is unstated in TCC23 and no value reproduces Tables 7 and 9 together
+      (E4) — owner's decision, not a fix.
+    - *Consequence for the paper.* At 3 copies, even with the migration fix,
+      Burst-HADS pays about 2.4× its published hibernation premium, so
+      R-BurstHADS's cost lead over Burst-HADS under hibernation is
+      flattered by an amount this study has not bounded. The pool-size
+      sensitivity in the main sweep must include a SMALLER pool, not only 5.
 - **Declared per-type risk is untested in every Table 9 cell — a
   limitation to state, not a benefit to claim.** Table 9 hibernates every
   spot VM at kh/D, so the c5 / m5.xlarge risk differential R-BurstHADS

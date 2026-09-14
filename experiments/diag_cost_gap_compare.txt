@@ -1,0 +1,60 @@
+TABLE 9 AGGREGATES (hibernation, 20 cells). cost = Burst-HADS vs HADS, mean of per-cell changes; rms = per-cell cost change vs Table 9, root mean square
+  state                              cost R0 cost PAPER    rms |  mk red    J60  ED200 | HADS prem Burst prem |  od H  od B
+  TCC23                                +1.9%      +nan%   0.0 |   25.9%  40.1%  10.2% |      +95%       +25% |  1.52  1.30
+  nocap_c3 (copies 3)                 +38.7%     +42.5%  45.4 |   14.7%  25.8%   1.2% |     +111%       +94% |  2.29  1.39
+  nocap_c2 (copies 2)                 +56.4%     +57.7%  61.3 |    6.7%  13.4%   3.7% |      +77%       +47% |  2.85  2.17
+  nocap_c1 (copies 1)                 +41.8%     +42.0%  45.1 |    4.4%   3.9%   4.7% |      +82%       +62% |  3.80  3.55
+  nocap_mig_launched_c3 (copies 3)    +16.0%     +30.2%  24.6 |   21.5%  35.0%   5.0% |     +112%       +60% |  2.90  1.44
+  nocap_mig_launched_c2 (copies 2)    +28.9%     +35.1%  34.1 |   11.2%  20.2%   5.5% |      +84%       +24% |  3.17  2.22
+  nocap_mig_launched_c1 (copies 1)    +16.7%     +17.3%  23.8 |    7.2%   8.8%   5.9% |      +86%       +36% |  3.85  3.59
+  nocap_no_release_c3 (copies 3)      +49.5%     +55.1%  54.7 |   14.7%  25.8%   1.2% |     +114%       +62% |  2.29  1.39
+  nocap_t9_deployed_c3 (copies 3)     +37.8%     +39.4%  45.6 |   14.5%  25.7%   0.8% |     +113%       +94% |  2.22  1.39
+  (prem = cost under hibernation vs the same scheduler without, mean over the 20 cells; od = regular on-demand VMs launched per run)
+
+HIBERNATION PREMIUM BY SCENARIO: cost under hibernation vs the same scheduler without, mean over jobs; and hibernations per run, mean over jobs (kh/kr: sc1 1/0, sc2 5/0, sc3 1/5, sc4 5/5, sc5 3/2.5)
+  HADS
+  state                                       sc1           sc2           sc3           sc4           sc5
+  TCC23                               +34%  1.7h  +194%  5.8h   +46%  4.5h   +94%  8.7h  +108%  3.4h
+  nocap_c3 (copies 3)                 +92%  5.0h  +140%  8.9h  +110%  6.0h  +104% 18.6h  +110% 12.4h
+  nocap_c2 (copies 2)                 +48%  3.4h  +110%  5.9h   +64%  4.4h   +78% 13.7h   +87%  8.6h
+  nocap_c1 (copies 1)                 +35%  1.5h  +109%  3.0h   +56%  2.1h   +96%  7.5h  +112%  4.9h
+  nocap_mig_launched_c3 (copies 3)    +55%  5.3h  +157%  8.9h   +84%  6.2h  +129% 19.1h  +135% 12.8h
+  nocap_mig_launched_c2 (copies 2)    +34%  3.5h  +121%  5.9h   +59%  4.4h   +96% 13.9h  +109%  8.6h
+  nocap_mig_launched_c1 (copies 1)    +38%  1.5h  +111%  3.0h   +60%  2.1h  +101%  7.5h  +119%  4.9h
+  nocap_no_release_c3 (copies 3)      +74%  5.2h  +136%  8.9h  +108%  6.9h  +133% 24.5h  +118% 14.5h
+  nocap_t9_deployed_c3 (copies 3)    +104%  4.6h  +135%  8.9h  +105%  5.2h  +104% 17.8h  +114% 11.6h
+  Burst-HADS
+  state                                       sc1           sc2           sc3           sc4           sc5
+  TCC23                                +9%  1.7h   +44%  5.8h   +14%  4.5h   +42%  8.7h   +15%  3.4h
+  nocap_c3 (copies 3)                 +68%  4.1h  +125%  8.8h   +77%  5.0h   +99% 18.2h   +97% 11.4h
+  nocap_c2 (copies 2)                 +26%  3.1h   +74%  5.9h   +29%  4.0h   +53% 13.8h   +54%  8.2h
+  nocap_c1 (copies 1)                 +33%  1.5h   +82%  3.0h   +41%  2.0h   +74%  7.3h   +80%  4.7h
+  nocap_mig_launched_c3 (copies 3)    +40%  4.0h   +90%  8.7h   +45%  4.7h   +62% 17.3h   +63% 11.2h
+  nocap_mig_launched_c2 (copies 2)     +9%  3.1h   +50%  5.9h    +8%  3.9h   +26% 13.4h   +26%  8.0h
+  nocap_mig_launched_c1 (copies 1)    +13%  1.5h   +55%  3.0h   +19%  2.0h   +43%  7.1h   +49%  4.7h
+  nocap_no_release_c3 (copies 3)      +18%  4.5h   +65%  8.8h   +58%  6.0h   +90% 23.5h   +78% 13.7h
+  nocap_t9_deployed_c3 (copies 3)     +68%  4.1h  +125%  8.8h   +77%  5.0h   +99% 18.2h   +97% 11.4h
+
+HIBERNATIONS PER RUN, mean over sc1-sc5 (TCC23: one column; ours: HADS / Burst-HADS runs)
+  state                                       J60           J80          J100         ED200  spot VMs billed w/o hib H/B
+  TCC23                               2.86/2.86     4.33/4.33     5.93/5.93     6.20/6.20             nan/nan 
+  nocap_c3 (copies 3)                 9.20/7.86     9.65/8.89    10.21/9.70    11.65/11.55            4.7/9.0 
+  nocap_c2 (copies 2)                 6.57/6.15     6.92/6.81     7.27/7.32     8.04/7.77             4.0/6.0 
+  nocap_c1 (copies 1)                 3.61/3.57     3.80/3.72     3.87/3.69     3.97/3.87             2.8/3.0 
+  nocap_mig_launched_c3 (copies 3)    9.73/7.46    10.01/8.62    10.49/9.35    11.69/11.25            4.7/9.0 
+  nocap_mig_launched_c2 (copies 2)    6.65/6.01     7.11/6.71     7.21/7.06     8.04/7.64             4.0/6.0 
+  nocap_mig_launched_c1 (copies 1)    3.58/3.49     3.79/3.63     3.87/3.65     3.97/3.85             2.8/3.0 
+  nocap_no_release_c3 (copies 3)     11.84/10.45   11.88/11.08   12.03/11.43   12.19/12.24            4.7/9.0 
+  nocap_t9_deployed_c3 (copies 3)     8.37/7.86     9.05/8.89     9.63/9.70    11.45/11.55            4.7/9.0 
+
+TABLE 7 (no hibernation). Burst-HADS vs HADS makespan change | cost change; Burst-HADS makespan s
+  state                                                  J60                      J80                     J100                    ED200
+  TCC23                              -44.4| +67.2%  1274s  -42.1| +45.2%  1329s  -28.8| +57.1%  1660s  -11.8| +33.7%  2275s
+  nocap_c3 (copies 3)                -70.9| +27.9%   678s  -59.8| +47.5%   945s  -50.7| +79.2%  1162s   -0.1| +66.0%  2363s
+  nocap_c2 (copies 2)                -42.8| +98.5%  1328s  -29.5|+132.2%  1650s  -17.0|+108.0%  1949s   -8.7| +25.1%  2409s
+  nocap_c1 (copies 1)                -10.0|+103.8%  2083s   +0.8| +65.6%  2361s   +2.3| +44.3%  2408s   -9.4| +14.5%  2423s
+  nocap_mig_launched_c3 (copies 3)   -70.9| +27.9%   678s  -59.8| +47.5%   945s  -50.7| +79.2%  1162s   -0.1| +66.0%  2363s
+  nocap_mig_launched_c2 (copies 2)   -42.8| +98.5%  1328s  -29.5|+132.2%  1650s  -17.0|+108.0%  1949s   -8.7| +25.1%  2409s
+  nocap_mig_launched_c1 (copies 1)   -10.0|+103.8%  2083s   +0.8| +65.6%  2361s   +2.3| +44.3%  2408s   -9.4| +14.5%  2423s
+  nocap_no_release_c3 (copies 3)     -70.9|+112.8%   678s  -59.8|+115.7%   945s  -50.7|+121.9%  1162s   -0.1| +50.2%  2363s
+  nocap_t9_deployed_c3 (copies 3)    -70.9| +27.9%   678s  -59.8| +47.5%   945s  -50.7| +79.2%  1162s   -0.1| +66.0%  2363s

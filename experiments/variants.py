@@ -549,9 +549,98 @@ def _burst_fill(guard):
                           _allocate_burstable_vms)
 
 
+def _no_release():
+    """Fix 3's predecessor: surviving VMs are NOT terminated when the last
+    task completes (TaskCompleteEvent._release_fleet_if_done is a no-op), so
+    idle VMs run to their 900 s allocation cycle and hibernated ones can
+    resume after the job. Together with the pre-fix-2 cost rule computed
+    post hoc (diag_cost_gap's PRE2), this is the billing before fixes 2-3."""
+    def apply_patch():
+        import simulation.events as ev
+        _patch(ev.TaskCompleteEvent, "_release_fleet_if_done", lambda self: None)
+    return apply_patch
+
+
+def _t9_deployed():
+    """Table 8's hibernation process on DEPLOYED spot VMs only.
+
+    main.run_simulation gives EVERY spot VM in the pool its own Poisson
+    hibernation/resume chain from t = 0 (lambda_h = kh/D, lambda_r = kr/D),
+    whether or not the scheduler ever launches it. TCC23 hibernates running
+    instances; its Table 9 counts grow with the job (sc2, kh = 5: 3.33
+    hibernations per J60 run, 8.00 per ED200 run), which a pool-wide process
+    of fixed size cannot produce and a per-job reading (at most kh) cannot
+    either.
+
+    Here a spot VM launched by the scheduler's primary schedule (in
+    _launches at the moment the engine starts) keeps main.py's chain
+    VERBATIM, so every run in which no never-launched VM was ever hit is
+    unchanged. Every other pool spot VM loses its t = 0 chain and is entered
+    into the same process from the instant it is launched (LaunchCounter.
+    commit), drawn from its own Random((seed + 1) * 7919 + pool index) so
+    the draw is common to all schedulers. VMs R-BurstHADS provisions are
+    untouched: ProvisioningEvent already exposes them from ready time.
+    """
+    import random
+    from simulation.event_engine import EventEngine
+    from simulation.events import HibernationEvent
+    import models.limits as lim
+    orig_run = EventEngine.run
+    orig_commit = lim.LaunchCounter.commit
+
+    def chain(vm, t0, sched, rng, engine):
+        kh, kr, D = _T9["kh"], _T9["kr"], sched.D
+        lam_h = kh / D
+        lam_r = (kr / D) if kr else 0.0
+        t = t0 + rng.expovariate(lam_h)
+        while t < D:
+            if lam_r > 0:
+                back = t + rng.expovariate(lam_r)
+                res = back if back < D else None
+            else:
+                res = None
+            engine.add_event(HibernationEvent(t, vm, sched, resume_time=res))
+            if res is None:
+                break
+            t = res + rng.expovariate(lam_h)
+
+    def run(self):
+        sched = self.scheduler
+        launches = getattr(sched, "_launches", None)
+        if _T9.get("kh") is not None and launches is not None:
+            provisioned = {v.id for v in getattr(sched, "provisioned_vms", [])}
+            pool = [v for v in sched.vms if v.is_spot and v.id not in provisioned]
+            late = {v.id: i for i, v in enumerate(pool) if v.id not in launches._ids}
+            self.events = [e for e in self.events
+                           if not (isinstance(e, HibernationEvent) and e.vm.id in late)]
+            _T9.update(engine=self, launches=launches, late=late, sched=sched)
+        return orig_run(self)
+
+    def commit(self, vm):
+        late = _T9.get("late")
+        if late and self is _T9.get("launches") and vm.id in late and vm.id not in self._ids:
+            idx = late.pop(vm.id)
+            rng = random.Random(((_T9.get("seed") or 0) + 1) * 7919 + idx)
+            engine = _T9["engine"]
+            chain(vm, engine.time, _T9["sched"], rng, engine)
+        return orig_commit(self, vm)
+
+    def apply_patch():
+        _patch(EventEngine, "run", run)
+        _patch(lim.LaunchCounter, "commit", commit)
+    return apply_patch
+
+
 VARIANTS = {
     "base":             [],
+    "nocap+t9_deployed":     [lambda: _nocap()(), lambda: _t9_deployed()()],
+    "nocap+mig_launched+t9_deployed": [lambda: _nocap()(), lambda: _migrate_to_launched(True)(),
+                                       lambda: _t9_deployed()()],
+    "mig_launched+t9_deployed": [lambda: _migrate_to_launched(True)(), lambda: _t9_deployed()()],
+    "nocap+no_release":      [lambda: _nocap()(), lambda: _no_release()()],
     "nocap":                 [lambda: _nocap()()],
+    "mig_launched":          [lambda: _migrate_to_launched(True)()],
+    "mig_copy":              [lambda: _migrate_to_launched(False)()],
     "nocap+mig_copy":        [lambda: _nocap()(), lambda: _migrate_to_launched(False)()],
     "nocap+mig_launched":    [lambda: _nocap()(), lambda: _migrate_to_launched(True)()],
     "nocap+fill_copy":       [lambda: _nocap()(), _burst_fill(True)],
@@ -578,10 +667,11 @@ VARIANTS = {
 }
 
 
-def apply(name, kh=None, kr=None):
+def apply(name, kh=None, kr=None, seed=None):
     if name not in VARIANTS:
         raise ValueError(f"unknown variant {name!r}; have {sorted(VARIANTS)}")
     _restore_all()
-    _T9["kh"], _T9["kr"] = kh, kr
+    _T9.clear()
+    _T9.update(kh=kh, kr=kr, seed=seed)
     for fn in VARIANTS[name]:
         fn()
