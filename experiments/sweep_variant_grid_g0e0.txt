@@ -1,0 +1,35 @@
+variant grid_g0e0: 2400 units on 20 workers -> sweep_variant_grid_g0e0_519c868a99f9.jsonl
+infeasible runs: 750
+done in 115s, 0 errors
+identical to base 519c868a99f9: 106/2400 units (base rows found: 2400)
+
+variant grid_g0e0 vs base, mean of cells (% vs HADS unless R/B); cells with any infeasible run excluded
+  group              cells | Burst mk  Burst $ |    R mk     R $ |  R/B mk   R/B $ |   dom | miss cells H/B/R   miss total H/B/R
+  all           base  55 |    -17.2    +44.8 |   -32.9   +18.7 |   -19.1   -16.1 | 46/55 |          10/9/14 248.40/188.10/120.60
+  all        variant  55 |     -6.5    +48.8 |   -10.6   +60.4 |    -6.7    +6.7 | 12/55 |         13/16/21 250.10/216.70/131.10
+  DF=0.5        base  15 |     -3.6    +38.4 |    -9.5   +35.2 |    -6.0    -2.0 |  8/15 |          10/9/10 248.40/188.10/120.00
+  DF=0.5     variant  15 |    +13.0    +46.3 |    +9.5   +57.7 |    -3.5    +7.9 |  3/15 |         10/11/13 248.80/207.70/120.80
+  DF=1.0        base  20 |     -7.1    +45.9 |   -23.0   +25.2 |   -16.6   -13.3 | 18/20 |            0/0/4     0.00/0.00/0.60
+  DF=1.0     variant  20 |    +11.3    +52.8 |    +7.1   +67.3 |    -5.8    +8.8 |  2/20 |            3/5/8    1.30/9.00/10.30
+  DF=2.0        base  20 |    -37.6    +48.6 |   -60.2    -0.1 |   -31.4   -29.5 | 20/20 |            0/0/0     0.00/0.00/0.00
+  DF=2.0     variant  20 |    -39.0    +46.6 |   -43.3   +55.4 |    -9.9    +3.8 |  7/20 |            0/0/0     0.00/0.00/0.00
+
+infeasible runs by df (share of runs per scheduler)
+  df=0.25   hads: 200/200  (100%)  burst: 200/200  (100%)  rburst: 200/200  (100%)
+  df=0.5    hads:  50/200  ( 25%)  burst:  50/200  ( 25%)  rburst:  50/200  ( 25%)
+  df=1.0    hads:   0/200  (  0%)  burst:   0/200  (  0%)  rburst:   0/200  (  0%)
+  df=2.0    hads:   0/200  (  0%)  burst:   0/200  (  0%)  rburst:   0/200  (  0%)
+
+infeasible runs by n (share of runs per scheduler)
+  n=50     hads: 100/200  ( 50%)  burst: 100/200  ( 50%)  rburst: 100/200  ( 50%)
+  n=100    hads:  50/200  ( 25%)  burst:  50/200  ( 25%)  rburst:  50/200  ( 25%)
+  n=200    hads:  50/200  ( 25%)  burst:  50/200  ( 25%)  rburst:  50/200  ( 25%)
+  n=300    hads:  50/200  ( 25%)  burst:  50/200  ( 25%)  rburst:  50/200  ( 25%)
+
+cells where schedulers differ in infeasible seeds: 0; cells with some but not all seeds infeasible: 0
+
+mean deadline misses per FEASIBLE run, by DF
+  DF=0.25  hads:  0.00 (n=0)  burst:  0.00 (n=0)  rburst:  0.00 (n=0)
+  DF=0.5   hads: 16.59 (n=150)  burst: 13.85 (n=150)  rburst:  8.05 (n=150)
+  DF=1.0   hads:  0.07 (n=200)  burst:  0.45 (n=200)  rburst:  0.52 (n=200)
+  DF=2.0   hads:  0.00 (n=200)  burst:  0.00 (n=200)  rburst:  0.00 (n=200)

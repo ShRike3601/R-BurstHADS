@@ -1,0 +1,49 @@
+cost rule: R0  (R0 ours; LAUNCH billed from launch; PAPER = LAUNCH without VMs billed only via resume, TCC23 section 3.1)
+
+TABLE 9 AGGREGATES (hibernation, 20 cells). cost = Burst-HADS vs HADS, mean of per-cell changes; rms = per-cell cost change vs Table 9, root mean square
+  state                           cost R0 cost PAPER    rms |  mk red    J60  ED200 | HADS prem Burst prem |  od H  od B
+  TCC23                             +1.9%      +nan%   0.0 |   25.9%  40.1%  10.2% |      +95%       +25% |  1.52  1.30
+  nocap_c3 (copies 3)              +38.7%     +42.5%  45.4 |   14.7%  25.8%   1.2% |     +111%       +94% |  2.29  1.39
+  nocap_grid_g1e1_c3 (copies 3)    +18.0%     +30.1%  24.9 |   21.9%  35.4%   5.4% |     +105%       +39% |  3.00  1.44
+  freeze_nocap_c3 (copies 3)       +18.8%     +30.9%  25.4 |   22.2%  35.4%   5.3% |     +105%       +40% |  3.00  1.27
+  freeze_capped_c3 (copies 3)      +18.7%     +30.8%  25.2 |   22.2%  35.4%   5.3% |     +105%       +40% |  3.00  1.27
+  (prem = cost under hibernation vs the same scheduler without, mean over the 20 cells; od = regular on-demand VMs launched per run)
+
+HIBERNATION PREMIUM BY SCENARIO: cost under hibernation vs the same scheduler without, mean over jobs; and hibernations per run, mean over jobs (kh/kr: sc1 1/0, sc2 5/0, sc3 1/5, sc4 5/5, sc5 3/2.5)
+  HADS
+  state                                    sc1           sc2           sc3           sc4           sc5
+  TCC23                            +34%  1.7h  +194%  5.8h   +46%  4.5h   +94%  8.7h  +108%  3.4h
+  nocap_c3 (copies 3)              +92%  5.0h  +140%  8.9h  +110%  6.0h  +104% 18.6h  +110% 12.4h
+  nocap_grid_g1e1_c3 (copies 3)    +55%  5.3h  +156%  8.9h   +70%  5.9h  +122% 18.4h  +123% 12.4h
+  freeze_nocap_c3 (copies 3)       +55%  5.3h  +156%  8.9h   +70%  5.9h  +122% 18.4h  +123% 12.4h
+  freeze_capped_c3 (copies 3)      +55%  5.3h  +157%  8.9h   +70%  5.9h  +123% 18.4h  +123% 12.4h
+  Burst-HADS
+  state                                    sc1           sc2           sc3           sc4           sc5
+  TCC23                             +9%  1.7h   +44%  5.8h   +14%  4.5h   +42%  8.7h   +15%  3.4h
+  nocap_c3 (copies 3)              +68%  4.1h  +125%  8.8h   +77%  5.0h   +99% 18.2h   +97% 11.4h
+  nocap_grid_g1e1_c3 (copies 3)    +21%  3.7h   +72%  8.6h   +21%  4.2h   +41% 16.0h   +40% 10.2h
+  freeze_nocap_c3 (copies 3)       +21%  3.7h   +73%  8.6h   +21%  4.2h   +43% 16.1h   +40% 10.2h
+  freeze_capped_c3 (copies 3)      +21%  3.7h   +73%  8.6h   +21%  4.2h   +43% 16.1h   +40% 10.2h
+
+DEADLINE MISSES AND MAKESPAN (D = 2700 s). missed tasks summed over all runs; runs with any miss; mean makespan without / with hibernation
+  state                           missed H  missed B  runs H  runs B | mk H none  mk H hib mk B none  mk B hib
+  nocap_c3                               0         0       0       0 |      2350      2323      1287      1987
+  nocap_grid_g1e1_c3                     0         0       0       0 |      2350      2422      1287      1901
+  freeze_nocap_c3                        0         0       0       0 |      2350      2422      1287      1894
+  freeze_capped_c3                       0         0       0       0 |      2350      2422      1287      1894
+
+HIBERNATIONS PER RUN, mean over sc1-sc5 (TCC23: one column; ours: HADS / Burst-HADS runs)
+  state                                    J60           J80          J100         ED200  spot VMs billed w/o hib H/B
+  TCC23                            2.86/2.86     4.33/4.33     5.93/5.93     6.20/6.20             nan/nan 
+  nocap_c3 (copies 3)              9.20/7.86     9.65/8.89    10.21/9.70    11.65/11.55            4.7/9.0 
+  nocap_grid_g1e1_c3 (copies 3)    9.55/6.57     9.73/7.91    10.17/8.79    11.25/11.01            4.7/9.0 
+  freeze_nocap_c3 (copies 3)       9.55/6.57     9.73/7.91    10.17/8.79    11.25/11.01            4.7/9.0 
+  freeze_capped_c3 (copies 3)      9.55/6.57     9.73/7.91    10.17/8.79    11.25/11.01            4.7/9.0 
+
+TABLE 7 (no hibernation). Burst-HADS vs HADS makespan change | cost change; Burst-HADS makespan s
+  state                                               J60                      J80                     J100                    ED200
+  TCC23                           -44.4| +67.2%  1274s  -42.1| +45.2%  1329s  -28.8| +57.1%  1660s  -11.8| +33.7%  2275s
+  nocap_c3 (copies 3)             -70.9| +27.9%   678s  -59.8| +47.5%   945s  -50.7| +79.2%  1162s   -0.1| +66.0%  2363s
+  nocap_grid_g1e1_c3 (copies 3)   -70.9| +87.0%   678s  -59.8| +58.8%   945s  -50.7| +72.1%  1162s   -0.1| +69.2%  2363s
+  freeze_nocap_c3 (copies 3)      -70.9| +87.0%   678s  -59.8| +58.8%   945s  -50.7| +72.1%  1162s   -0.1| +69.2%  2363s
+  freeze_capped_c3 (copies 3)     -70.9| +87.0%   678s  -59.8| +58.8%   945s  -50.7| +72.1%  1162s   -0.1| +69.2%  2363s
