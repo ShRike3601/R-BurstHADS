@@ -36,8 +36,11 @@ def mean(xs):
     return sum(xs) / len(xs)
 
 
+RULE = "R0"
+
+
 def stats(by):
-    c = lambda j, sc, k, rule="R0": mean(r["cost"][rule] for r in by[(j, sc, k)])
+    c = lambda j, sc, k, rule=None: mean(r["cost"][rule or RULE] for r in by[(j, sc, k)])
     m = lambda j, sc, k: mean(r["mk"] for r in by[(j, sc, k)])
     h = lambda j, sc, k, f="hib": mean(r["counts"][f] for r in by[(j, sc, k)])
     s = {}
@@ -85,7 +88,12 @@ def published():
 
 
 def main():
+    global RULE
     tags = sys.argv[1:]
+    if tags and tags[0].startswith("--rule="):
+        RULE = tags.pop(0).split("=", 1)[1]
+    print(f"cost rule: {RULE}  (R0 ours; LAUNCH billed from launch; PAPER = LAUNCH without VMs billed"
+          f" only via resume, TCC23 section 3.1)\n")
     rows = [("TCC23", published())]
     for t in tags:
         d, by = load(t)
@@ -94,7 +102,7 @@ def main():
 
     print("TABLE 9 AGGREGATES (hibernation, 20 cells). cost = Burst-HADS vs HADS, mean of per-cell changes;"
           " rms = per-cell cost change vs Table 9, root mean square")
-    print(f"  {'state':{w}s} {'cost R0':>8s} {'cost PAPER':>10s} {'rms':>6s} | {'mk red':>7s} {'J60':>6s} {'ED200':>6s} |"
+    print(f"  {'state':{w}s} {'cost ' + RULE:>8s} {'cost PAPER':>10s} {'rms':>6s} | {'mk red':>7s} {'J60':>6s} {'ED200':>6s} |"
           f" {'HADS prem':>9s} {'Burst prem':>10s} | {'od H':>5s} {'od B':>5s}")
     for n, s in rows:
         print(f"  {n:{w}s} {s['t9_cost']:+7.1f}% {s['t9_cost_paper']:+9.1f}% {s['rms_cell_cost']:5.1f} |"

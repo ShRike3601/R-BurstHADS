@@ -23,6 +23,17 @@ Usage: python experiments\\tcc23_tables.py   (runs check())
 JOBS = ["J60", "J80", "J100", "ED200"]
 SCENARIOS = ["sc1", "sc2", "sc3", "sc4", "sc5"]
 
+# Table 3, "VMs Attributes" (prices November 2020): type -> (vCPUs, memory GB,
+# on-demand $/h, spot $/h or None, burstable baseline performance or None).
+# No per-type processing speed is published: section 3.2 weights VMs by
+# Gflops "previously estimated using the LINPACK benchmark", values not given.
+T3 = {
+    "c3.large":  (2, 3.75, 0.105, 0.0299, None),
+    "c4.large":  (2, 3.75, 0.100, 0.0366, None),
+    "c3.xlarge": (4, 7.50, 0.199, 0.0634, None),
+    "t3.large":  (2, 8.00, 0.0832, None, 0.20),
+}
+
 # Table 7, no hibernation: (cost $, makespan s)
 T7 = {
     "J60":   dict(burst=(0.112, 1274), hads=(0.067, 2290), autobot=(0.166, 2221), ondemand=(0.271, 1112)),

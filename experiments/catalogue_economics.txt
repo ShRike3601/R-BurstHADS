@@ -1,0 +1,36 @@
+SWEEP CATALOGUE (main.build_vms_dburst, used by the main sweep)
+  type       market    speed slots units     $/h   $/unit $/unit 1 task $/unit baseline
+  c5.large   spot       2.00     2  4.00  0.0306  0.00765       0.01530                
+  c5.xlarge  spot       2.00     4  8.00  0.0612  0.00765       0.03060                
+  m5.xlarge  spot       1.70     4  6.80  0.0700  0.01029       0.04118                
+  c5.large   ondemand   2.00     2  4.00  0.0850  0.02125       0.04250                
+  t3.large   burstable  1.70     1  1.70  0.0832  0.04894       0.04894          0.2447
+
+VALIDATION CATALOGUE (paper_reproduction.build_vms_paper, used by Round A)
+  type       market    speed slots units     $/h   $/unit $/unit 1 task $/unit baseline
+  c3.large   spot       1.00     2  2.00  0.0299  0.01495       0.02990                
+  c3.xlarge  spot       1.00     4  4.00  0.0634  0.01585       0.06340                
+  c4.large   spot       1.00     2  2.00  0.0366  0.01830       0.03660                
+  c4.large   ondemand   1.00     2  2.00  0.1000  0.05000       0.10000                
+  t3.large   burstable  1.00     1  1.00  0.0832  0.08320       0.08320          0.4160
+
+TCC23 TABLE 3 (equal per-core speed assumed; burstable one slot)
+  type       market    speed slots units     $/h   $/unit $/unit 1 task $/unit baseline
+  c3.large   spot       1.00     2  2.00  0.0299  0.01495       0.02990                
+  c3.xlarge  spot       1.00     4  4.00  0.0634  0.01585       0.06340                
+  c4.large   spot       1.00     2  2.00  0.0366  0.01830       0.03660                
+  c3.xlarge  ondemand   1.00     4  4.00  0.1990  0.04975       0.19900                
+  c4.large   ondemand   1.00     2  2.00  0.1000  0.05000       0.10000                
+  c3.large   ondemand   1.00     2  2.00  0.1050  0.05250       0.10500                
+  t3.large   burstable  1.00     1  1.00  0.0832  0.08320       0.08320          0.4160
+
+BURSTABLE vs CHEAPEST REGULAR ON-DEMAND, $ per unit of work
+  sweep      burst mode 0.04894 vs c5.large on-demand 0.02125 per core -> x2.30; vs one task alone on it 0.04250 -> x1.15
+  validation burst mode 0.08320 vs c4.large on-demand 0.05000 per core -> x1.66; vs one task alone on it 0.10000 -> x0.83
+  TCC23      burst mode 0.08320 vs cheapest on-demand per core 0.04975 -> x1.67  (per vCPU, ignoring the one-task rule: 0.04160 -> x0.84)
+
+COUNTERFACTUAL t3.large per-core speed in the sweep catalogue (price fixed, one slot)
+  speed 1.7 x 1 slot(s): 0.04894 $/unit -> x2.30 of c5.large on-demand
+  speed 1.7 x 2 slot(s): 0.02447 $/unit -> x1.15 of c5.large on-demand
+  speed 2.0 x 1 slot(s): 0.04160 $/unit -> x1.96 of c5.large on-demand
+  speed 2.0 x 2 slot(s): 0.02080 $/unit -> x0.98 of c5.large on-demand

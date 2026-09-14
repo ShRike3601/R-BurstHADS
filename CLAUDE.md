@@ -453,8 +453,30 @@ old −52% / −74% figures (the speed artefact).
     - *Consequence for the paper.* At 3 copies, even with the migration fix,
       Burst-HADS pays about 2.4× its published hibernation premium, so
       R-BurstHADS's cost lead over Burst-HADS under hibernation is
-      flattered by an amount this study has not bounded. The pool-size
-      sensitivity in the main sweep must include a SMALLER pool, not only 5.
+      flattered by an amount this study has not bounded. Pool size: 3 kept
+      (owner; chosen before these results), 1 / 2 / 3 reported as a
+      sensitivity, and "TCC23 underspecifies the pool" is a finding.
+  - **Round A closing checks (2026-09-14; Round A is now CLOSED).**
+    `catalogue_economics.txt`, `diag_cost_gap_compare.txt` (our billing),
+    `diag_cost_gap_compare_PAPER.txt` (TCC23 §3.1 billing).
+    1. *Catalogue.* The validation catalogue is TCC23's Table 3 exactly, so
+       it is not the Round A defect: a burst-mode task on t3.large costs
+       0.83× the same task alone on a fresh c4.large on-demand, 1.66× a
+       core of one. In the SWEEP catalogue it costs 1.15× a lone task on a
+       fresh c5.large (0.98× at the pre-fix-4 speed 2.0) and 2.30× a core.
+       Note `VM` gives every burstable ONE slot (TCC23's one-task rule), so
+       t3.large delivers 1.7 units, not 3.4.
+    2. *t3.large speed.* TCC23 publishes none (Gflops, unpublished). AWS:
+       T3 and M5 share the Xeon Platinum 8000 at up to 3.1 GHz; C5 3.4 /
+       3.6 GHz. t3 = m5 = 1.7 is supported; the old 2.0 was c5's clock.
+       Kept (DEVIATIONS E7; baseline 20% vs AWS's current 30%, E9).
+    3. *Sunk-cost burstables — confirmed.* TCC23 bills burstables from
+       launch and never AC-terminates them; ours bill from first task and
+       the guard leaves some idle. §3.1 billing: Burst-HADS premium +60 →
+       +42% (TCC23 +25%). Guard removed as well: +8%, but its
+       no-hibernation cost then overshoots (J60 $0.210 vs $0.112) through
+       idle-billed spot VMs, which points at a new, unmeasured deviation
+       in Allocation Cycle boundaries (DEVIATIONS E10). The U5 guard is live.
 - **Declared per-type risk is untested in every Table 9 cell — a
   limitation to state, not a benefit to claim.** Table 9 hibernates every
   spot VM at kh/D, so the c5 / m5.xlarge risk differential R-BurstHADS
