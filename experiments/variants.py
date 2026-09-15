@@ -1223,6 +1223,10 @@ VARIANTS = {
     # kept (copy of the frozen code) and removed (TCC23 §3.2 text), limits on.
     "fill_copy":             [_burst_fill(True)],
     "burst_fill":            [_burst_fill(False)],
+    # The guard without hibernation (experiments/u5_nohib_plan.md): run with
+    # --scenarios none; the names only label the output files.
+    "u5nohib_kept":          [],
+    "u5nohib_removed":       [_burst_fill(False)],
     # Fix 21 (experiments/fix21_plan.md), parent freeze-fix20: deploy time for
     # every VM a scheduler launches; sub-fixes a, b, c and leave-one-out sets.
     "f21_copy":              [lambda: _f21(True, True, True, boot=0.0)()],
