@@ -15,13 +15,13 @@ Frozen simulator: tag `freeze-fix21`, code fingerprint `2439a00d7f74`. Generated
 - Guard disclosure [T12]: removing it turns 85 Burst-HADS and 92 R-BurstHADS clean runs into missing runs (reverse: 0 and 3).
 
 
-Conventions. A cell is (scenario, n, DF). "X vs Y" in every table is the change of X's cell mean against Y's, averaged over the cells named, computed from the runs of the two schedulers it names. A run counts as changed between two result sets when its makespan differs by more than 1e-9 s, its cost by more than 1e-12 $, or its missed-task count differs; reproduction checks compare exactly.
+Conventions. A cell is (scenario, n, DF). "X vs Y" in every table is the change of X's cell mean against Y's, averaged over the cells named, computed from the runs of the two schedulers it names. R-BurstHADS dominates Burst-HADS in a cell when both its mean makespan and its mean cost are no greater than Burst-HADS's; the count uses means only, so it moves when a cell's mean crosses the boundary on either axis, however small the move (T26). Significant counts use the paired per-seed 95% CI. A run counts as changed between two result sets when its makespan differs by more than 1e-9 s, its cost by more than 1e-12 $, or its missed-task count differs; reproduction checks compare exactly.
 
 ## Headline tables
 
 ### T1. Results, instance limits ON (provider limits)
 
-Source: `experiments/sweep_raw_2439a00d7f74.jsonl`. Cells where every scheduler is feasible in every seed: **75 of 80**. Columns: HADS makespan as % of D; Burst-HADS (B) and R-BurstHADS (R) vs HADS; R vs B; cells where R dominates B on both means; cells where the paired per-seed 95% CI of R − B excludes 0 (faster / slower, cheaper / dearer).
+Source: `experiments/sweep_raw_2439a00d7f74.jsonl`. Cells where every scheduler is feasible in every seed: **75 of 80**. Columns: HADS makespan as % of D; Burst-HADS (B) and R-BurstHADS (R) vs HADS; R vs B; cells where R dominates B (R's mean makespan and mean cost over the cell's seeds are both no greater than B's: means only, ties count, no significance test); cells where the paired per-seed 95% CI of R − B excludes 0 (faster / slower, cheaper / dearer).
 
 | group | cells | HADS mk/D | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -43,7 +43,7 @@ Source: `experiments/sweep_raw_2439a00d7f74.jsonl`. Cells where every scheduler 
 
 ### T2. Results, instance limits OFF
 
-Source: `experiments/sweep_variant_nocap_2439a00d7f74.jsonl`. Cells where every scheduler is feasible in every seed: **80 of 80**. Columns: HADS makespan as % of D; Burst-HADS (B) and R-BurstHADS (R) vs HADS; R vs B; cells where R dominates B on both means; cells where the paired per-seed 95% CI of R − B excludes 0 (faster / slower, cheaper / dearer).
+Source: `experiments/sweep_variant_nocap_2439a00d7f74.jsonl`. Cells where every scheduler is feasible in every seed: **80 of 80**. Columns: HADS makespan as % of D; Burst-HADS (B) and R-BurstHADS (R) vs HADS; R vs B; cells where R dominates B (R's mean makespan and mean cost over the cell's seeds are both no greater than B's: means only, ties count, no significance test); cells where the paired per-seed 95% CI of R − B excludes 0 (faster / slower, cheaper / dearer).
 
 | group | cells | HADS mk/D | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |
 |---|---|---|---|---|---|---|---|---|---|---|---|
@@ -675,6 +675,40 @@ Invariant (fix 21): capacity the VM builder built and a primary schedule deploye
 | 21b alone | 17788 | 11153 | 0 |
 | fix 21 | 42623 | 0 | 0 |
 | adopted code | 42623 | 0 | 0 |
+
+### T26. Dominance and significance, freeze-fix20 against the current baseline, cell by cell
+
+Sources: `experiments/sweep_raw_d40a1c917c63.jsonl` (freeze-fix20), `experiments/sweep_raw_2439a00d7f74.jsonl` (current). The fully feasible cells are identical in both: True (75 cells; none entered or left the set). Criterion: R-BurstHADS dominates Burst-HADS in a cell when its mean makespan and mean cost over the cell's seeds are both no greater than Burst-HADS's; means only, so the paired CI plays no part. Significance: the paired per-seed 95% CI of R − B excludes 0. The floor makes n = 50 at DF 0.25 and 0.5 the same cell, so such pairs move together.
+
+Cells dominated: 42 → 49 (11 entered, 4 left).
+
+| cell | change | R mk vs B | R $ vs B | axis that was failing | R mean cost | B mean cost | R mean makespan | B mean makespan |
+|---|---|---|---|---|---|---|---|---|
+| sc1 n=300 DF=1.0 | entered | -19.26% → -22.02% | +1.54% → -1.79% | cost | -4.30% | -1.07% | -4.36% | -0.97% |
+| sc1 n=300 DF=2.0 | entered | -18.98% → -18.48% | +1.22% → -0.53% | cost | -2.90% | -1.20% | -1.89% | -2.48% |
+| sc2 n=300 DF=0.25 | entered | +0.03% → -0.03% | -0.75% → -1.79% | makespan | +3.52% | +4.61% | -0.04% | +0.02% |
+| sc3 n=200 DF=0.25 | entered | -1.73% → -2.42% | +0.43% → -1.52% | cost | +3.18% | +5.22% | +0.59% | +1.30% |
+| sc3 n=300 DF=0.25 | entered | -0.12% → -0.45% | +0.82% → -0.51% | cost | +0.63% | +1.98% | -0.65% | -0.33% |
+| sc3 n=300 DF=0.5 | entered | +2.06% → -4.49% | +2.99% → -4.37% | makespan and cost | -4.34% | +3.01% | -4.71% | +1.83% |
+| sc4 n=300 DF=1.0 | entered | -7.23% → -12.75% | +3.19% → -1.94% | cost | +1.29% | +6.58% | +2.04% | +8.49% |
+| sc4 n=300 DF=2.0 | entered | -12.33% → -13.35% | +1.05% → -0.47% | cost | -2.63% | -1.15% | -2.98% | -1.85% |
+| sc5 n=200 DF=0.25 | entered | +1.47% → -0.53% | +1.24% → -1.69% | makespan and cost | +2.46% | +5.52% | -1.00% | +0.98% |
+| sc5 n=200 DF=1.0 | entered | -6.90% → -13.50% | +0.78% → -3.68% | cost | -0.26% | +4.35% | -1.89% | +5.60% |
+| sc5 n=300 DF=1.0 | entered | -11.85% → -13.63% | +1.25% → -0.44% | cost | -1.65% | +0.02% | -3.19% | -1.20% |
+| sc1 n=50 DF=0.25 | left | -4.97% → -1.85% | -1.20% → +1.89% | cost | +11.67% | +8.28% | +3.83% | +0.52% |
+| sc1 n=50 DF=0.5 | left | -4.97% → -1.85% | -1.20% → +1.89% | cost | +11.67% | +8.28% | +3.83% | +0.52% |
+| sc2 n=200 DF=0.25 | left | -0.05% → +0.07% | -0.59% → -1.10% | makespan | +5.84% | +6.38% | +0.09% | -0.04% |
+| sc4 n=50 DF=1.0 | left | -7.76% → -4.36% | -0.39% → +1.62% | cost | +1.79% | -0.23% | -0.18% | -3.73% |
+
+- Threshold crossing, not effect size: the entering cells were +1.22% (median) and at most +3.19% on the axis that failed; 13 non-dominated cells sat within 2 points of the boundary. Their R $ vs B moved -2.95 points and R mk vs B -2.44, while every other cell moved +0.64 and +0.84. The averages therefore moved slightly against R-BurstHADS while the count rose.
+- Not variance: dominance uses no interval, and the paired CI half-widths barely changed (ratio of current to freeze-fix20 1.024 for cost, 0.974 for makespan, mean over cells).
+
+| significance count | freeze-fix20 → current | gained | lost | crossings driven by the mean | crossings driven by the half-width |
+|---|---|---|---|---|---|
+| significantly cheaper | 27 → 25 | 4 | 6 | 10 | 0 |
+| significantly dearer | 11 → 8 | 2 | 5 | 7 | 0 |
+| significantly faster | 46 → 42 | 3 | 7 | 8 | 2 |
+| significantly slower | 10 → 9 | 1 | 2 | 2 | 1 |
 
 ## Per-cell means and 95% confidence intervals
 

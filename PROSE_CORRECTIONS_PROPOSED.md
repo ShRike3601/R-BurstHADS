@@ -45,7 +45,7 @@ or derived percentage.
 | C11 | 313–318 | "10 runs are infeasible, all HADS (2 seeds in each sc1–sc5 n=100 DF=0.25 cell) … all 80 cells with 28–30 seeds (Burst −18.0% / +20.0%, R −26.4% / +12.2%, R vs Burst −11.9% / −5.0%, dominance 44/80)" | New baseline. | "110 runs are infeasible, all HADS (22 of 30 seeds in each sc1–sc5 n = 100, DF = 0.25 cell). The tables are over the 75 cells where every scheduler is feasible in every seed; over all 80 cells with their feasible seeds: Burst −18.4% / +18.2%, R −26.0% / +11.5%, R vs Burst −11.3% / −4.3%, dominance 49/80 [T1 last row]." |
 | C12 | 322–328 | Limits-on table (all 75: −19.1 / +21.3 / −27.9 / +12.9 / −12.7 / −5.4 / 44; DF rows). | New baseline. | Replace with T1's rows (Burst mk, Burst $, R mk, R $, R vs Burst mk, R vs Burst $, dominance), listed below the table. |
 | C13 | 332–338 | Limits-off table (all 80: −18.1 / +21.9 / −31.0 / +2.6 / −17.8 / −14.6 / 69/80; DF rows). | New baseline. | Replace with T2's rows, listed below the table. |
-| C14 | 340–342 | "By scenario, limits on, R-BurstHADS vs HADS (makespan / cost, 80 cells): sc1 −37.1% / +18.9% …" | New baseline. The per-scenario rows are over 15 fully feasible cells each, not 80. | "By scenario, limits on, R-BurstHADS vs HADS (makespan / cost; 15 fully feasible cells each) [T1]: sc1 −38.7% / +18.6%, sc2 −17.3% / +18.4%, sc3 −36.6% / +10.6%, sc4 −19.7% / +7.6%, sc5 −26.0% / +4.0%." |
+| C14 | 340–342 | "By scenario, limits on, R-BurstHADS vs HADS (makespan / cost, 80 cells): sc1 −37.1% / +18.9% …" | New baseline. The "80 cells" label is correct: these values are over all 16 cells per scenario with their feasible seeds (`sweep_analysis`), not over T1's 15 fully feasible cells (`diag_f21_verify.txt` §5). | "By scenario, limits on, R-BurstHADS vs HADS (makespan / cost, 80 cells with their feasible seeds; `sweep_analysis_2439a00d7f74.txt`): sc1 −36.5% / +18.1%, sc2 −16.3% / +17.6%, sc3 −34.5% / +10.3%, sc4 −18.4% / +7.5%, sc5 −24.4% / +4.0%." |
 | C15 | 344–348 | "Lifting it changes mainly R-BurstHADS: its cost lead over Burst-HADS grows from −5.4% to −14.6% and its misses vanish." | Compares 75 cells with 80 (see D3). Numbers superseded. "Misses vanish" implies the limit caused them. | "Lifting it changes mainly R-BurstHADS. Over the same 75 cells [T2b], its cost change vs Burst-HADS goes from −4.6% to −14.1% and its makespan change from −12.0% to −17.6%. Burst-HADS vs HADS moves from +19.0% to +20.3% cost. With limits off Burst-HADS and R-BurstHADS still miss 5 tasks between them, in the same floor cells [T5]." |
 | C16 | 349–351 | "Burst-HADS is cheaper than HADS in 15 of 80 cells. R-BurstHADS ranges from −22.5% (sc4 n=200 DF=2.0) to +43.8% (sc1 n=50 DF=2.0) and is no more expensive than HADS in 18 of 75 cells." | New baseline. | "Burst-HADS is cheaper than HADS in 16 of 80 cells. R-BurstHADS ranges from −23.5% (sc4 n=300 DF=2.0) to +41.6% (sc4 n=50 DF=1.0) and is no more expensive than HADS in 18 of 75 cells [T3]." |
 | C17 | 352 | "HADS's makespan is 62–100% of D; it never exceeds D." | New baseline. | "HADS's makespan is 63–100% of D (cell means; 47–100% per run); it never exceeds D." |
@@ -220,9 +220,162 @@ validation, discussion and conclusion need rewriting from the pack.
 | D6 | `paper/paper.tex` 770–771 | "HADS … 26–40% slower than R-BurstHADS" | Reverses the direction of an averaged change. A −x% change of R-BurstHADS vs HADS is not "HADS x% slower"; per cell that would be x / (1 − x). | Derived. Use R-BurstHADS vs HADS as computed [T1]. |
 | D7 | `paper/paper.tex` Table V, 693–700, and abstract | "Makespan (%) +39.8 … +26.0" (a reduction printed positive), "mean over \|T\| ≥ 100" | An aggregation not in the pack; its source is not recorded. | Unverifiable and pre-fix. Replace from T1. |
 | D8 | `paper/paper.tex` Fig. `fig4_speedup` | "Speedup relative to HADS" | Makespan ratios from a pre-fix pipeline. | Not in the pack. Remove or recompute from runs. |
-| D9 | CLAUDE.md 340–342 | Per-scenario values labelled "80 cells" | The values are over 15 fully feasible cells per scenario. | Mislabelled cell set (C14). |
+| D9 | CLAUDE.md 340–342 | Per-scenario values labelled "80 cells" | Checked, and correct: the values reproduce over all 16 cells per scenario with feasible seeds, not over the 15 fully feasible ones (`diag_f21_verify.txt` §5). An earlier version of this list called it a mislabel; that is withdrawn. Every other cell-count label in the six documents was checked against the cell set its values come from, and none mismatches. | Correct as labelled. |
 
 **Checked and computed directly from runs** (no action): every "% vs X" in
 T1–T4, T2b, T8–T11, T14, T18, T19 and T23; the "0.14 points" in
 PAPER_SKELETON 5.3, which is a difference of two directly computed
 values; and CLAUDE.md's DF breakdowns.
+
+---
+
+## 8. Additions after freeze-fix21 (verified on existing data, `experiments/diag_f21_verify.txt`)
+
+### A1. Deploy-time assumption, for the paper's setup section, before any result
+
+The rule is stated in the form it was verified in. Insert it after the
+catalogue paragraph (`paper.tex` §V-A):
+
+> **Assumption 1 (deploy time).** The instance pool built before the
+> simulation starts is usable at once by the primary schedule that deploys it
+> at t = 0. Every instance a scheduler launches as a decision pays deploy time,
+> at any simulated time including t = 0. It runs no task before its launch time
+> plus T_start = 45 s, is billed from launch, and every finish a scheduler
+> predicts on it includes T_start. This covers:
+> - Burst-HADS's proactive burstables;
+> - the new on-demand instances of HADS's and Burst-HADS's primary schedules;
+> - every on-demand instance launched mid-run by the migration fallback,
+>   including a pool instance first launched mid-run;
+> - every spot or burstable instance R-BurstHADS provisions.
+>
+> We verified the assumption on every run: none of the 42,623 launches it
+> covers starts a task earlier than launch + T_start.
+
+**Why it must precede the results.** The rule charges deploy time to
+Burst-HADS's proactive burstables and to HADS's and Burst-HADS's new
+on-demand instances. Between the code without it and the code with it,
+dominance rose from 42 to 49 cells [T26]. A stated rule is what makes that
+auditable.
+
+### A2. E14, paper-facing wording
+
+Your proposed wording was: "excluded because the feasibility floor contains
+no deploy-time term and therefore generates deadlines no scheduler can meet,
+not because any scheduler failed." The data do not support it:
+
+| state | HADS feasible runs (of 150) | Burst-HADS feasible / runs with a miss | R-BurstHADS feasible / runs with a miss |
+|---|---|---|---|
+| freeze-round-b, before any deploy-time term | 140 | 150 / 1 | 150 / 1 |
+| freeze-fix21, limits on | 40 | 150 / 6 | 150 / 5 |
+| freeze-fix21, limits off | 150 | 150 / 2 | 150 / 3 |
+
+So:
+- the cells were excluded before deploy time existed;
+- Burst-HADS and R-BurstHADS meet the deadline in 144 and 145 of 150 runs;
+- the exclusion follows from HADS failing to find a schedule within the
+  deadline and the launch limits.
+
+Wording consistent with the data:
+
+> The five cells with n = 100 and DF = 0.25 sit at the deadline floor,
+> D = 339.7 s, and are left out of every cross-scheduler average. In them HADS
+> finds no primary schedule within D and the launch limits in 110 of 150 runs
+> (10 before deploy time was modelled), while Burst-HADS and R-BurstHADS are
+> feasible in all 150 and meet D in 144 and 145.
+>
+> The floor is defined to keep the migration reserve positive and contains no
+> deploy-time term. With the launch limits lifted every HADS run in these cells
+> is feasible. The cells are reported separately [T5, T6], not averaged over a
+> subset of seeds.
+
+### A3. Move the TCC23 validation failure into the setup section
+
+In `paper.tex`:
+- **Move** §VI, "Baseline Validation", rewritten per T18, to the end of §V
+  (Experimental Setup), as "§V-D Fidelity of the re-implemented baselines",
+  before §VII.
+- **State there, not in an appendix:**
+  - HADS without hibernation lands within 1–3% of TCC23's Table 7 for
+    J60–J100 [T8].
+  - Burst-HADS does not: makespan change −70.9 / −61.5 / −52.7 / +1.6%
+    against −44.4 / −42.1 / −28.8 / −11.8% [T8].
+  - Under hibernation Burst-HADS's cost change vs HADS is +17.9% against
+    +1.92%, and its hibernation premium +43% against +25% [T9].
+  - Consequence: every later comparison is against our re-implementations as
+    documented in the deviation register.
+- **Retitle** the abstract's last sentence per T1.
+
+In PAPER_SKELETON.md, move section 5 ("Fidelity audit") ahead of section 4.7,
+and make 1.4 ("Non-claim") point to it.
+
+### A4. The burstable tier: replacement description
+
+**Where the latency-hedge motivation appeared:** the module docstring, the
+`select_vm` docstring and ProvisioningEvent. All three were corrected when fix
+21 was adopted (467b438). DEVIATIONS R5 records the old reason as history.
+Neither `paper.tex` nor PAPER_SKELETON.md ever describes the burstable branch;
+the text below adds it.
+
+**R-BurstHADS section (`paper.tex` §IV), new paragraph after Algorithm 5
+(DeadlineAwareProvision):**
+
+> When no existing instance can take a displaced task, R-BurstHADS provisions
+> one new instance for it. That instance is a spot instance of the pool-resolved
+> type if the remaining slack exceeds 2 T_start, the instance would finish the
+> task before D with the spare-time margin of Section III, and the type is within
+> its launch limit. Otherwise it is a burstable instance, which draws on the
+> on-demand allowance rather than the exhausted spot one.
+>
+> Under provider launch limits this branch is a launch-limit overflow valve:
+> capacity of last resort that is not subject to the limit that binds. In 1,401
+> of its 1,453 firings (96%) the spot type was at its limit; in the other 52 the
+> spot instance failed the spare-time margin [T24]. It is not a hedge against
+> start-up latency: every instance it launches waits T_start, and the slack
+> condition selected a burstable in no run.
+>
+> Without launch limits the branch still fires, less often (0.36 against 0.61
+> per run, `diag_f21_verify.txt` §3). There the limit cannot bind, so a finish
+> or spare-time test selects it; the split was not measured.
+
+**Algorithm 5, DeadlineAwareProvision (`alg:sizing`; your "Algorithm 2"):**
+- Add after line 3: "instances are spot if D − t > 2 T_start, else burstable
+  (θ = s_b)".
+- Keep line 8 as it is: "launch n instances, ready at t + T_start" holds for
+  both types since fix 21.
+
+**Algorithm 6, burst migration, Attempt 3** (per T8): "provision one instance
+for t_i: spot if it passes the finish, spare-time and launch-limit tests, else
+a burstable if it finishes by D; ready at t + T_start."
+
+**PAPER_SKELETON 3.2:** as S12, with "the spot launch limit" named as what
+selects the burstable in 96% of firings.
+
+**Connection to the limits result.** Only this descriptive version is
+established:
+
+> The regime in which the branch acts as an overflow valve is the regime in
+> which R-BurstHADS's advantage is smallest: over the same 75 cells its cost
+> change against Burst-HADS is −4.6% with launch limits and −14.1% without
+> [T2b].
+
+**Not established:** "the tier is what keeps the cost advantage positive when
+limits bind". That is a counterfactual; it needs R-BurstHADS with the burstable
+branch disabled, limits on and off. The catalogue points the other way: a
+burst-mode task on t3.large costs 1.15× the same task alone on a fresh c5.large
+on-demand instance, which is what the next tier would launch [T15]. Measure it
+before writing it.
+
+### A5. Dominance, defined in the method section (`paper.tex` §V, metrics)
+
+> R-BurstHADS dominates Burst-HADS in a cell when both its mean makespan and its
+> mean cost over the cell's 30 seeds are no greater than Burst-HADS's. The count
+> uses means only; per-cell significance is reported separately, with a paired
+> per-seed 95% confidence interval.
+
+PAPER_SKELETON 4.6 gets the same sentence.
+
+The pack now states this criterion (Conventions, T1 caption) and explains the
+move from 42 to 49 cell by cell [T26]:
+- 11 cells entered and 4 left. All crossed the boundary on means; the entering
+  cells had sat a median 1.22 points from it.
+- The significance counts moved through per-cell means, not interval widths.

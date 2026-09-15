@@ -1,0 +1,135 @@
+# Verification on existing data after freeze-fix21
+
+## 1. Fully feasible cells, compared cell by cell
+
+- freeze-fix20 limits on: 75 cells; freeze-fix21 limits on: 75 cells; identical: True; only in freeze-fix20: []; only in freeze-fix21: []
+- freeze-round-b limits on: 75 cells; identical to freeze-fix21: True
+- cells excluded at freeze-fix21: [('sc1', 100, 0.25), ('sc2', 100, 0.25), ('sc3', 100, 0.25), ('sc4', 100, 0.25), ('sc5', 100, 0.25)]
+- limits off: freeze-fix20 80 cells, freeze-fix21 80 cells, identical: True
+- T23 set 21a: 75 cells, identical to freeze-fix20's: True
+- T23 set 21b: 75 cells, identical to freeze-fix20's: True
+- T23 set 21c: 75 cells, identical to freeze-fix20's: True
+- T23 set fix 21: 75 cells, identical to freeze-fix20's: True
+- T23 set fix 21 - 21a: 75 cells, identical to freeze-fix20's: True
+- T23 set fix 21 - 21b: 75 cells, identical to freeze-fix20's: True
+- T23 set fix 21 - 21c: 75 cells, identical to freeze-fix20's: True
+- T23 set fix 21, fix 20 reverted: 75 cells, identical to freeze-fix20's: True
+
+## 2. Dominance 42 -> 49 and the significance counts
+
+Criterion (results_pack.group_row): R-BurstHADS dominates Burst-HADS in a cell when its mean makespan over the cell's 30 seeds is <= Burst-HADS's AND its mean cost is <= Burst-HADS's. Means only: no test, no margin, ties count. Significance: the paired per-seed 95% CI of R - B excludes 0.
+
+Cells dominated: 42 -> 49; entered 11, left 4.
+
+| cell | change | R mk vs B before -> after | R $ vs B before -> after | axis failing when not dominated | R mean cost change | B mean cost change | R mean mk change | B mean mk change |
+|---|---|---|---|---|---|---|---|---|
+| ('sc1', 300, 1.0) | entered | -19.26% -> -22.02% | +1.54% -> -1.79% | cost | -4.30% | -1.07% | -4.36% | -0.97% |
+| ('sc1', 300, 2.0) | entered | -18.98% -> -18.48% | +1.22% -> -0.53% | cost | -2.90% | -1.20% | -1.89% | -2.48% |
+| ('sc2', 300, 0.25) | entered | +0.03% -> -0.03% | -0.75% -> -1.79% | mk | +3.52% | +4.61% | -0.04% | +0.02% |
+| ('sc3', 200, 0.25) | entered | -1.73% -> -2.42% | +0.43% -> -1.52% | cost | +3.18% | +5.22% | +0.59% | +1.30% |
+| ('sc3', 300, 0.25) | entered | -0.12% -> -0.45% | +0.82% -> -0.51% | cost | +0.63% | +1.98% | -0.65% | -0.33% |
+| ('sc3', 300, 0.5) | entered | +2.06% -> -4.49% | +2.99% -> -4.37% | mk+cost | -4.34% | +3.01% | -4.71% | +1.83% |
+| ('sc4', 300, 1.0) | entered | -7.23% -> -12.75% | +3.19% -> -1.94% | cost | +1.29% | +6.58% | +2.04% | +8.49% |
+| ('sc4', 300, 2.0) | entered | -12.33% -> -13.35% | +1.05% -> -0.47% | cost | -2.63% | -1.15% | -2.98% | -1.85% |
+| ('sc5', 200, 0.25) | entered | +1.47% -> -0.53% | +1.24% -> -1.69% | mk+cost | +2.46% | +5.52% | -1.00% | +0.98% |
+| ('sc5', 200, 1.0) | entered | -6.90% -> -13.50% | +0.78% -> -3.68% | cost | -0.26% | +4.35% | -1.89% | +5.60% |
+| ('sc5', 300, 1.0) | entered | -11.85% -> -13.63% | +1.25% -> -0.44% | cost | -1.65% | +0.02% | -3.19% | -1.20% |
+| ('sc1', 50, 0.25) | left | -4.97% -> -1.85% | -1.20% -> +1.89% | cost | +11.67% | +8.28% | +3.83% | +0.52% |
+| ('sc1', 50, 0.5) | left | -4.97% -> -1.85% | -1.20% -> +1.89% | cost | +11.67% | +8.28% | +3.83% | +0.52% |
+| ('sc2', 200, 0.25) | left | -0.05% -> +0.07% | -0.59% -> -1.10% | mk | +5.84% | +6.38% | +0.09% | -0.04% |
+| ('sc4', 50, 1.0) | left | -7.76% -> -4.36% | -0.39% -> +1.62% | cost | +1.79% | -0.23% | -0.18% | -3.73% |
+
+Failing-axis gap of the cells that entered, at freeze-fix20: largest +3.19%, median +1.22%. Non-dominated cells at freeze-fix20 within 2 points on their failing axis: 13.
+Mean change in R $ vs B: entering cells -2.95 pts, all other cells +0.64 pts; in R mk vs B: -2.44 / +0.84 pts.
+
+### significantly cheaper: 27 -> 25 (gained 4, lost 6)
+
+| cell | change | mean R - B before -> after | CI half-width before -> after | edge crossed 0 because |
+|---|---|---|---|---|
+| ('sc1', 200, 0.25) | gained | -0.004216 -> -0.005551 $ | 0.004665 -> 0.004143 | the mean moved away from 0 |
+| ('sc2', 300, 0.25) | gained | -0.003964 -> -0.009867 $ | 0.005955 -> 0.005259 | the mean moved away from 0 |
+| ('sc5', 200, 0.25) | gained | +0.004258 -> -0.006148 $ | 0.00602 -> 0.005535 | the mean moved away from 0 |
+| ('sc5', 300, 0.25) | gained | -0.002902 -> -0.01007 $ | 0.009002 -> 0.009621 | the mean moved away from 0 |
+| ('sc1', 300, 0.25) | lost | -0.008268 -> -0.005247 $ | 0.006524 -> 0.007315 | the mean moved toward 0 |
+| ('sc2', 50, 0.25) | lost | -0.003249 -> -0.001855 $ | 0.002625 -> 0.002825 | the mean moved toward 0 |
+| ('sc2', 50, 0.5) | lost | -0.003249 -> -0.001855 $ | 0.002625 -> 0.002825 | the mean moved toward 0 |
+| ('sc3', 100, 0.5) | lost | -0.01298 -> -0.006093 $ | 0.007966 -> 0.009819 | the mean moved toward 0 |
+| ('sc5', 50, 0.25) | lost | -0.005862 -> -0.003033 $ | 0.004062 -> 0.004407 | the mean moved toward 0 |
+| ('sc5', 50, 0.5) | lost | -0.005862 -> -0.003033 $ | 0.004062 -> 0.004407 | the mean moved toward 0 |
+
+### significantly dearer: 11 -> 8 (gained 2, lost 5)
+
+| cell | change | mean R - B before -> after | CI half-width before -> after | edge crossed 0 because |
+|---|---|---|---|---|
+| ('sc3', 50, 0.25) | gained | +0.0006955 -> +0.002555 $ | 0.001777 -> 0.002368 | the mean moved away from 0 |
+| ('sc3', 50, 0.5) | gained | +0.0006955 -> +0.002555 $ | 0.001777 -> 0.002368 | the mean moved away from 0 |
+| ('sc2', 50, 1.0) | lost | +0.008438 -> +0.004501 $ | 0.004797 -> 0.004598 | the mean moved toward 0 |
+| ('sc2', 100, 0.5) | lost | +0.003728 -> +0.001337 $ | 0.003071 -> 0.003545 | the mean moved toward 0 |
+| ('sc2', 200, 1.0) | lost | +0.02078 -> +0.01329 $ | 0.01919 -> 0.01898 | the mean moved toward 0 |
+| ('sc4', 100, 0.5) | lost | +0.01514 -> +0.007446 $ | 0.008354 -> 0.008439 | the mean moved toward 0 |
+| ('sc4', 300, 0.25) | lost | +0.01127 -> +0.005655 $ | 0.007943 -> 0.009822 | the mean moved toward 0 |
+
+### significantly faster: 46 -> 42 (gained 3, lost 7)
+
+| cell | change | mean R - B before -> after | CI half-width before -> after | edge crossed 0 because |
+|---|---|---|---|---|
+| ('sc3', 200, 0.25) | gained | -9.748 -> -13.86 s | 10.3 -> 8.001 | the mean moved away from 0 |
+| ('sc4', 300, 1.0) | gained | -178 -> -340.8 s | 245.9 -> 239.6 | the mean moved away from 0 |
+| ('sc5', 200, 1.0) | gained | -120.5 -> -248.9 s | 149.5 -> 143.5 | the mean moved away from 0 |
+| ('sc1', 50, 0.25) | lost | -12.22 -> -4.562 s | 8.481 -> 5.973 | the mean moved toward 0 |
+| ('sc1', 50, 0.5) | lost | -12.22 -> -4.562 s | 8.481 -> 5.973 | the mean moved toward 0 |
+| ('sc2', 50, 0.25) | lost | -8.588 -> -8.389 s | 7.567 -> 9.583 | the half-width widened |
+| ('sc2', 50, 0.5) | lost | -8.588 -> -8.389 s | 7.567 -> 9.583 | the half-width widened |
+| ('sc3', 50, 0.25) | lost | -7.34 -> -2.77 s | 5.507 -> 4.571 | the mean moved toward 0 |
+| ('sc3', 50, 0.5) | lost | -7.34 -> -2.77 s | 5.507 -> 4.571 | the mean moved toward 0 |
+| ('sc5', 50, 1.0) | lost | -69.96 -> -39.58 s | 47.97 -> 47.91 | the mean moved toward 0 |
+
+### significantly slower: 10 -> 9 (gained 1, lost 2)
+
+| cell | change | mean R - B before -> after | CI half-width before -> after | edge crossed 0 because |
+|---|---|---|---|---|
+| ('sc2', 100, 0.5) | gained | +1.709 -> +3.35 s | 5.76 -> 3.071 | the half-width narrowed |
+| ('sc4', 100, 0.5) | lost | +31.38 -> +17.85 s | 20.73 -> 20.04 | the mean moved toward 0 |
+| ('sc5', 200, 0.25) | lost | +8.489 -> -3.093 s | 6.981 -> 5.532 | the mean moved toward 0 |
+
+Mean ratio of paired-CI half-widths, freeze-fix21 / freeze-fix20, over the 75 cells: cost 1.024, makespan 0.974.
+
+## 3. R-BurstHADS's burstable branch, limits on and off (freeze-fix21)
+
+Estimator check, limits on: R-BurstHADS t3.large launches minus Burst-HADS's = 1455 over 2400 paired runs; the probe counts 1455 branch firings (tier 3 + saturation response).
+Limits off: 853 over 2400 paired runs (0.355 per run), against 0.606 per run with limits on.
+
+## 4. The five n = 100, DF = 0.25 cells (deadline floor, D = 339.7 s)
+
+| state | limits | scheduler | feasible runs of 150 | runs with a miss | missed tasks |
+|---|---|---|---|---|---|
+| freeze-round-b | on | HADS | 140 | 0 | 0 |
+| freeze-round-b | on | Burst-HADS | 150 | 1 | 1 |
+| freeze-round-b | on | R-BurstHADS | 150 | 1 | 1 |
+| freeze-round-b | off | HADS | 150 | 0 | 0 |
+| freeze-round-b | off | Burst-HADS | 150 | 0 | 0 |
+| freeze-round-b | off | R-BurstHADS | 150 | 0 | 0 |
+| freeze-fix20 | on | HADS | 140 | 0 | 0 |
+| freeze-fix20 | on | Burst-HADS | 150 | 1 | 1 |
+| freeze-fix20 | on | R-BurstHADS | 150 | 1 | 1 |
+| freeze-fix20 | off | HADS | 150 | 0 | 0 |
+| freeze-fix20 | off | Burst-HADS | 150 | 0 | 0 |
+| freeze-fix20 | off | R-BurstHADS | 150 | 0 | 0 |
+| freeze-fix21 | on | HADS | 40 | 0 | 0 |
+| freeze-fix21 | on | Burst-HADS | 150 | 6 | 6 |
+| freeze-fix21 | on | R-BurstHADS | 150 | 5 | 5 |
+| freeze-fix21 | off | HADS | 150 | 0 | 0 |
+| freeze-fix21 | off | Burst-HADS | 150 | 2 | 2 |
+| freeze-fix21 | off | R-BurstHADS | 150 | 3 | 3 |
+
+## 5. CLAUDE.md's per-scenario values, labelled "80 cells" (freeze-round-b, limits on)
+
+| scenario | 15 fully feasible cells: R mk / R $ vs HADS | 16 cells, feasible seeds: R mk / R $ vs HADS | CLAUDE.md |
+|---|---|---|---|
+| sc1 | -39.2% / +19.8% | -37.1% / +18.9% | −37.1% / +18.9% |
+| sc2 | -18.2% / +18.8% | -17.0% / +17.6% | −17.0% / +17.6% |
+| sc3 | -37.6% / +10.4% | -35.6% / +9.9% | −35.6% / +9.9% |
+| sc4 | -18.8% / +10.2% | -17.7% / +9.4% | −17.7% / +9.4% |
+| sc5 | -25.8% / +5.5% | -24.3% / +5.1% | −24.3% / +5.1% |
+
+"Burst-HADS is cheaper than HADS in 15 of 80 cells" (CLAUDE.md 349): over all 80 cells 15; over the 75, 12.

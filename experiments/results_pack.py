@@ -187,7 +187,8 @@ def summary_table(d, title, ident, source):
     w()
     w(f"Source: `{source}`. Cells where every scheduler is feasible in every seed: **{len(comp)} of {len(cells)}**. "
       "Columns: HADS makespan as % of D; Burst-HADS (B) and R-BurstHADS (R) vs HADS; R vs B; "
-      "cells where R dominates B on both means; cells where the paired per-seed 95% CI of R − B excludes 0 "
+      "cells where R dominates B (R's mean makespan and mean cost over the cell's seeds are both no greater than B's: "
+      "means only, ties count, no significance test); cells where the paired per-seed 95% CI of R − B excludes 0 "
       "(faster / slower, cheaper / dearer).")
     w()
     w("| group | cells | HADS mk/D | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |")
@@ -1141,6 +1142,77 @@ def launch21_tables():
     w()
 
 
+def dominance_table():
+    """T26: how the dominance and significance counts moved from freeze-fix20 to the current baseline."""
+    if SRC["raw_f20"] == SRC["on"] or not (ROOT / SRC["raw_f20"]).exists():
+        return
+    d0, d1 = load_jsonl(SRC["raw_f20"]), load_jsonl(SRC["on"])
+    c0, c1 = cells_of(d0), cells_of(d1)
+    s0 = {c for c in c0 if complete(c0[c])}
+    s1 = {c for c in c1 if complete(c1[c])}
+    mm = lambda st, k, f: st[k][f][0]
+    w("### T26. Dominance and significance, freeze-fix20 against the current baseline, cell by cell")
+    w()
+    w(f"Sources: `{SRC['raw_f20']}` (freeze-fix20), `{SRC['on']}` (current). The fully feasible cells are identical in both: "
+      f"{s0 == s1} ({len(s1)} cells; none entered or left the set). Criterion: R-BurstHADS dominates Burst-HADS in a cell "
+      "when its mean makespan and mean cost over the cell's seeds are both no greater than Burst-HADS's; means only, so "
+      "the paired CI plays no part. Significance: the paired per-seed 95% CI of R − B excludes 0. The floor makes "
+      "n = 50 at DF 0.25 and 0.5 the same cell, so such pairs move together.")
+    w()
+    rows = []
+    for c in sorted(s0 & s1):
+        a, b = cell_stats(c0[c]), cell_stats(c1[c])
+        r = dict(cell=c)
+        for t, st in (("0", a), ("1", b)):
+            r["mk" + t] = pct(mm(st, "rburst", "mk"), mm(st, "burst", "mk"))
+            r["c" + t] = pct(mm(st, "rburst", "cost"), mm(st, "burst", "cost"))
+            r["dom" + t] = r["mk" + t] <= 0 and r["c" + t] <= 0
+            for key, name in (("rb_cost", "cc"), ("rb_mk", "cm")):
+                r[name + t] = (st[key][0], st[key][1])
+        r["dRc"] = pct(mm(b, "rburst", "cost"), mm(a, "rburst", "cost"))
+        r["dBc"] = pct(mm(b, "burst", "cost"), mm(a, "burst", "cost"))
+        r["dRm"] = pct(mm(b, "rburst", "mk"), mm(a, "rburst", "mk"))
+        r["dBm"] = pct(mm(b, "burst", "mk"), mm(a, "burst", "mk"))
+        rows.append(r)
+    enter = [r for r in rows if r["dom1"] and not r["dom0"]]
+    leave = [r for r in rows if r["dom0"] and not r["dom1"]]
+    w(f"Cells dominated: {sum(r['dom0'] for r in rows)} → {sum(r['dom1'] for r in rows)} ({len(enter)} entered, {len(leave)} left).")
+    w()
+    w("| cell | change | R mk vs B | R $ vs B | axis that was failing | R mean cost | B mean cost | R mean makespan | B mean makespan |")
+    w("|---|---|---|---|---|---|---|---|---|")
+    fail = lambda mk, c: " and ".join(x for x, v in (("makespan", mk), ("cost", c)) if v > 0)
+    for r in enter + leave:
+        f_ = fail(r["mk0"], r["c0"]) if r in enter else fail(r["mk1"], r["c1"])
+        w(f"| {r['cell'][0]} n={r['cell'][1]} DF={r['cell'][2]} | {'entered' if r in enter else 'left'} | "
+          f"{r['mk0']:+.2f}% → {r['mk1']:+.2f}% | {r['c0']:+.2f}% → {r['c1']:+.2f}% | {f_} | {r['dRc']:+.2f}% | "
+          f"{r['dBc']:+.2f}% | {r['dRm']:+.2f}% | {r['dBm']:+.2f}% |")
+    w()
+    gap = lambda r: max(r["mk0"], r["c0"])
+    eg = sorted(gap(r) for r in enter)
+    others = [r for r in rows if r not in enter]
+    w(f"- Threshold crossing, not effect size: the entering cells were {eg[len(eg) // 2]:+.2f}% (median) and at most "
+      f"{eg[-1]:+.2f}% on the axis that failed; {sum(1 for r in rows if not r['dom0'] and 0 < gap(r) <= 2)} non-dominated "
+      f"cells sat within 2 points of the boundary. Their R $ vs B moved {mean(r['c1'] - r['c0'] for r in enter):+.2f} "
+      f"points and R mk vs B {mean(r['mk1'] - r['mk0'] for r in enter):+.2f}, while every other cell moved "
+      f"{mean(r['c1'] - r['c0'] for r in others):+.2f} and {mean(r['mk1'] - r['mk0'] for r in others):+.2f}. The averages "
+      "therefore moved slightly against R-BurstHADS while the count rose.")
+    hw_c = mean(r["cc1"][1] / r["cc0"][1] for r in rows if r["cc0"][1] > 0)
+    hw_m = mean(r["cm1"][1] / r["cm0"][1] for r in rows if r["cm0"][1] > 0)
+    w(f"- Not variance: dominance uses no interval, and the paired CI half-widths barely changed (ratio of current to "
+      f"freeze-fix20 {hw_c:.3f} for cost, {hw_m:.3f} for makespan, mean over cells).")
+    w()
+    w("| significance count | freeze-fix20 → current | gained | lost | crossings driven by the mean | crossings driven by the half-width |")
+    w("|---|---|---|---|---|---|")
+    for name, key, test in (("significantly cheaper", "cc", lambda v: v[0] + v[1] < 0), ("significantly dearer", "cc", lambda v: v[0] - v[1] > 0),
+                            ("significantly faster", "cm", lambda v: v[0] + v[1] < 0), ("significantly slower", "cm", lambda v: v[0] - v[1] > 0)):
+        g = [r for r in rows if test(r[key + "1"]) and not test(r[key + "0"])]
+        l_ = [r for r in rows if test(r[key + "0"]) and not test(r[key + "1"])]
+        by_mean = sum(1 for r in g + l_ if abs(abs(r[key + "1"][0]) - abs(r[key + "0"][0])) >= abs(r[key + "1"][1] - r[key + "0"][1]))
+        w(f"| {name} | {sum(test(r[key + '0']) for r in rows)} → {sum(test(r[key + '1']) for r in rows)} | {len(g)} | {len(l_)} | "
+          f"{by_mean} | {len(g) + len(l_) - by_mean} |")
+    w()
+
+
 def sources_table():
     w("## Sources")
     w()
@@ -1184,7 +1256,10 @@ def main():
       f"instance type, {lim.GLOBAL['ondemand']} on-demand and {lim.GLOBAL['spot']} spot per market (burstables count as on-demand).")
     w()
     w("Conventions. A cell is (scenario, n, DF). \"X vs Y\" in every table is the change of X's cell mean against Y's, "
-      "averaged over the cells named, computed from the runs of the two schedulers it names. A run counts as changed "
+      "averaged over the cells named, computed from the runs of the two schedulers it names. R-BurstHADS dominates "
+      "Burst-HADS in a cell when both its mean makespan and its mean cost are no greater than Burst-HADS's; the count "
+      "uses means only, so it moves when a cell's mean crosses the boundary on either axis, however small the move "
+      "(T26). Significant counts use the paired per-seed 95% CI. A run counts as changed "
       "between two result sets when its makespan differs by more than 1e-9 s, its cost by more than 1e-12 $, or its "
       "missed-task count differs; reproduction checks compare exactly.")
     w()
@@ -1219,6 +1294,7 @@ def main():
     u10_window_table()
     fix21_tables()
     launch21_tables()
+    dominance_table()
     w("## Per-cell means and 95% confidence intervals")
     w()
     cell_ci_table(d_on, "T3", "Per cell, instance limits ON", SRC["on"])
