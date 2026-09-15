@@ -1,0 +1,50 @@
+# Fix 21 launch census, invariant and burstable branch: variant base (reference experiments/sweep_raw_2439a00d7f74.jsonl)
+
+Probed runs reproducing their reference row exactly: 7200 / 7200
+
+## Launch sites (a launch = a VM's first LaunchCounter.commit)
+
+| scheduler | phase | VM from | market | routine | via | deploy time | launches | ran a task | task started before launch + T_start | mean seconds early |
+|---|---|---|---|---|---|---|---|---|---|---|
+| hads | primary | builder | ondemand | HADS primary: Phase (a)-(c) (_greedy_construct) | existing VM object | exempt | 2580 | 2250 | 0 | - |
+| hads | primary | created | ondemand | HADS primary: Phase (a)-(c) (_greedy_construct) | _launch_new_ondemand_vm | pays | 5525 | 4205 | 0 | - |
+| hads | primary | builder | spot | HADS primary: Phase (a)-(c) (_greedy_construct) | existing VM object | exempt | 11610 | 11545 | 0 | - |
+| hads | run | created | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | _launch_new_ondemand_vm | pays | 6001 | 5994 | 0 | - |
+| burst | primary | builder | ondemand | Burst-HADS primary: Phase 1-3 (_initial_solution) | existing VM object | exempt | 2580 | 2580 | 0 | - |
+| burst | primary | created | ondemand | Burst-HADS primary: Phase 1-3 (_initial_solution) | _launch_new_ondemand_vm | pays | 4560 | 4538 | 0 | - |
+| burst | primary | builder | spot | Burst-HADS primary: Phase 1-3 (_initial_solution) | existing VM object | exempt | 14515 | 14496 | 0 | - |
+| burst | primary | created | burstable | Burst-HADS primary: proactive burstables (_allocate_burstable_vms) | _launch_burstable_vms | pays | 6765 | 6706 | 0 | - |
+| burst | primary | builder | spot | primary: _apply_solution | existing VM object | exempt | 7085 | 7085 | 0 | - |
+| burst | run | created | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | _launch_new_ondemand_vm | pays | 1729 | 1592 | 0 | - |
+| burst | run | builder | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | existing VM object | pays | 1472 | 1452 | 0 | - |
+| rburst | primary | builder | ondemand | Burst-HADS primary: Phase 1-3 (_initial_solution) | existing VM object | exempt | 2580 | 2578 | 0 | - |
+| rburst | primary | created | ondemand | Burst-HADS primary: Phase 1-3 (_initial_solution) | _launch_new_ondemand_vm | pays | 4560 | 4506 | 0 | - |
+| rburst | primary | builder | spot | Burst-HADS primary: Phase 1-3 (_initial_solution) | existing VM object | exempt | 14515 | 14484 | 0 | - |
+| rburst | primary | created | burstable | Burst-HADS primary: proactive burstables (_allocate_burstable_vms) | _launch_burstable_vms | pays | 6765 | 6237 | 0 | - |
+| rburst | primary | created | spot | R-BurstHADS primary: Theorem 1 replacement (_preemptive_provision) | _create_vm | pays | 4240 | 4240 | 0 | - |
+| rburst | primary | builder | spot | primary: _apply_solution | existing VM object | exempt | 7085 | 7085 | 0 | - |
+| rburst | run | created | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | _launch_new_ondemand_vm | pays | 1045 | 920 | 0 | - |
+| rburst | run | builder | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | existing VM object | pays | 775 | 767 | 0 | - |
+| rburst | run | created | burstable | run: saturation response (_respond_to_saturation) | _create_vm | pays | 2 | 0 | 0 | - |
+| rburst | run | created | spot | run: saturation response (_respond_to_saturation) | _create_vm | pays | 8 | 6 | 0 | - |
+| rburst | run | created | burstable | run: tier 3 (_provision_one_more) | _create_vm | pays | 1453 | 1453 | 0 | - |
+| rburst | run | created | spot | run: tier 3 (_provision_one_more) | _create_vm | pays | 7 | 7 | 0 | - |
+
+Invariant: non-exempt launches that ran a task 42623; of them started a task before launch + T_start: 0. Launches from an unrecognised routine: 0.
+
+## R-BurstHADS's burstable branch
+
+| path | firings | per run | runs with a firing | firings as share of all placements |
+|---|---|---|---|---|
+| tier 3 (_provision_one_more) | 1453 | 0.605 | 682 / 2400 | 0.187% |
+| saturation response | 2 | 0.001 | 1 / 2400 | 0.000% |
+| both | 1455 | 0.606 | 682 / 2400 | 0.187% |
+
+Placements (VM.reserve_memory calls, start_execution's re-reservation excluded): 778369 (324.3 per run); placed on a branch burstable: 30089 (3.866%).
+Tier 3 calls: burstable 1453, spot 7, nothing 1828.
+
+| what selected the burstable, tier 3 | firings |
+|---|---|
+| spot launch limit | 1401 |
+| spot spare-time rule | 52 |
+
