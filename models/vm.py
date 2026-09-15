@@ -103,6 +103,9 @@ class VM:
         # creation; RBurstHADS._create_vm sets it for the VMs it provisions,
         # whose ProvisioningEvent fires at this time.
         self.ready_time = None
+        # Fix 21: True once something will start this VM's queue at
+        # ready_time -- a VMReadyEvent, or R-BurstHADS's ProvisioningEvent.
+        self._ready_event = False
 
     # ------------------------------------------------------------------
     # MARKET TYPE PROPERTIES
@@ -272,12 +275,18 @@ class VM:
         """
         from simulation.events import TaskCompleteEvent
 
-        # Fix 18: a provisioned VM starts nothing before it is ready; its
-        # ProvisioningEvent calls this again at ready_time. Tasks used to
-        # start at once on a spot VM still booting: 6,661 early starts, 26.9 s
-        # early on average, all on R-BurstHADS's VMs
-        # (experiments/diag_overcredit_boot.txt).
+        # Fixes 18 and 21: a VM a scheduler launched starts nothing before it
+        # is ready. R-BurstHADS's provisioned VMs are started at ready_time by
+        # their ProvisioningEvent; any other VM handed a task while booting
+        # gets a VMReadyEvent that only starts its queue. Tasks used to start
+        # at once on R-BurstHADS's spot VMs still booting (fix 18,
+        # experiments/diag_overcredit_boot.txt) and on every other VM a
+        # scheduler launched (fix 21, experiments/diag_launch21_base.txt).
         if self.ready_time is not None and current_time < self.ready_time:
+            if engine is not None and not self._ready_event:
+                from simulation.events import VMReadyEvent
+                self._ready_event = True
+                engine.add_event(VMReadyEvent(self.ready_time, self, engine))
             return
 
         while len(self.running) < self.vcpu_count:

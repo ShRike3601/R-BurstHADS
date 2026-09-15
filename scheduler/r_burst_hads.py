@@ -41,9 +41,15 @@ THEOREM 2 — Adaptive VM Count:
   Without this: O(n) makespan (all tasks queue sequentially on 1 VM)
   With this:    O(1) makespan relative to TASKS_PER_VM_CAP
 
-VM TYPE SELECTION:
-  Spot VMs if:     slack > STARTUP_LATENCY * SLACK_MULTIPLIER
-  Burstable VMs if: deadline too tight for spot startup
+VM TYPE SELECTION (tier 3, _provision_one_more):
+  Spot VM if slack > STARTUP_LATENCY * SLACK_MULTIPLIER, it finishes by D
+  with the Section 3.4 spare-time margin, and its type is within its
+  launch limit; otherwise a burstable if it finishes by D. Both boot for
+  STARTUP_LATENCY (fix 21). This docstring used to say a burstable is
+  chosen when the deadline is too tight for spot startup; measured, that
+  never selected one, before fix 21 or after: the spot launch limit chose
+  1,401 of the 1,453 burstables and the spare-time rule 52
+  (experiments/diag_launch21_f21.txt, 7,200 runs).
 
 R-BurstHADS never overrides the paper's own migration attempts -- it
 calls BurstHADS's _attempt_paper_migration / _attempt_ondemand_fallback
@@ -459,7 +465,8 @@ class RBurstHADS(BurstHADS):
 
         slack    = self.D - current_time
         use_spot = slack > STARTUP_LATENCY * SLACK_MULTIPLIER
-        startup  = STARTUP_LATENCY if use_spot else 0.0
+        # Fix 21: a burstable launched now boots for STARTUP_LATENCY as well.
+        startup  = STARTUP_LATENCY
 
         active_prov = [v for v in self.provisioned_vms
                        if v.state not in (VM.HIBERNATED, VM.TERMINATED)]
@@ -505,7 +512,7 @@ class RBurstHADS(BurstHADS):
                 new_vm = self._create_vm(
                     BURST_TYPE, BURST_SPEED, BURST_RATE,
                     BURST_MEM_GB, 0.0, BURST_VCPU,
-                    ready_time=current_time,
+                    ready_time=current_time + STARTUP_LATENCY,   # fix 21
                     extra_credits=BURST_CREDITS_INIT,
                     baseline_fraction=BURST_BASELINE_FRAC,
                 )
@@ -648,6 +655,7 @@ class RBurstHADS(BurstHADS):
         new_vm.state = VM.IDLE
         self._launches.commit(new_vm)
         new_vm.ready_time = ready_time     # fix 18: usable from ready_time
+        new_vm._ready_event = True         # fix 21: its ProvisioningEvent starts the queue
         if extra_credits is not None:
             new_vm.cpu_credits = extra_credits
 
@@ -679,8 +687,9 @@ class RBurstHADS(BurstHADS):
            tried only once the inherited paper attempts are
            exhausted, so it never pre-empts Algorithm 4's own order.
            Creates a NEW VM: spot when the remaining slack exceeds
-           SLACK_MULTIPLIER * STARTUP_LATENCY and the boot delay still
-           leaves room, otherwise a burstable, which is ready at once.
+           SLACK_MULTIPLIER * STARTUP_LATENCY, the boot delay still
+           leaves room and spot is within its launch limit, otherwise a
+           burstable, which boots for STARTUP_LATENCY too (fix 21).
            Not interchangeable with tier 0: tier 0 is capacity that
            already exists, tier 3 is capacity that will not be usable
            for STARTUP_LATENCY seconds.
@@ -745,8 +754,9 @@ class RBurstHADS(BurstHADS):
         # Try spot.
         #
         # _check_migration cannot be used here: the VM does not exist
-        # yet and estimate_finish_time() has no notion of a boot delay,
-        # so it would understate the finish time by STARTUP_LATENCY.
+        # yet, so the tests are written out against the template, each
+        # charging the STARTUP_LATENCY the new VM boots for (fix 21 for
+        # the burstable).
         # The two tests it would have applied are therefore written out
         # against the template. The second is the Section 3.4 spot
         # spare-time rule, previously missing on this path for the same
@@ -776,12 +786,13 @@ class RBurstHADS(BurstHADS):
                 return vm
 
         # Try burstable
-        if ((current_time + task.remaining_time / BURST_SPEED * ovh) <= self.D
+        # Fix 21: the burstable boots for STARTUP_LATENCY too.
+        if ((current_time + STARTUP_LATENCY + task.remaining_time / BURST_SPEED * ovh) <= self.D
                 and self._launches.can_launch_type("ondemand", BURST_TYPE)):
             vm = self._create_vm(
                 BURST_TYPE, BURST_SPEED, BURST_RATE,
                 BURST_MEM_GB, 0.0, BURST_VCPU,
-                ready_time=current_time,
+                ready_time=current_time + STARTUP_LATENCY,   # fix 21
                 extra_credits=BURST_CREDITS_INIT,
                 baseline_fraction=BURST_BASELINE_FRAC,
             )

@@ -240,7 +240,20 @@ class BurstHADS:
         for t in tasks:
             idx = cores.index(min(cores))
             cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
-        return max(cores) if cores else 0.0
+        return (max(cores) if cores else 0.0) + self._boot_offset(vm)
+
+    def _boot_offset(self, vm):
+        """Fix 21: when `vm` can start work, measured from the primary
+        schedule's t = 0. The builder's VMs are usable at once; a VM this
+        scheduler launches (or a probe standing for one) waits STARTUP_LATENCY."""
+        return vm.ready_time if vm.ready_time is not None else 0.0
+
+    def _fresh_probe(self, tpl):
+        """Fix 21: a not-yet-launched VM of type `tpl` as the primary schedule
+        would launch it, usable only after STARTUP_LATENCY."""
+        probe = make_vm(tpl, -1)
+        probe.ready_time = STARTUP_LATENCY
+        return probe
 
     def _solution_task_finish_times(self, solution):
         """
@@ -268,11 +281,12 @@ class BurstHADS:
                 continue
             # Execution order, for the reason given in _compute_vm_load.
             tasks.sort(key=lambda t: t.memory_req, reverse=True)
+            off = self._boot_offset(vm)      # fix 21
             cores = [0.0] * vm.vcpu_count
             for t in tasks:
                 idx = cores.index(min(cores))
                 cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
-                finish[t] = cores[idx]
+                finish[t] = cores[idx] + off
         return finish
 
     # ------------------------------------------------------------------
@@ -422,7 +436,7 @@ class BurstHADS:
                     f"BurstHADS: no placement for task {task.task_id} within "
                     f"D={self.D:.1f}s and the instance limits.")
             tpl = next((t for t in in_limit
-                        if self._check_schedule(task, make_vm(t, -1), vm_tasks,
+                        if self._check_schedule(task, self._fresh_probe(t), vm_tasks,
                                                 vm_memory, self.D)), None)
             if tpl is not None:
                 new_vm = self._launch_new_ondemand_vm(0.0, tpl)
@@ -746,7 +760,7 @@ class BurstHADS:
         sp = burst_vm.effective_speed(burst_mode=False)
         if sp <= 0:
             return float('inf')
-        return (task.exec_time / sp) * (1.0 + task.checkpoint_overhead)
+        return (task.exec_time / sp) * (1.0 + task.checkpoint_overhead) + self._boot_offset(burst_vm)
 
     def _launch_burstable_vms(self, n):
         """
@@ -768,6 +782,10 @@ class BurstHADS:
             new_vm = make_vm(tpl, self._next_new_vm_id)
             self._next_new_vm_id += 1
             new_vm.state = VM.IDLE
+            # Fix 21: a burstable this scheduler launches waits its deploy
+            # time. Algorithm 1 Part 2 launches them in the primary schedule,
+            # at t = 0; the builder's pool only seeds the type.
+            new_vm.ready_time = STARTUP_LATENCY
 
             self.burstable_vms.append(new_vm)
             if new_vm not in self.all_vms:
@@ -1114,10 +1132,18 @@ class BurstHADS:
             key=lambda v: v.cost_rate
         )
         for vm in candidates:
-            if (self._launches.can_launch(vm)
-                    and self._check_migration(task, vm, current_time, deadline)):
+            if not self._launches.can_launch(vm):
+                continue
+            # Fix 21: a pool VM this run has not launched would be launched
+            # here, mid-run, so the test charges its deploy time.
+            fresh = not self._launches.is_launched(vm)
+            if fresh:
+                vm.ready_time = current_time + STARTUP_LATENCY
+            if self._check_migration(task, vm, current_time, deadline):
                 self._launches.commit(vm)
                 return vm
+            if fresh:
+                vm.ready_time = None
 
         in_limit = [t for t in self._od_catalogue
                     if self._launches.can_launch_type("ondemand", t["vm_type"])]
@@ -1154,6 +1180,9 @@ class BurstHADS:
         new_vm = make_vm(tpl or self._od_catalogue[0], self._next_new_vm_id)
         self._next_new_vm_id += 1
         new_vm.state = VM.IDLE
+        # Fix 21: a VM this scheduler launches waits its deploy time, at t = 0
+        # in the primary schedule as much as mid-run.
+        new_vm.ready_time = current_time + STARTUP_LATENCY
 
         self.ondemand_vms.append(new_vm)
         if new_vm not in self.all_vms:
@@ -1179,8 +1208,16 @@ class BurstHADS:
                  and self._launches.can_launch(v)]
         fit = [v for v in cands if v.can_fit_task(task)]
         if fit or cands:
-            vm = min(fit or cands,
-                     key=lambda v: v.estimate_finish_time(task, current_time))
+            pool = fit or cands
+            # Fix 21: a pool VM never launched is launched here, mid-run, so it
+            # is judged -- and, if chosen, runs -- after its deploy time.
+            fresh = [v for v in pool if not self._launches.is_launched(v)]
+            for v in fresh:
+                v.ready_time = current_time + STARTUP_LATENCY
+            vm = min(pool, key=lambda v: v.estimate_finish_time(task, current_time))
+            for v in fresh:
+                if v is not vm:
+                    v.ready_time = None
             self._launches.commit(vm)
             return vm
         self._launches.overrides += 1

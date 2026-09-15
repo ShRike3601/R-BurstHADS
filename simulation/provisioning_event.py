@@ -3,9 +3,10 @@ ProvisioningEvent: fires when a pre-provisioned VM (R-BurstHADS's own
 Theorem 1 / Theorem 2 contribution) becomes active.
 
 R-BurstHADS provisions replacement VMs at scheduling time or in
-response to a saturation event. After STARTUP_LATENCY seconds
-(zero for burstable VMs, which paper Section 3 treats as always
-on-demand-available), the VM is active and ready to receive tasks.
+response to a saturation event. After STARTUP_LATENCY seconds the VM
+is active and ready to receive tasks -- a burstable too since fix 21: a t3
+launched mid-run boots like any EC2 instance, and TCC23 Section 3's
+availability statement concerns revocation, not readiness.
 
 Billing starts here, at activation (ready_time) -- NOT deferred
 until the VM is actually handed a task. This is deliberate: Theorem
@@ -19,9 +20,9 @@ import math
 
 from models.vm import VM
 
-# Pre-provisioned VM startup time (seconds)
-# Represents time to configure and start a spot instance
-# that was requested at scheduling time
+# Deploy time of a VM a scheduler launches (seconds): TCC23's omega, the
+# paper's T_start. Every launched VM except the builder's initial fleet
+# waits it before running a task (fixes 18 and 21).
 STARTUP_LATENCY = 45.0
 
 

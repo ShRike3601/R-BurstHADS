@@ -327,3 +327,20 @@ class StageCompleteEvent:
 
     def execute(self):
         self.scheduler.on_stage_complete(self.job, self.stage, self.time)
+
+
+class VMReadyEvent:
+    """Fix 21: a VM a scheduler launched becomes usable after its deploy time
+    (STARTUP_LATENCY: TCC23's omega, the paper's T_start). It only starts the
+    VM's queued tasks -- no scheduler call, no work stealing, no Allocation
+    Cycle -- so the one thing it changes is when they start. R-BurstHADS's
+    provisioned VMs are started by their ProvisioningEvent instead."""
+    def __init__(self, time, vm, engine):
+        self.time   = time
+        self.vm     = vm
+        self.engine = engine
+
+    def execute(self):
+        if self.vm.state in (VM.HIBERNATED, VM.TERMINATED):
+            return
+        self.vm.start_next_if_free(self.time, self.engine)

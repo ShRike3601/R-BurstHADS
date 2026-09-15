@@ -311,7 +311,20 @@ class HADS:
         for t in tasks:
             idx = cores.index(min(cores))
             cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
-        return max(cores) if cores else 0.0
+        return (max(cores) if cores else 0.0) + self._boot_offset(vm)
+
+    def _boot_offset(self, vm):
+        """Fix 21: when `vm` can start work, measured from the primary
+        schedule's t = 0. The builder's VMs are usable at once; a VM this
+        scheduler launches (or a probe standing for one) waits STARTUP_LATENCY."""
+        return vm.ready_time if vm.ready_time is not None else 0.0
+
+    def _fresh_probe(self, tpl):
+        """Fix 21: a not-yet-launched VM of type `tpl` as the primary schedule
+        would launch it, usable only after STARTUP_LATENCY."""
+        probe = make_vm(tpl, -1)
+        probe.ready_time = STARTUP_LATENCY
+        return probe
 
     # ------------------------------------------------------------------
     # SCHEDULE ENTRY POINT
@@ -445,7 +458,7 @@ class HADS:
                     f"HADS: no placement for task {task.task_id} within "
                     f"D={self.D:.1f}s and the instance limits.")
             tpl = next((t for t in in_limit
-                        if self._check_schedule(task, make_vm(t, -1), vm_tasks,
+                        if self._check_schedule(task, self._fresh_probe(t), vm_tasks,
                                                 vm_memory, self.D)), None)
             if tpl is not None:
                 new_vm = self._launch_new_ondemand_vm(0.0, tpl)
@@ -663,6 +676,9 @@ class HADS:
         new_vm = make_vm(tpl or self._od_catalogue[0], self._next_new_vm_id)
         self._next_new_vm_id += 1
         new_vm.state = VM.IDLE
+        # Fix 21: a VM this scheduler launches waits its deploy time, at t = 0
+        # in the primary schedule as much as mid-run.
+        new_vm.ready_time = current_time + STARTUP_LATENCY
 
         self.ondemand_vms.append(new_vm)
         if new_vm not in self.all_vms:
@@ -688,8 +704,16 @@ class HADS:
                  and self._launches.can_launch(v)]
         fit = [v for v in cands if v.can_fit_task(task)]
         if fit or cands:
-            vm = min(fit or cands,
-                     key=lambda v: v.estimate_finish_time(task, current_time))
+            pool = fit or cands
+            # Fix 21: a pool VM never launched is launched here, mid-run, so it
+            # is judged -- and, if chosen, runs -- after its deploy time.
+            fresh = [v for v in pool if not self._launches.is_launched(v)]
+            for v in fresh:
+                v.ready_time = current_time + STARTUP_LATENCY
+            vm = min(pool, key=lambda v: v.estimate_finish_time(task, current_time))
+            for v in fresh:
+                if v is not vm:
+                    v.ready_time = None
             self._launches.commit(vm)
             return vm
         self._launches.overrides += 1
