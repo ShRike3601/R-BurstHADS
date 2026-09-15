@@ -1172,6 +1172,28 @@ def _f21(a, b, c, ovh20=True, boot=None):
     return apply_patch
 
 
+def _no_burst_branch():
+    """Diagnostic (experiments/tier_off_plan.md), parent freeze-fix21: R-BurstHADS
+    with its burstable branch disabled. Both paths that create a burstable
+    mid-run -- tier 3 (_provision_one_more) and the saturation response -- test
+    `_launches.can_launch_type("ondemand", BURST_TYPE)` before creating one; that
+    test answers False when called from either routine, so tier 3 returns None
+    (the task goes to Algorithm 4 Attempt 3) and the saturation response creates
+    no burstables. Every other launch test, including Burst-HADS's proactive
+    burstables in the primary schedule, is untouched."""
+    import sys
+    import models.limits as lim
+    import scheduler.r_burst_hads as rb
+    o = lim.LaunchCounter.can_launch_type
+
+    def can_launch_type(self, key, vm_type):
+        if vm_type == rb.BURST_TYPE and sys._getframe(1).f_code.co_name in (
+                "_provision_one_more", "_respond_to_saturation"):
+            return False
+        return o(self, key, vm_type)
+    return lambda: _patch(lim.LaunchCounter, "can_launch_type", can_launch_type)
+
+
 # Round A closing grid: guard (U5) on/off x Allocation Cycle boundaries (E10)
 # off/on, on the state Round B adopts (migration fix U6/H2, billing from launch
 # B1). "nocap+" = validation catalogue setting, bare = capped sweep setting.
@@ -1194,6 +1216,13 @@ def _grid_variants():
 
 VARIANTS = {
     "base":             [],
+    # Diagnostic (experiments/tier_off_plan.md): R-BurstHADS without its burstable branch.
+    "no_burst_branch":       [lambda: _no_burst_branch()()],
+    "nocap+no_burst_branch": [lambda: _nocap()(), lambda: _no_burst_branch()()],
+    # U5 re-measured at freeze-fix21 (experiments/u5_remeasure_plan.md): the guard
+    # kept (copy of the frozen code) and removed (TCC23 §3.2 text), limits on.
+    "fill_copy":             [_burst_fill(True)],
+    "burst_fill":            [_burst_fill(False)],
     # Fix 21 (experiments/fix21_plan.md), parent freeze-fix20: deploy time for
     # every VM a scheduler launches; sub-fixes a, b, c and leave-one-out sets.
     "f21_copy":              [lambda: _f21(True, True, True, boot=0.0)()],
