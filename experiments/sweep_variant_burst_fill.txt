@@ -1,0 +1,5 @@
+variant burst_fill: 4800 units on 20 workers -> sweep_variant_burst_fill_2439a00d7f74.jsonl
+infeasible runs: 0
+done in 481s, 0 errors
+identical to base 2439a00d7f74: 1624/4800 units (base rows found: 4800)
+scheduler subset: cross-scheduler summary skipped

@@ -1,0 +1,63 @@
+# R-BurstHADS with its burstable branch disabled
+
+Parent freeze-fix21 `2439a00d7f74`; pre-registration `experiments/tier_off_plan.md`. Rows for R-BurstHADS in the 'branch disabled' sets come from sweep_variant_no_burst_branch_2439a00d7f74.jsonl, sweep_variant_nocap+no_burst_branch_2439a00d7f74.jsonl; every other row from the baselines. Seeds 0–29. Runs changed: makespan within 1e-9 s, cost within 1e-12 $, same misses.
+
+## Burstable branch firings (R-BurstHADS t3.large launches minus Burst-HADS's in the same unit)
+| set | sum over runs | per run | units with a difference | units with a negative difference | paired units |
+|---|---|---|---|---|---|
+| limits on, with branch | 1455 | 0.606 | 682 | 0 | 2400 |
+| limits on, branch disabled | 0 | 0.000 | 0 | 0 | 2400 |
+| limits off, with branch | 853 | 0.355 | 278 | 0 | 2400 |
+| limits off, branch disabled | 0 | 0.000 | 0 | 0 | 2400 |
+
+## R-BurstHADS on its own runs
+| set | feasible runs | infeasible runs | runs with a miss | missed tasks | runs changed vs 'with branch' | mean makespan change | mean cost change | no miss → miss | miss → no miss |
+|---|---|---|---|---|---|---|---|---|---|
+| limits on, with branch | 2400 | 0 | 5 | 5 | — | — | — | — | — |
+| limits on, branch disabled | 2400 | 0 | 5 | 5 | 682/2400 | -1.52% | -3.35% | 0 | 0 |
+| limits off, with branch | 2400 | 0 | 3 | 3 | — | — | — | — | — |
+| limits off, branch disabled | 2400 | 0 | 3 | 3 | 278/2400 | -0.13% | -0.47% | 0 | 0 |
+
+## Cell aggregates over each set's own complete cells (every scheduler feasible in every seed)
+| set | cells | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |
+|---|---|---|---|---|---|---|---|---|---|---|
+| limits on, with branch | 75 | -19.58% | +18.98% | -27.67% | +11.84% | -12.00% | -4.62% | 49 | 42 / 9 | 25 / 8 |
+| limits on, branch disabled | 75 | -19.58% | +18.98% | -29.37% | +6.58% | -14.02% | -9.11% | 65 | 54 / 0 | 51 / 2 |
+| limits off, with branch | 80 | -18.38% | +19.53% | -30.09% | +2.35% | -16.50% | -13.16% | 67 | 66 / 0 | 53 / 4 |
+| limits off, branch disabled | 80 | -18.38% | +19.53% | -30.22% | +1.81% | -16.63% | -13.60% | 67 | 69 / 0 | 56 / 3 |
+
+limits on: cell sets identical: True
+
+limits off: cell sets identical: True
+
+### By DF
+| set, DF | cells | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |
+|---|---|---|---|---|---|---|---|---|---|---|
+| limits on, with branch, DF 0.25 | 15 | -7.37% | +8.30% | -8.35% | +7.37% | -1.16% | -0.82% | 9 | 4 / 2 | 4 / 1 |
+| limits on, with branch, DF 0.5 | 20 | -6.12% | +17.43% | -7.01% | +18.08% | -1.01% | +0.65% | 9 | 6 / 7 | 4 / 6 |
+| limits on, with branch, DF 1.0 | 20 | -14.77% | +19.58% | -26.81% | +14.66% | -14.67% | -3.08% | 12 | 12 / 0 | 6 / 1 |
+| limits on, with branch, DF 2.0 | 20 | -46.99% | +27.93% | -63.68% | +6.14% | -28.46% | -14.30% | 19 | 20 / 0 | 11 / 0 |
+| limits on, branch disabled, DF 0.25 | 15 | -7.37% | +8.30% | -8.83% | +6.11% | -1.65% | -1.93% | 12 | 7 / 0 | 8 / 1 |
+| limits on, branch disabled, DF 0.5 | 20 | -6.12% | +17.43% | -9.76% | +8.89% | -3.83% | -6.89% | 16 | 11 / 0 | 14 / 1 |
+| limits on, branch disabled, DF 1.0 | 20 | -14.77% | +19.58% | -29.01% | +7.59% | -17.14% | -9.23% | 18 | 16 / 0 | 13 / 0 |
+| limits on, branch disabled, DF 2.0 | 20 | -46.99% | +27.93% | -64.73% | +3.61% | -30.38% | -16.58% | 19 | 20 / 0 | 16 / 0 |
+| limits off, with branch, DF 0.25 | 20 | -5.62% | +10.52% | -7.10% | +7.53% | -1.64% | -2.56% | 11 | 10 / 0 | 7 / 3 |
+| limits off, with branch, DF 0.5 | 20 | -6.14% | +18.83% | -12.05% | -1.67% | -6.16% | -16.63% | 18 | 16 / 0 | 14 / 1 |
+| limits off, with branch, DF 1.0 | 20 | -14.77% | +20.83% | -33.29% | +2.08% | -22.24% | -14.86% | 19 | 20 / 0 | 16 / 0 |
+| limits off, with branch, DF 2.0 | 20 | -46.99% | +27.93% | -67.93% | +1.45% | -35.93% | -18.60% | 19 | 20 / 0 | 16 / 0 |
+| limits off, branch disabled, DF 0.25 | 20 | -5.62% | +10.52% | -7.18% | +6.86% | -1.72% | -3.13% | 11 | 12 / 0 | 9 / 2 |
+| limits off, branch disabled, DF 0.5 | 20 | -6.14% | +18.83% | -12.37% | -2.57% | -6.50% | -17.34% | 18 | 17 / 0 | 15 / 1 |
+| limits off, branch disabled, DF 1.0 | 20 | -14.77% | +20.83% | -33.41% | +1.49% | -22.37% | -15.31% | 19 | 20 / 0 | 16 / 0 |
+| limits off, branch disabled, DF 2.0 | 20 | -46.99% | +27.93% | -67.93% | +1.45% | -35.93% | -18.60% | 19 | 20 / 0 | 16 / 0 |
+
+## Matched: the 75 cells complete in all four sets
+| set | cells | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |
+|---|---|---|---|---|---|---|---|---|---|---|
+| limits on, with branch | 75 | -19.58% | +18.98% | -27.67% | +11.84% | -12.00% | -4.62% | 49 | 42 / 9 | 25 / 8 |
+| limits on, branch disabled | 75 | -19.58% | +18.98% | -29.37% | +6.58% | -14.02% | -9.11% | 65 | 54 / 0 | 51 / 2 |
+| limits off, with branch | 75 | -19.52% | +20.31% | -31.99% | +1.93% | -17.57% | -14.09% | 67 | 66 / 0 | 53 / 2 |
+| limits off, branch disabled | 75 | -19.52% | +20.31% | -32.13% | +1.37% | -17.71% | -14.54% | 67 | 68 / 0 | 56 / 2 |
+
+## Runs changed by DF
+- R-BurstHADS, limits on: DF 0.25: 189/600; DF 0.5: 297/600; DF 1.0: 160/600; DF 2.0: 36/600
+- R-BurstHADS, limits off: DF 0.25: 110/600; DF 0.5: 124/600; DF 1.0: 43/600; DF 2.0: 1/600
