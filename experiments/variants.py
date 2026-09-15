@@ -940,6 +940,238 @@ def _u10(with_overhead):
     return apply_patch
 
 
+def _f21(a, b, c, ovh20=True, boot=None):
+    """Fix 21 (experiments/fix21_plan.md): deploy time for every VM a scheduler
+    launches as a scheduling decision. Parent: freeze-fix20 (d40a1c917c63).
+
+    a: a VM launched mid-run runs no task before launch + T_start. That is
+       Algorithm 4 Attempt 3's / HADS stage 3's fresh M^o VM, a never-launched
+       pool VM taken by Burst-HADS's Attempt 3 candidate loop or by
+       _capped_fallback, and the over-limit launch. The candidate tests charge
+       T_start for a VM not yet launched.
+    b: R-BurstHADS's burstables launched mid-run (tier 3, saturation response)
+       wait T_start; the tier-3 burstable test and the saturation sizing charge it.
+    c: VMs a primary schedule creates at t = 0 (Burst-HADS's proactive
+       burstables; the new on-demand VMs of HADS Phase (c) and Burst-HADS
+       Phase 3) wait T_start, and the static planners start those VMs' cores
+       at T_start (the Phase-3 probe, id -1, stands for such a VM).
+    ovh20=False reverts fix 20 in both fallback walks.
+    boot=0.0 with every switch on installs every copy and changes nothing: the
+    fidelity check (f21_copy).
+    """
+    from models.vm import VM
+    from models.catalogue import make_vm
+    from simulation.provisioning_event import STARTUP_LATENCY
+    from scheduler.hads import HADS
+    from scheduler.burst_hads import BurstHADS
+    import scheduler.r_burst_hads as rb
+    W = STARTUP_LATENCY if boot is None else boot
+
+    class VMReadyEvent:
+        """A launched VM becomes usable: start its queue, nothing else."""
+        def __init__(self, time, vm, engine):
+            self.time, self.vm, self.engine = time, vm, engine
+
+        def execute(self):
+            if self.vm.state in (VM.HIBERNATED, VM.TERMINATED):
+                return
+            self.vm.start_next_if_free(self.time, self.engine)
+
+    o_start = VM.start_next_if_free
+
+    def start_next_if_free(self, current_time, engine):
+        ra = self.ready_time
+        if (ra is not None and current_time < ra and engine is not None
+                and not getattr(self, "_ready_event", False)):
+            self._ready_event = True
+            engine.add_event(VMReadyEvent(ra, self, engine))
+        return o_start(self, current_time, engine)
+
+    def launch_od(o):
+        def _launch_new_ondemand_vm(self, current_time, tpl=None):
+            vm = o(self, current_time, tpl)
+            primary = self.event_engine is None
+            if (primary and c) or (not primary and a):
+                vm.ready_time = current_time + W
+            return vm
+        return _launch_new_ondemand_vm
+
+    o_burst = BurstHADS._launch_burstable_vms
+
+    def _launch_burstable_vms(self, n):
+        vms = o_burst(self, n)
+        if c and self.event_engine is None:
+            for v in vms:
+                v.ready_time = 0.0 + W
+        return vms
+
+    def boot_offset(vm):
+        if not c:
+            return 0.0
+        if vm.id == -1:
+            return W
+        return vm.ready_time if vm.ready_time is not None else 0.0
+
+    def _vm_makespan_static(self, tasks, vm):
+        cores = [0.0] * vm.vcpu_count
+        for t in tasks:
+            idx = cores.index(min(cores))
+            cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
+        return (max(cores) if cores else 0.0) + boot_offset(vm)
+
+    def _solution_task_finish_times(self, solution):
+        vm_map  = {vm.id: vm for vm in self.all_vms}
+        buckets = {}
+        for task in self.all_tasks:
+            vid = solution.allocation.get(task.task_id)
+            if vid is None:
+                continue
+            buckets.setdefault(vid, []).append(task)
+        finish = {}
+        for vid, tasks in buckets.items():
+            vm = vm_map.get(vid)
+            if vm is None:
+                continue
+            tasks.sort(key=lambda t: t.memory_req, reverse=True)
+            off = boot_offset(vm)
+            cores = [0.0] * vm.vcpu_count
+            for t in tasks:
+                idx = cores.index(min(cores))
+                cores[idx] += (t.exec_time / vm.speed) * (1.0 + t.checkpoint_overhead)
+                finish[t] = cores[idx] + off
+        return finish
+
+    o_bf = BurstHADS._baseline_finish
+
+    def _baseline_finish(self, task, burst_vm):
+        return o_bf(self, task, burst_vm) + boot_offset(burst_vm)
+
+    def walk(self, task, current_time, in_limit, deadline):
+        for tpl in in_limit:
+            probe = make_vm(tpl, -1)
+            finish = (current_time + STARTUP_LATENCY
+                      + task.remaining_time / probe.speed
+                      * ((1.0 + task.checkpoint_overhead) if ovh20 else 1.0))
+            if probe.can_fit_task(task) and finish <= deadline:
+                return self._launch_new_ondemand_vm(current_time, tpl)
+        return self._launch_new_ondemand_vm(current_time, in_limit[0])
+
+    def burst_fallback(self, task, current_time):
+        deadline = self.D
+        candidates = sorted(
+            [v for v in self.ondemand_vms
+             if v.state not in (VM.HIBERNATED, VM.TERMINATED)],
+            key=lambda v: v.cost_rate)
+        for vm in candidates:
+            if not self._launches.can_launch(vm):
+                continue
+            fresh = a and not self._launches.is_launched(vm)
+            if fresh:
+                vm.ready_time = current_time + W
+            if self._check_migration(task, vm, current_time, deadline):
+                self._launches.commit(vm)
+                return vm
+            if fresh:
+                vm.ready_time = None
+        in_limit = [t for t in self._od_catalogue
+                    if self._launches.can_launch_type("ondemand", t["vm_type"])]
+        if not in_limit:
+            return self._capped_fallback(task, current_time)
+        return walk(self, task, current_time, in_limit, deadline)
+
+    def hads_fallback(self, task, current_time):
+        deadline = self.D
+        in_limit = [t for t in self._od_catalogue
+                    if self._launches.can_launch_type("ondemand", t["vm_type"])]
+        if not in_limit:
+            return self._capped_fallback(task, current_time)
+        return walk(self, task, current_time, in_limit, deadline)
+
+    def capped(self, task, current_time):
+        cands = [v for v in (self.spot_vms + self.ondemand_vms)
+                 if v.state not in (VM.HIBERNATED, VM.TERMINATED)
+                 and self._launches.can_launch(v)]
+        fit = [v for v in cands if v.can_fit_task(task)]
+        if fit or cands:
+            pool = fit or cands
+            fresh = [v for v in pool if a and not self._launches.is_launched(v)]
+            for v in fresh:
+                v.ready_time = current_time + W
+            vm = min(pool, key=lambda v: v.estimate_finish_time(task, current_time))
+            for v in fresh:
+                if v is not vm:
+                    v.ready_time = None
+            self._launches.commit(vm)
+            return vm
+        self._launches.overrides += 1
+        return self._launch_new_ondemand_vm(current_time)
+
+    o_create = rb.RBurstHADS._create_vm
+
+    def _create_vm(self, *args, **kw):
+        if b and kw.get("baseline_fraction") is not None:
+            kw["ready_time"] = kw["ready_time"] + W
+        vm = o_create(self, *args, **kw)
+        vm._ready_event = True          # its ProvisioningEvent starts the queue
+        return vm
+
+    o_need = rb.RBurstHADS._vms_needed_for_deadline
+
+    def _vms_needed_for_deadline(self, tasks, current_time, targets, use_spot, startup):
+        if b and not use_spot:
+            startup = W
+        return o_need(self, tasks, current_time, targets, use_spot, startup)
+
+    def _provision_one_more(self, task, current_time):
+        slack = self.D - current_time
+        ovh = 1.0 + task.checkpoint_overhead
+        if slack > rb.STARTUP_LATENCY * rb.SLACK_MULTIPLIER:
+            spot_speed = self._spot_tpl["speed"]
+            finish     = (current_time + rb.STARTUP_LATENCY
+                          + task.remaining_time / spot_speed * ovh)
+            spare      = self.D - finish
+            longest    = task.exec_time / spot_speed
+            if (finish <= self.D and spare > longest
+                    and self._launches.can_launch_type(
+                        "spot", self._spot_tpl["vm_type"])):
+                vm = self._create_spot_vm(
+                    ready_time=current_time + rb.STARTUP_LATENCY,
+                )
+                self.provisioned_vms.append(vm)
+                return vm
+        wb = W if b else 0.0
+        if ((current_time + wb + task.remaining_time / rb.BURST_SPEED * ovh) <= self.D
+                and self._launches.can_launch_type("ondemand", rb.BURST_TYPE)):
+            vm = self._create_vm(
+                rb.BURST_TYPE, rb.BURST_SPEED, rb.BURST_RATE,
+                rb.BURST_MEM_GB, 0.0, rb.BURST_VCPU,
+                ready_time=current_time,
+                extra_credits=rb.BURST_CREDITS_INIT,
+                baseline_fraction=rb.BURST_BASELINE_FRAC,
+            )
+            self.provisioned_vms.append(vm)
+            return vm
+        return None
+
+    def apply_patch():
+        _patch(VM, "start_next_if_free", start_next_if_free)
+        _patch(BurstHADS, "_launch_new_ondemand_vm", launch_od(BurstHADS._launch_new_ondemand_vm))
+        _patch(HADS, "_launch_new_ondemand_vm", launch_od(HADS._launch_new_ondemand_vm))
+        _patch(BurstHADS, "_launch_burstable_vms", _launch_burstable_vms)
+        _patch(BurstHADS, "_vm_makespan_static", _vm_makespan_static)
+        _patch(HADS, "_vm_makespan_static", _vm_makespan_static)
+        _patch(BurstHADS, "_solution_task_finish_times", _solution_task_finish_times)
+        _patch(BurstHADS, "_baseline_finish", _baseline_finish)
+        _patch(BurstHADS, "_attempt_ondemand_fallback", burst_fallback)
+        _patch(HADS, "_attempt_ondemand_fallback", hads_fallback)
+        _patch(BurstHADS, "_capped_fallback", capped)
+        _patch(HADS, "_capped_fallback", capped)
+        _patch(rb.RBurstHADS, "_create_vm", _create_vm)
+        _patch(rb.RBurstHADS, "_vms_needed_for_deadline", _vms_needed_for_deadline)
+        _patch(rb.RBurstHADS, "_provision_one_more", _provision_one_more)
+    return apply_patch
+
+
 # Round A closing grid: guard (U5) on/off x Allocation Cycle boundaries (E10)
 # off/on, on the state Round B adopts (migration fix U6/H2, billing from launch
 # B1). "nocap+" = validation catalogue setting, bare = capped sweep setting.
@@ -962,6 +1194,21 @@ def _grid_variants():
 
 VARIANTS = {
     "base":             [],
+    # Fix 21 (experiments/fix21_plan.md), parent freeze-fix20: deploy time for
+    # every VM a scheduler launches; sub-fixes a, b, c and leave-one-out sets.
+    "f21_copy":              [lambda: _f21(True, True, True, boot=0.0)()],
+    "f21a":                  [lambda: _f21(True, False, False)()],
+    "f21b":                  [lambda: _f21(False, True, False)()],
+    "f21c":                  [lambda: _f21(False, False, True)()],
+    "f21":                   [lambda: _f21(True, True, True)()],
+    "f21_no_a":              [lambda: _f21(False, True, True)()],
+    "f21_no_b":              [lambda: _f21(True, False, True)()],
+    "f21_no_c":              [lambda: _f21(True, True, False)()],
+    "f21_no20":              [lambda: _f21(True, True, True, ovh20=False)()],
+    "nocap+f21_copy":        [lambda: _nocap()(), lambda: _f21(True, True, True, boot=0.0)()],
+    "nocap+f21a":            [lambda: _nocap()(), lambda: _f21(True, False, False)()],
+    "nocap+f21c":            [lambda: _nocap()(), lambda: _f21(False, False, True)()],
+    "nocap+f21":             [lambda: _nocap()(), lambda: _f21(True, True, True)()],
     "nocap+ac_copy":         [lambda: _nocap()(), _ac_cycles(False)],
     "f17_copy":              [lambda: _sat17(False, False, False)()],
     "f17a":                  [lambda: _sat17(True, False, False)()],
