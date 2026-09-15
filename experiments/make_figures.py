@@ -20,7 +20,7 @@ import matplotlib
 import matplotlib.ticker
 matplotlib.rcParams["pdf.fonttype"] = 42    # TrueType, not Type 3: IEEE PDF eXpress rejects Type 3
 matplotlib.rcParams["ps.fonttype"] = 42
-from ieee_figs import single, save, grouped_bars, trend, zero_line, legend_above, C, INK, INK_SOFT
+from ieee_figs import single, save, grouped_bars, trend, zero_line, legend_above, C, INK, INK_SOFT, MARK, ZERO
 
 import argparse
 _ap = argparse.ArgumentParser()
@@ -129,19 +129,40 @@ ax.annotate(f"n = 300: R-BurstHADS {rb300.replace('-', chr(0x2212))} vs Burst-HA
 legend_above(fig, ax)
 made.append(save(fig, "fig5_cost_vs_n", outdir=str(OUT)))
 
-# ── Fig. 6: missed deadline tasks, limits on and off ────────────────────────
-miss = {(r["limits"], r["scheduler"]): int(r["missed tasks"]) for r in T5 if r.get("limits") in ("on", "off")}
+# ── Fig. 6: limits on against limits off, both axes, the same cells ─────────
+# T2b holds both settings over identical cells (T1's and T2's "all" rows do not).
+T2B = {r["limits"]: r for r in table("T2b")}
 fig, ax = single()
-series = ["HADS", B, R]
-vals = {s: [miss[("on", s)], miss[("off", s)]] for s in series}
-grouped_bars(ax, ["Instance limits on", "Instance limits off"], vals, ylabel="Missed deadline tasks", series=series)
-w, g = 0.26, 0.02
-for k, name in enumerate(series):
-    off = (k - 1) * (w + g)
-    label_bars(ax, [0 + off, 1 + off], vals[name], "{:d}")
-ax.set_ylim(0, max(max(v) for v in vals.values()) * 1.18)
-ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(integer=True))   # counts: no fractional ticks
+ax.axhline(0, color=ZERO, linewidth=0.7, zorder=1)
+ax.axvline(0, color=ZERO, linewidth=0.7, zorder=1)
+ax.annotate("HADS", xy=(0, 0), xytext=(3, 3), textcoords="offset points", fontsize=6, color=INK_SOFT)
+xs, ys = [0.0], [0.0]
+P6 = {name: [(pct(T2B[s][c_col]), pct(T2B[s][mk_col])) for s in ("on", "off")]
+      for name, mk_col, c_col in ((B, "B mk vs H", "B $ vs H"), (R, "R mk vs H", "R $ vs H"))}
+for (x_, y_) in [p for v in P6.values() for p in v]:
+    xs.append(x_)
+    ys.append(y_)
+x_mid = (min(xs) + max(xs)) / 2
+for name in (B, R):
+    marker, _ = MARK[name]
+    (x0, y0), (x1, y1) = P6[name]
+    ax.annotate("", xy=(x1, y1), xytext=(x0, y0), zorder=2,
+                arrowprops=dict(arrowstyle="-|>", color=C[name], lw=0.8, shrinkA=4, shrinkB=4, mutation_scale=7))
+    ax.plot([x0], [y0], marker=marker, linestyle="none", color=C[name], markeredgecolor="white",
+            markeredgewidth=0.5, markersize=6, label=f"{name}, limits on", zorder=3)
+    ax.plot([x1], [y1], marker=marker, linestyle="none", markerfacecolor="white", markeredgecolor=C[name],
+            markeredgewidth=1.0, markersize=6, label=f"{name}, limits off", zorder=3)
+    # Shift when limits are lifted, in points (off minus on over the same cells, T2b).
+    right = (x0 + x1) / 2 > x_mid          # keep the label inside the axes
+    ax.annotate(f"limits off: cost {x1 - x0:+.1f} pts, makespan {y1 - y0:+.1f} pts".replace("-", "−"),
+                xy=(max(x0, x1) if right else min(x0, x1), min(y0, y1)), xytext=(0, -8),
+                textcoords="offset points", ha="right" if right else "left", va="top",
+                fontsize=6, color=C[name])
+ax.set_xlabel("Cost change vs HADS (%)", color=INK)
+ax.set_ylabel("Makespan change vs HADS (%)", color=INK)
+ax.set_xlim(min(xs) - 3, max(xs) + 3)
+ax.set_ylim(min(ys) - 8, max(ys) + 4)
 legend_above(fig, ax)
-made.append(save(fig, "fig6_missed_tasks", outdir=str(OUT)))
+made.append(save(fig, "fig6_limits_on_off", outdir=str(OUT)))
 
 print("\n".join(made))

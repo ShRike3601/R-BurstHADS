@@ -1,0 +1,32 @@
+# Limits-off misses on freeze-fix21 (2439a00d7f74), traced (record-only; experiments/diag_f21_misses.py's tracer, variant nocap)
+
+## ('sc1', 100, 0.25, 21, 'burst'): makespan 360.2, misses 1, reproduces sweep row: True
+- task 68 (exec 268 s): D 339.7, started 167.8, finished 360.2 (20.4 s late) on VM 10023 launched at 244.03629059546
+    - t=0.0 primary schedule -> VM 7 spot c5.xlarge ready None predicted finish None
+    - t=244.0 hibernation rescue -> VM 10023 ondemand c5.large ready 289.0 predicted finish None
+    - Attempt 3 at t=244.0 (D 339.7, remaining 268 s): 20 existing on-demand candidates; fresh-VM test per type (type, within limit, finish): [('c5.large', True, 436.4), ('c5.xlarge', True, 436.4), ('m5.xlarge', True, 462.4)]; launched c5.large
+
+## ('sc1', 100, 0.25, 21, 'rburst'): makespan 360.2, misses 1, reproduces sweep row: True
+- task 68 (exec 268 s): D 339.7, started 167.8, finished 360.2 (20.4 s late) on VM 10023 launched at 244.03629059546
+    - t=0.0 primary schedule -> VM 7 spot c5.xlarge ready None predicted finish None
+    - t=244.0 hibernation rescue -> VM 10023 ondemand c5.large ready 289.0 predicted finish None
+    - Attempt 3 at t=244.0 (D 339.7, remaining 268 s): 20 existing on-demand candidates; fresh-VM test per type (type, within limit, finish): [('c5.large', True, 436.4), ('c5.xlarge', True, 436.4), ('m5.xlarge', True, 462.4)]; launched c5.large
+
+## ('sc2', 100, 0.25, 2, 'burst'): makespan 357.9, misses 1, reproduces sweep row: True
+- task 29 (exec 346 s): D 339.7, started 167.6, finished 357.9 (18.2 s late) on VM 10021 launched at 122.62280951179537
+    - t=0.0 primary schedule -> VM 4 spot c5.xlarge ready None predicted finish None
+    - t=122.6 hibernation rescue -> VM 10021 ondemand c5.large ready 167.6 predicted finish None
+    - Attempt 3 at t=122.6 (D 339.7, remaining 346 s): 18 existing on-demand candidates; fresh-VM test per type (type, within limit, finish): [('c5.large', True, 357.9), ('c5.xlarge', True, 357.9), ('m5.xlarge', True, 391.5)]; launched c5.large
+
+## ('sc2', 100, 0.25, 2, 'rburst'): makespan 357.9, misses 1, reproduces sweep row: True
+- task 29 (exec 346 s): D 339.7, started 167.6, finished 357.9 (18.2 s late) on VM 10021 launched at 122.62280951179537
+    - t=0.0 primary schedule -> VM 4 spot c5.xlarge ready None predicted finish None
+    - t=122.6 hibernation rescue -> VM 10021 ondemand c5.large ready 167.6 predicted finish None
+    - Attempt 3 at t=122.6 (D 339.7, remaining 346 s): 18 existing on-demand candidates; fresh-VM test per type (type, within limit, finish): [('c5.large', True, 357.9), ('c5.xlarge', True, 357.9), ('m5.xlarge', True, 391.5)]; launched c5.large
+
+## ('sc5', 100, 0.25, 4, 'rburst'): makespan 366.9, misses 1, reproduces sweep row: True
+- task 17 (exec 255 s): D 339.7, started 159.2, finished 366.9 (27.2 s late) on VM 10017 launched at 308.79888794567887
+    - t=0.0 primary schedule -> VM 8 spot m5.xlarge ready None predicted finish None
+    - t=308.8 hibernation rescue -> VM 10017 ondemand c5.large ready 353.8 predicted finish None
+    - Attempt 3 at t=308.8 (D 339.7, remaining 255 s): 15 existing on-demand candidates; fresh-VM test per type (type, within limit, finish): [('c5.large', True, 494.0), ('c5.xlarge', True, 494.0), ('m5.xlarge', True, 518.8)]; launched c5.large
+
