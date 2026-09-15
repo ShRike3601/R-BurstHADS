@@ -1,0 +1,39 @@
+# Fix 21 launch census, invariant and burstable branch: variant f21b (reference experiments/sweep_variant_f21b_d40a1c917c63.jsonl)
+
+Probed runs reproducing their reference row exactly: 2400 / 2400
+
+## Launch sites (a launch = a VM's first LaunchCounter.commit)
+
+| scheduler | phase | VM from | market | routine | via | deploy time | launches | ran a task | task started before launch + T_start | mean seconds early |
+|---|---|---|---|---|---|---|---|---|---|---|
+| rburst | primary | builder | ondemand | Burst-HADS primary: Phase 1-3 (_initial_solution) | existing VM object | exempt | 2580 | 2578 | 0 | - |
+| rburst | primary | created | ondemand | Burst-HADS primary: Phase 1-3 (_initial_solution) | _launch_new_ondemand_vm | pays | 4095 | 4091 | 4043 | 44.8 |
+| rburst | primary | builder | spot | Burst-HADS primary: Phase 1-3 (_initial_solution) | existing VM object | exempt | 14515 | 14492 | 0 | - |
+| rburst | primary | created | burstable | Burst-HADS primary: proactive burstables (_allocate_burstable_vms) | _launch_burstable_vms | pays | 6620 | 6203 | 5384 | 41.4 |
+| rburst | primary | created | spot | R-BurstHADS primary: Theorem 1 replacement (_preemptive_provision) | _create_vm | pays | 4285 | 4285 | 0 | - |
+| rburst | primary | builder | spot | primary: _apply_solution | existing VM object | exempt | 7085 | 7085 | 0 | - |
+| rburst | run | created | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | _launch_new_ondemand_vm | pays | 955 | 955 | 955 | 45.0 |
+| rburst | run | builder | ondemand | run: Attempt 3 / stage 3 (_attempt_ondemand_fallback) | existing VM object | pays | 771 | 771 | 771 | 45.0 |
+| rburst | run | created | burstable | run: saturation response (_respond_to_saturation) | _create_vm | pays | 2 | 0 | 0 | - |
+| rburst | run | created | spot | run: saturation response (_respond_to_saturation) | _create_vm | pays | 13 | 13 | 0 | - |
+| rburst | run | created | burstable | run: tier 3 (_provision_one_more) | _create_vm | pays | 1461 | 1461 | 0 | - |
+| rburst | run | created | spot | run: tier 3 (_provision_one_more) | _create_vm | pays | 9 | 9 | 0 | - |
+
+Invariant: non-exempt launches that ran a task 17788; of them started a task before launch + T_start: 11153. Launches from an unrecognised routine: 0.
+
+## R-BurstHADS's burstable branch
+
+| path | firings | per run | runs with a firing | firings as share of all placements |
+|---|---|---|---|---|
+| tier 3 (_provision_one_more) | 1461 | 0.609 | 689 / 2400 | 0.188% |
+| saturation response | 2 | 0.001 | 1 / 2400 | 0.000% |
+| both | 1463 | 0.610 | 689 / 2400 | 0.188% |
+
+Placements (VM.reserve_memory calls, start_execution's re-reservation excluded): 777508 (324.0 per run); placed on a branch burstable: 30195 (3.884%).
+Tier 3 calls: burstable 1461, spot 9, nothing 1725.
+
+| what selected the burstable, tier 3 | firings |
+|---|---|
+| spot launch limit | 1401 |
+| spot spare-time rule | 60 |
+

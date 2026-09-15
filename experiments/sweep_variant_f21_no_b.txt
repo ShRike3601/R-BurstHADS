@@ -1,0 +1,5 @@
+variant f21_no_b: 2400 units on 20 workers -> sweep_variant_f21_no_b_d40a1c917c63.jsonl
+infeasible runs: 0
+done in 253s, 0 errors
+identical to base d40a1c917c63: 463/2400 units (base rows found: 2400)
+scheduler subset: cross-scheduler summary skipped

@@ -1,0 +1,68 @@
+Base freeze-fix20 d40a1c917c63, limits on, 30 seeds. Cell aggregates over the cells where every scheduler is feasible in every seed (count in 'cells').
+
+## Fidelity: f21_copy (every copy installed, T_start = 0) against base, exact
+| scheduler | rows differing |
+|---|---|
+| HADS | 0/2400 |
+| Burst-HADS | 0/2400 |
+| R-BurstHADS | 0/2400 |
+
+## Every set
+| set | cells | R $ vs H | R mk vs H | R $ vs B | R mk vs B | B $ vs H | B mk vs H | R dominates B | R sig. cheaper | R sig. dearer | R sig. faster | R sig. slower | missed H | missed B | missed R | infeasible H |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| base | 75 | +13.74% | -27.60% | -4.74% | -12.36% | +21.16% | -19.01% | 42 | 27 | 11 | 46 | 10 | 0 | 1 | 1 | 10 |
+| 21a | 75 | +12.14% | -27.73% | -5.38% | -12.65% | +20.24% | -18.91% | 44 | 30 | 8 | 48 | 11 | 0 | 4 | 4 | 10 |
+| 21b | 75 | +13.94% | -27.58% | -4.58% | -12.33% | +21.16% | -19.01% | 43 | 27 | 11 | 44 | 9 | 0 | 1 | 1 | 10 |
+| 21c | 75 | +13.28% | -27.52% | -4.18% | -11.75% | +19.97% | -19.63% | 43 | 25 | 12 | 44 | 7 | 0 | 4 | 4 | 110 |
+| ALL | 75 | +11.84% | -27.67% | -4.62% | -12.00% | +18.98% | -19.58% | 49 | 25 | 8 | 42 | 9 | 0 | 6 | 5 | 110 |
+| ALL-21a | 75 | +13.47% | -27.50% | -4.04% | -11.73% | +19.97% | -19.63% | 43 | 26 | 12 | 44 | 9 | 0 | 4 | 4 | 110 |
+| ALL-21b | 75 | +11.66% | -27.70% | -4.78% | -12.04% | +18.98% | -19.58% | 49 | 26 | 8 | 45 | 7 | 0 | 6 | 5 | 110 |
+| ALL-21c | 75 | +12.33% | -27.70% | -5.22% | -12.61% | +20.24% | -18.91% | 43 | 32 | 8 | 48 | 10 | 0 | 4 | 4 | 10 |
+| ALL-20 | 75 | +11.84% | -27.67% | -4.62% | -12.00% | +18.98% | -19.58% | 49 | 25 | 8 | 42 | 9 | 0 | 6 | 5 | 110 |
+
+## Individual effect (set against base)
+| effect | computed as | cells | R $ vs H | R mk vs H | R $ vs B | R mk vs B | B $ vs H | B mk vs H | R dominates B | R sig. cheaper | R sig. dearer | R sig. faster | R sig. slower | missed H | missed B | missed R | infeasible H |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fix 21a | 21a minus base | 75 vs 75 | -1.60 | -0.14 | -0.64 | -0.29 | -0.92 | +0.10 | +2 | +3 | -3 | +2 | +1 | +0 | +3 | +3 | +0 |
+| fix 21b | 21b minus base | 75 vs 75 | +0.21 | +0.02 | +0.16 | +0.02 | +0.00 | +0.00 | +1 | +0 | +0 | -2 | -1 | +0 | +0 | +0 | +0 |
+| fix 21c | 21c minus base | 75 vs 75 | -0.45 | +0.08 | +0.56 | +0.61 | -1.19 | -0.61 | +1 | -2 | +1 | -2 | -3 | +0 | +3 | +3 | +100 |
+| fix 21 (all) | ALL minus base | 75 vs 75 | -1.89 | -0.07 | +0.12 | +0.36 | -2.18 | -0.56 | +7 | -2 | -3 | -4 | -1 | +0 | +5 | +4 | +100 |
+
+## Contribution within the combined set (ALL against ALL without the sub-fix)
+| effect | computed as | cells | R $ vs H | R mk vs H | R $ vs B | R mk vs B | B $ vs H | B mk vs H | R dominates B | R sig. cheaper | R sig. dearer | R sig. faster | R sig. slower | missed H | missed B | missed R | infeasible H |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| fix 21a | ALL minus ALL-21a | 75 vs 75 | -1.62 | -0.17 | -0.59 | -0.27 | -0.99 | +0.05 | +6 | -1 | -4 | -2 | +0 | +0 | +2 | +1 | +0 |
+| fix 21b | ALL minus ALL-21b | 75 vs 75 | +0.19 | +0.03 | +0.15 | +0.04 | +0.00 | +0.00 | +0 | -1 | +0 | -3 | +2 | +0 | +0 | +0 | +0 |
+| fix 21c | ALL minus ALL-21c | 75 vs 75 | -0.49 | +0.03 | +0.59 | +0.61 | -1.26 | -0.66 | +6 | -7 | +0 | -6 | -1 | +0 | +2 | +1 | +100 |
+
+## Per scheduler (runs changed use the tolerance above)
+| comparison | scheduler | runs changed | missed tasks (from -> to) | runs with a miss (from -> to) | infeasible runs (from -> to) | mean makespan change | mean cost change |
+|---|---|---|---|---|---|---|---|
+| 21a alone vs base | HADS | 1339/2400 | 0 -> 0 | 0 -> 0 | 10 -> 10 | +0.27% | +1.67% |
+| 21a alone vs base | Burst-HADS | 824/2400 | 1 -> 4 | 1 -> 4 | 0 -> 0 | +0.49% | +1.07% |
+| 21a alone vs base | R-BurstHADS | 316/2400 | 1 -> 4 | 1 -> 4 | 0 -> 0 | +0.11% | +0.40% |
+| 21b alone vs base | HADS | 0/2400 | 0 -> 0 | 0 -> 0 | 10 -> 10 | +0.00% | +0.00% |
+| 21b alone vs base | Burst-HADS | 0/2400 | 1 -> 1 | 1 -> 1 | 0 -> 0 | +0.00% | +0.00% |
+| 21b alone vs base | R-BurstHADS | 622/2400 | 1 -> 1 | 1 -> 1 | 0 -> 0 | +0.03% | +0.14% |
+| 21c alone vs base | HADS | 735/2400 | 0 -> 0 | 0 -> 0 | 10 -> 110 | +0.14% | +2.29% |
+| 21c alone vs base | Burst-HADS | 2218/2400 | 1 -> 4 | 1 -> 4 | 0 -> 0 | +0.43% | +2.43% |
+| 21c alone vs base | R-BurstHADS | 1851/2400 | 1 -> 4 | 1 -> 4 | 0 -> 0 | +0.95% | +2.80% |
+| fix 21 vs base | HADS | 1958/2400 | 0 -> 0 | 0 -> 0 | 10 -> 110 | +0.42% | +4.01% |
+| fix 21 vs base | Burst-HADS | 2261/2400 | 1 -> 6 | 1 -> 6 | 0 -> 0 | +0.79% | +3.36% |
+| fix 21 vs base | R-BurstHADS | 2075/2400 | 1 -> 5 | 1 -> 5 | 0 -> 0 | +1.04% | +3.30% |
+| ALL vs ALL-21a | HADS | 1350/2400 | 0 -> 0 | 0 -> 0 | 110 -> 110 | +0.28% | +1.72% |
+| ALL vs ALL-21a | Burst-HADS | 809/2400 | 4 -> 6 | 4 -> 6 | 0 -> 0 | +0.44% | +0.99% |
+| ALL vs ALL-21a | R-BurstHADS | 315/2400 | 4 -> 5 | 4 -> 5 | 0 -> 0 | +0.06% | +0.36% |
+| ALL vs ALL-21b | HADS | 0/2400 | 0 -> 0 | 0 -> 0 | 110 -> 110 | +0.00% | +0.00% |
+| ALL vs ALL-21b | Burst-HADS | 0/2400 | 6 -> 6 | 6 -> 6 | 0 -> 0 | +0.00% | +0.00% |
+| ALL vs ALL-21b | R-BurstHADS | 607/2400 | 5 -> 5 | 5 -> 5 | 0 -> 0 | +0.04% | +0.13% |
+| ALL vs ALL-21c | HADS | 735/2400 | 0 -> 0 | 0 -> 0 | 10 -> 110 | +0.14% | +2.27% |
+| ALL vs ALL-21c | Burst-HADS | 2211/2400 | 4 -> 6 | 4 -> 6 | 0 -> 0 | +0.37% | +2.35% |
+| ALL vs ALL-21c | R-BurstHADS | 1852/2400 | 4 -> 5 | 4 -> 5 | 0 -> 0 | +0.89% | +2.77% |
+
+## Fix 20 once VMs wait for boot: ALL against ALL with fix 20 reverted
+| scheduler | runs changed (tolerance) | rows differing (exact) |
+|---|---|---|
+| HADS | 0/2400 | 0/2400 |
+| Burst-HADS | 0/2400 | 0/2400 |
+| R-BurstHADS | 0/2400 | 0/2400 |
