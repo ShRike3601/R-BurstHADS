@@ -1,0 +1,10 @@
+diag_part2 on 2439a00d7f74, limits on, seeds 0-29
+- base: rows identical to experiments/sweep_raw_2439a00d7f74.jsonl: 4800/4800
+- burst_fill: rows identical to experiments/sweep_variant_burst_fill_2439a00d7f74.jsonl: 4800/4800
+
+| guard | scheduler | runs | Part 2 ran | runs with a violator before | violators before | burstables launched | tasks moved to burstables | runs leaving a violator on spot | violators left on spot | left and planned past D | those runs in the 75 cells | missed tasks in those runs | by DF 0.25 / 0.5 / 1.0 / 2.0 (runs leaving one) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| kept | Burst-HADS | 2400 | 2400 | 575 | 12345 | 6765 | 3865 | 575 | 12150 | 0 | 440 | 6 | 285 / 290 / 0 / 0 |
+| kept | R-BurstHADS | 2400 | 2400 | 575 | 12345 | 6765 | 3865 | 575 | 12150 | 0 | 440 | 5 | 285 / 290 / 0 / 0 |
+| removed | Burst-HADS | 2400 | 2400 | 575 | 12345 | 6765 | 6765 | 575 | 11210 | 0 | 440 | 2061 | 285 / 290 / 0 / 0 |
+| removed | R-BurstHADS | 2400 | 2400 | 575 | 12345 | 6765 | 6765 | 575 | 11210 | 0 | 440 | 2058 | 285 / 290 / 0 / 0 |
