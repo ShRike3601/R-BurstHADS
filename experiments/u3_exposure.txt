@@ -1,0 +1,14 @@
+# U3 exposure and its REF-faithful counterfactual, freeze-fix21 `2439a00d7f74`
+
+- HADS: primary schedule uses its on-demand phase in 905 of 2400 runs; by DF 0.25 / 0.5 / 1.0 / 2.0: 600 / 305 / 0 / 0 (HADS's Phase (c) follows CCScheduler.create_primary_map; shown for comparison)
+- Burst-HADS: primary schedule uses its on-demand phase in 905 of 2400 runs; by DF 0.25 / 0.5 / 1.0 / 2.0: 600 / 305 / 0 / 0
+- R-BurstHADS: primary schedule uses its on-demand phase in 905 of 2400 runs; by DF 0.25 / 0.5 / 1.0 / 2.0: 600 / 305 / 0 / 0
+- Burst-HADS and R-BurstHADS use it in the same units: True
+- floor cells (n = 100, DF = 0.25): Burst-HADS uses it in 150 of 150 runs
+
+| limits | comparison | cells | cells by DF 0.25 / 0.5 / 1.0 / 2.0 | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| on | as frozen (U3 kept) | 75 | 15 / 20 / 20 / 20 | -19.58% | +18.98% | -27.67% | +11.84% | -12.00% | -4.62% | 49 | 42 / 9 | 25 / 8 |
+| on | REF-faithful: cells with a Phase-3 run dropped | 45 | 0 / 5 / 20 / 20 | -27.80% | +23.44% | -40.50% | +11.76% | -19.10% | -7.54% | 33 | 33 / 3 | 18 / 3 |
+| off (proxy) | as frozen (U3 kept) | 80 | 20 / 20 / 20 / 20 | -18.38% | +19.53% | -30.09% | +2.35% | -16.50% | -13.16% | 67 | 66 / 0 | 53 / 4 |
+| off (proxy) | REF-faithful: cells with a Phase-3 run dropped | 45 | 0 / 5 / 20 / 20 | -27.81% | +24.08% | -45.96% | +0.36% | -26.49% | -17.87% | 43 | 45 / 0 | 37 / 0 |
