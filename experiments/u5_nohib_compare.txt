@@ -1,0 +1,51 @@
+# The U5 guard with and without hibernation, freeze-fix21 `2439a00d7f74`, sweep catalogue, limits on, seeds 0–29
+
+Table 9 scenarios: sc1–sc5 (guard-removed Burst-HADS and R-BurstHADS rows from sweep_variant_burst_fill). No hibernation: scenario `none`, no hibernation or resumption events (sweep_variant_u5nohib_{kept,removed}).
+
+## HADS
+| set | runs | infeasible | runs with a miss | share | missed tasks | mean mk / D | runs with a miss by DF 0.25 / 0.5 / 1.0 / 2.0 (of runs per DF) |
+|---|---|---|---|---|---|---|---|
+| Table 9 scenarios, guard kept | 2400 | 110 | 0 | 0.0% | 0 | 0.935 | 0/600 / 0/600 / 0/600 / 0/600 |
+| Table 9 scenarios, guard removed | 2400 | 110 | 0 | 0.0% | 0 | 0.935 | 0/600 / 0/600 / 0/600 / 0/600 |
+| no hibernation, guard kept | 480 | 22 | 0 | 0.0% | 0 | 0.896 | 0/120 / 0/120 / 0/120 / 0/120 |
+| no hibernation, guard removed | 480 | 22 | 0 | 0.0% | 0 | 0.896 | 0/120 / 0/120 / 0/120 / 0/120 |
+
+## Burst-HADS
+| set | runs | infeasible | runs with a miss | share | missed tasks | mean mk / D | runs with a miss by DF 0.25 / 0.5 / 1.0 / 2.0 (of runs per DF) |
+|---|---|---|---|---|---|---|---|
+| Table 9 scenarios, guard kept | 2400 | 0 | 6 | 0.2% | 6 | 0.765 | 6/600 / 0/600 / 0/600 / 0/600 |
+| Table 9 scenarios, guard removed | 2400 | 0 | 980 | 40.8% | 2981 | 1.336 | 545/600 / 290/600 / 145/600 / 0/600 |
+| no hibernation, guard kept | 480 | 0 | 0 | 0.0% | 0 | 0.611 | 0/120 / 0/120 / 0/120 / 0/120 |
+| no hibernation, guard removed | 480 | 0 | 196 | 40.8% | 595 | 1.284 | 109/120 / 58/120 / 29/120 / 0/120 |
+
+## R-BurstHADS
+| set | runs | infeasible | runs with a miss | share | missed tasks | mean mk / D | runs with a miss by DF 0.25 / 0.5 / 1.0 / 2.0 (of runs per DF) |
+|---|---|---|---|---|---|---|---|
+| Table 9 scenarios, guard kept | 2400 | 0 | 5 | 0.2% | 5 | 0.700 | 5/600 / 0/600 / 0/600 / 0/600 |
+| Table 9 scenarios, guard removed | 2400 | 0 | 980 | 40.8% | 2978 | 1.316 | 545/600 / 290/600 / 145/600 / 0/600 |
+| no hibernation, guard kept | 480 | 0 | 0 | 0.0% | 0 | 0.570 | 0/120 / 0/120 / 0/120 / 0/120 |
+| no hibernation, guard removed | 480 | 0 | 196 | 40.8% | 595 | 1.259 | 109/120 / 58/120 / 29/120 / 0/120 |
+
+## Cell aggregates (cells where every scheduler is feasible in every seed of that set)
+| set | group | cells | B mk vs H | B $ vs H | R mk vs H | R $ vs H | R mk vs B | R $ vs B | R dominates B |
+|---|---|---|---|---|---|---|---|---|---|
+| Table 9 scenarios, guard kept | all | 75 | -19.58% | +18.98% | -27.67% | +11.84% | -12.00% | -4.62% | 49 |
+| Table 9 scenarios, guard kept | DF 0.25 | 15 | -7.37% | +8.30% | -8.35% | +7.37% | -1.16% | -0.82% | 9 |
+| Table 9 scenarios, guard kept | DF 0.5 | 20 | -6.12% | +17.43% | -7.01% | +18.08% | -1.01% | +0.65% | 9 |
+| Table 9 scenarios, guard kept | DF 1.0 | 20 | -14.77% | +19.58% | -26.81% | +14.66% | -14.67% | -3.08% | 12 |
+| Table 9 scenarios, guard kept | DF 2.0 | 20 | -46.99% | +27.93% | -63.68% | +6.14% | -28.46% | -14.30% | 19 |
+| Table 9 scenarios, guard removed | all | 75 | +31.98% | +73.19% | +29.73% | +79.20% | -4.50% | +2.57% | 31 |
+| Table 9 scenarios, guard removed | DF 0.25 | 15 | +100.13% | +108.23% | +100.16% | +109.20% | +0.02% | -0.06% | 8 |
+| Table 9 scenarios, guard removed | DF 0.5 | 20 | +72.35% | +94.45% | +72.87% | +97.64% | +0.53% | +1.75% | 7 |
+| Table 9 scenarios, guard removed | DF 1.0 | 20 | +12.39% | +53.46% | +8.05% | +64.00% | -6.37% | +5.04% | 6 |
+| Table 9 scenarios, guard removed | DF 2.0 | 20 | -39.92% | +45.37% | -44.54% | +53.45% | -11.04% | +2.88% | 10 |
+| no hibernation, guard kept | all | 15 | -34.14% | +53.98% | -39.04% | +58.73% | -8.85% | +3.41% | 4 |
+| no hibernation, guard kept | DF 0.25 | 3 | -12.38% | +8.70% | -14.13% | +12.32% | -1.94% | +3.29% | 0 |
+| no hibernation, guard kept | DF 0.5 | 4 | -8.38% | +26.96% | -16.32% | +31.59% | -7.97% | +3.59% | 0 |
+| no hibernation, guard kept | DF 1.0 | 4 | -39.04% | +75.19% | -43.81% | +87.15% | -8.29% | +7.18% | 1 |
+| no hibernation, guard kept | DF 2.0 | 4 | -71.30% | +93.74% | -75.65% | +92.24% | -15.49% | -0.43% | 3 |
+| no hibernation, guard removed | all | 15 | +32.52% | +164.29% | +29.53% | +186.73% | -5.26% | +6.75% | 2 |
+| no hibernation, guard removed | DF 0.25 | 3 | +99.18% | +127.11% | +98.89% | +136.35% | -0.26% | +4.64% | 0 |
+| no hibernation, guard removed | DF 0.5 | 4 | +77.93% | +124.16% | +72.27% | +135.73% | -5.23% | +5.48% | 0 |
+| no hibernation, guard removed | DF 1.0 | 4 | +18.25% | +185.18% | +15.45% | +222.35% | -5.17% | +10.49% | 0 |
+| no hibernation, guard removed | DF 2.0 | 4 | -48.62% | +211.43% | -51.16% | +239.89% | -9.12% | +5.84% | 2 |

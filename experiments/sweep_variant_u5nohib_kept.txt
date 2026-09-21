@@ -1,0 +1,28 @@
+variant u5nohib_kept: 1440 units on 20 workers -> sweep_variant_u5nohib_kept_2439a00d7f74.jsonl
+infeasible runs: 22
+done in 129s, 0 errors
+identical to base 2439a00d7f74: 0/1440 units (base rows found: 0)
+
+variant u5nohib_kept vs base, mean of cells (% vs HADS unless R/B); cells with any infeasible run excluded
+  group              cells | Burst mk  Burst $ |    R mk     R $ |  R/B mk   R/B $ |   dom | miss cells H/B/R   miss total H/B/R
+
+infeasible runs by df (share of runs per scheduler)
+  df=0.25   hads:  22/120  ( 18%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+  df=0.5    hads:   0/120  (  0%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+  df=1.0    hads:   0/120  (  0%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+  df=2.0    hads:   0/120  (  0%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+
+infeasible runs by n (share of runs per scheduler)
+  n=50     hads:   0/120  (  0%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+  n=100    hads:  22/120  ( 18%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+  n=200    hads:   0/120  (  0%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+  n=300    hads:   0/120  (  0%)  burst:   0/120  (  0%)  rburst:   0/120  (  0%)
+
+cells where schedulers differ in infeasible seeds: 1; cells with some but not all seeds infeasible: 1
+  none n=100 DF=0.25: hads:22/30 burst:0/30 rburst:0/30
+
+mean deadline misses per FEASIBLE run, by DF
+  DF=0.25  hads:  0.00 (n=98)  burst:  0.00 (n=120)  rburst:  0.00 (n=120)
+  DF=0.5   hads:  0.00 (n=120)  burst:  0.00 (n=120)  rburst:  0.00 (n=120)
+  DF=1.0   hads:  0.00 (n=120)  burst:  0.00 (n=120)  rburst:  0.00 (n=120)
+  DF=2.0   hads:  0.00 (n=120)  burst:  0.00 (n=120)  rburst:  0.00 (n=120)

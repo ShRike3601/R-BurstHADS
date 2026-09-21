@@ -1,0 +1,7 @@
+diag_capped on 2439a00d7f74, limits on: 7200 units probed; rows identical to sweep_raw: 7200/7200
+
+| scheduler | runs | placements | runs with a placement | in the 75 cells | by DF 0.25 / 0.5 / 1.0 / 2.0 | with a miss | overrides past the limit |
+|---|---|---|---|---|---|---|---|
+| HADS | 2400 | 0 | 0 | 0 | 0 / 0 / 0 / 0 | 0 | 0 |
+| Burst-HADS | 2400 | 12 | 8 | 1 | 8 / 0 / 0 / 0 | 2 | 0 |
+| R-BurstHADS | 2400 | 11 | 7 | 0 | 7 / 0 / 0 / 0 | 2 | 0 |
