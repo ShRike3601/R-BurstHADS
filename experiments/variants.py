@@ -549,6 +549,124 @@ def _burst_fill(guard):
                           _allocate_burstable_vms)
 
 
+def _burst_fill2(guard, od_step):
+    """Algorithm 1 Part 2 with TCC23 §3.2's three steps (experiments/ref_p2_plan.md).
+
+    `_burst_fill` above covers steps 1 and 3 only, which is what the frozen
+    code does. This copy adds step 2: "if there still exist tasks violating
+    Dspot and no available burstable VM, the procedure allocates them to the
+    cheapest regular on-demand VMs", run between them.
+
+    guard=True keeps the U5 improvement test on the burstable moves;
+    od_step=True adds step 2. (True, False) is a faithful copy of the frozen
+    method and must reproduce it row for row; (False, True) is §3.2 followed
+    in full.
+
+    Step 2 places exactly as `_initial_solution`'s Phase 3 does: the running
+    on-demand VMs cheapest first, then a fresh VM of the cheapest on-demand
+    type within its instance limit, each judged against D by
+    `_check_schedule`. A violator no on-demand VM can take by D within the
+    limits stays where it is, as Phase 3's caller would find at the limit.
+    """
+    import math
+    from scheduler.burst_hads import BurstHADS
+
+    def _allocate_burstable_vms(self, solution):
+        n = math.ceil(self.burst_rate * max(1, len(solution.selected_vms)))
+        if n <= 0:
+            return solution
+        burst_pool = self._launch_burstable_vms(n)
+        if not burst_pool:
+            return solution
+        vm_map = {vm.id: vm for vm in self.all_vms}
+        remaining_burst = list(burst_pool)
+
+        finish_times = self._solution_task_finish_times(solution)
+        violators = [(task, ft) for task, ft in finish_times.items()
+                     if ft > self.Dspot]
+        violators.sort(key=lambda pair: pair[1], reverse=True)
+        for task, ft in violators:
+            if not remaining_burst:
+                break
+            burst_vm = remaining_burst[0]
+            old_vm = vm_map.get(solution.allocation.get(task.task_id))
+            if old_vm is None or not burst_vm.can_fit_task(task):
+                continue
+            if guard and self._baseline_finish(task, burst_vm) >= ft:
+                continue
+            task.baseline_mode = True
+            solution.allocation[task.task_id] = burst_vm.id
+            if burst_vm not in solution.selected_vms:
+                solution.selected_vms.append(burst_vm)
+            remaining_burst.pop(0)
+
+        if od_step:
+            vm_map = {vm.id: vm for vm in self.all_vms}
+            vm_tasks, vm_memory = {}, {}
+            for t in self.all_tasks:
+                vid = solution.allocation.get(t.task_id)
+                if vid is None:
+                    continue
+                vm_tasks.setdefault(vid, []).append(t)
+                vm_memory[vid] = vm_memory.get(vid, 0) + t.memory_req
+            left = [(task, ft) for task, ft in self._solution_task_finish_times(solution).items()
+                    if ft > self.Dspot
+                    and (v := vm_map.get(solution.allocation.get(task.task_id))) is not None
+                    and v.is_spot]
+            left.sort(key=lambda pair: pair[1], reverse=True)
+            for task, _ft in left:
+                old_id = solution.allocation.get(task.task_id)
+                target = None
+                for vm in sorted(self.ondemand_vms, key=lambda v: v.cost_rate):
+                    if not self._launches.can_launch(vm):
+                        continue
+                    if self._check_schedule(task, vm, vm_tasks, vm_memory, self.D):
+                        self._launches.commit(vm)
+                        target = vm
+                        break
+                if target is None:
+                    in_limit = [t for t in self._od_catalogue
+                                if self._launches.can_launch_type("ondemand", t["vm_type"])]
+                    tpl = next((t for t in in_limit
+                                if self._check_schedule(task, self._fresh_probe(t),
+                                                        vm_tasks, vm_memory, self.D)), None)
+                    if tpl is not None:
+                        target = self._launch_new_ondemand_vm(0.0, tpl)
+                if target is None:
+                    continue
+                vm_tasks[old_id] = [t for t in vm_tasks.get(old_id, []) if t is not task]
+                vm_memory[old_id] = vm_memory.get(old_id, 0) - task.memory_req
+                vm_tasks.setdefault(target.id, []).append(task)
+                vm_memory[target.id] = vm_memory.get(target.id, 0) + task.memory_req
+                task.baseline_mode = False
+                solution.allocation[task.task_id] = target.id
+                if target not in solution.selected_vms:
+                    solution.selected_vms.append(target)
+
+        if remaining_burst:
+            finish_times = self._solution_task_finish_times(solution)
+            candidates = sorted(finish_times.items(),
+                                key=lambda pair: pair[1], reverse=True)
+            for task, ft in candidates:
+                if not remaining_burst:
+                    break
+                burst_vm = remaining_burst[0]
+                old_vm_id = solution.allocation.get(task.task_id)
+                if old_vm_id == burst_vm.id or not burst_vm.can_fit_task(task):
+                    continue
+                if guard and self._baseline_finish(task, burst_vm) >= ft:
+                    continue
+                task.baseline_mode = True
+                solution.allocation[task.task_id] = burst_vm.id
+                if burst_vm not in solution.selected_vms:
+                    solution.selected_vms.append(burst_vm)
+                remaining_burst.pop(0)
+        return solution
+
+    return lambda: _patch(BurstHADS, "_allocate_burstable_vms",
+                          _allocate_burstable_vms)
+
+
 def _no_release():
     """Fix 3's predecessor: surviving VMs are NOT terminated when the last
     task completes (TaskCompleteEvent._release_fleet_if_done is a no-op), so
@@ -1227,6 +1345,14 @@ VARIANTS = {
     # --scenarios none; the names only label the output files.
     "u5nohib_kept":          [],
     "u5nohib_removed":       [_burst_fill(False)],
+    # TCC23 §3.2 in full (experiments/ref_p2_plan.md): step 2 sends the
+    # violators left after the burstables to the cheapest on-demand VMs.
+    "p2_copy":               [_burst_fill2(True, False)],
+    "p2_od":                 [_burst_fill2(True, True)],
+    "ref_p2":                [_burst_fill2(False, True)],
+    "nocap+p2_od":           [lambda: _nocap()(), _burst_fill2(True, True)],
+    "nocap+ref_p2":          [lambda: _nocap()(), _burst_fill2(False, True)],
+    "nocap+p2_copy":         [lambda: _nocap()(), _burst_fill2(True, False)],
     # Fix 21 (experiments/fix21_plan.md), parent freeze-fix20: deploy time for
     # every VM a scheduler launches; sub-fixes a, b, c and leave-one-out sets.
     "f21_copy":              [lambda: _f21(True, True, True, boot=0.0)()],
