@@ -1,0 +1,18 @@
+diag_provisioned on 2439a00d7f74: R-BurstHADS, DF 2.0, 1200 runs (600 per configuration), pre-registration experiments/util_plan.md
+- faithful (TCC23 §3.2 in full): rows identical to the committed sweep 600/600; per-VM cost reproduces the metric in 600/600 runs
+- guard kept (as frozen): rows identical to the committed sweep 600/600; per-VM cost reproduces the metric in 600/600 runs
+
+| configuration | n | runs | provisioned VMs per run | fleet VMs per run | provisioned share of cost | provisioned utilisation | whole-fleet utilisation |
+|---|---|---|---|---|---|---|---|
+| faithful (TCC23 §3.2 in full) | 50 | 150 | 1.85 | 13.19 | 13.1% | 33.6% (n=150) | 41.3% |
+| faithful (TCC23 §3.2 in full) | 100 | 150 | 2.10 | 13.55 | 14.7% | 52.5% (n=150) | 57.6% |
+| faithful (TCC23 §3.2 in full) | 200 | 150 | 2.11 | 13.63 | 14.9% | 77.8% (n=150) | 80.7% |
+| faithful (TCC23 §3.2 in full) | 300 | 150 | 2.09 | 13.65 | 15.1% | 76.7% (n=150) | 79.3% |
+| guard kept (as frozen) | 50 | 150 | 1.84 | 13.18 | 14.4% | 62.7% (n=150) | 65.8% |
+| guard kept (as frozen) | 100 | 150 | 2.09 | 13.55 | 15.3% | 69.0% (n=150) | 73.5% |
+| guard kept (as frozen) | 200 | 150 | 2.11 | 13.63 | 14.9% | 77.5% (n=150) | 80.4% |
+| guard kept (as frozen) | 300 | 150 | 2.09 | 13.65 | 15.1% | 76.7% (n=150) | 79.3% |
+
+Pooled over runs (total busy core-seconds / total billed core-seconds), by bag size:
+- faithful (TCC23 §3.2 in full): n=50: 27.4%; n=100: 48.8%; n=200: 77.5%; n=300: 74.9%
+- guard kept (as frozen): n=50: 60.8%; n=100: 67.5%; n=200: 77.1%; n=300: 74.9%

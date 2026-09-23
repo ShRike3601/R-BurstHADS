@@ -78,6 +78,7 @@ SRC = {
     "val_refp2": "experiments/diag_cost_gap_refp2_nocap_c3.json",
     "val_p2od": "experiments/diag_cost_gap_p2od_nocap_c3.json",
     "part2_probe": "experiments/diag_part2.txt",
+    "prov_probe": "experiments/diag_provisioned.txt",
     "u3_exposure": "experiments/u3_exposure.txt",
     "capped_probe": "experiments/diag_capped.txt",
     "launch_base": "experiments/diag_launch21_base.json",
@@ -776,6 +777,36 @@ def faithful_regime_table(d_on):
         g = group_row(stats, sorted(sel))
         w(f"| {name} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
           f"{g['cheap']} / {g['dear']} |")
+    w()
+
+
+def provisioned_table():
+    """T30: what R-BurstHADS's provisioned capacity costs and how busy it is,
+    by bag size, at DF 2.0 (experiments/util_plan.md). Parsed from the probe's
+    own output so the pack and the probe cannot disagree."""
+    w("### T30. R-BurstHADS's provisioned capacity at DF 2.0: cost share and utilisation, by bag size")
+    w()
+    w(f"Source: `{SRC['prov_probe']}` (record-only probe; all 1,200 probed runs reproduce their committed sweep row "
+      "exactly and the per-VM costs reproduce the metric). Utilisation is executed core-seconds over billed "
+      "core-seconds, measured where the simulator sets and clears `exec_start_on_current_vm`. \"Provisioned\" means "
+      "the VMs R-BurstHADS launches at runtime (Theorem 1 replacements, tier 3, the saturation response), not the "
+      "pool or the primary schedule's burstables.")
+    w()
+    try:
+        text = (ROOT / SRC["prov_probe"]).read_text(encoding="utf-8")
+    except FileNotFoundError:
+        w("(probe output missing)")
+        w()
+        return
+    keep = [l for l in text.splitlines() if l.startswith("|")]
+    for line in keep:
+        w(line)
+    w()
+    w("Reading, fixed before the run (`experiments/util_plan.md`): utilisation of provisioned capacity **does** fall "
+      "as the bag gets smaller under the faithful baseline (78% at n = 200 against 34% at n = 50), while its share "
+      "of cost stays flat at 13–15%, so the small-bag cost penalty is idle capacity that the run does not recover — "
+      "not a larger fleet. It does not explain everything: utilisation at n = 300 (77%) matches n = 200, yet the "
+      "cost gap against Burst-HADS is −2.0% against −8.8%, so the bag-size pattern is not a single mechanism.")
     w()
 
 
@@ -1563,6 +1594,7 @@ def main():
     w()
     u5s = u5_sensitivity_table(d_on, d_off)
     faithful_regime_table(d_on)
+    provisioned_table()
     guard = guard_tables()
     ablation_table(d_on, d_off)
     u3_table(d_on, d_off)

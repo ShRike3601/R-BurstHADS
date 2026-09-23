@@ -6,67 +6,72 @@
 
 Every place our re-implementations differ from the published algorithms, with the status of each. The register holds 40 rows: 15 corrected, 15 design, 8 open, 1 kept, 1 inert. "Corrected" means the code now follows the source and the row is kept because earlier results used the deviation; ``design'' is a deliberate modelling choice this study keeps; ``open'' means the code still differs. The full register, with the measured effect and the evidence file behind every row, ships as supplementary material (\texttt{DEVIATIONS.md}); the three rows that bear on how the results should be read are discussed in Section~\ref{sec:validation}.
 
-\begin{table}[t]
-\caption{The deviation register, by section.}
+\begin{table*}[t]
+\caption{The deviation register. The effect column is filled only where the effect has been measured; an em dash means it has not. The full text of every row, with its evidence file, is supplementary.}
 \label{tab:deviations}
 \centering
 \scriptsize
-\begin{tabular}{@{}llp{3.9cm}l@{}}
+\begin{tabular}{@{}lp{3.4cm}p{2.5cm}p{8.6cm}@{}}
 \toprule
- & \# & Deviation & Status \\
+\# & Deviation & Status & Measured effect \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Cost and billing model}} \\
-& B1 & When billing starts & corrected \\
-& B2 & Charges while hibernated & open --- immaterial \\
-& B3 & Billing granularity & design \\
-& B4 & End of run & design \\
-& B5 & Resumed VMs that were never launched & open \\
+\midrule
+B1 & When billing starts & corrected & 20-cell cost change vs HADS +38.7 to +40.5\%; launch-to-dispatch is 5.9\% of Burst-HADS's no-hibernation cost \\
+B2 & Charges while hibernated & open --- immaterial & charging EBS while hibernated: +38.7 to +37.5\%; no cell moves by 3 points \\
+B3 & Billing granularity & design & 900 s quantisation: +38.7 to +30.1\%, but no-hibernation cost change +55 to +79\% \\
+B4 & End of run & design & undoing fixes 2-3: +38.7 to +22.9\%, but J60 Burst-HADS no-hibernation cost \$0.165 against Table 7's \$0.112 \\
+B5 & Resumed VMs that were never launched & open & 0.9-2.9\% of HADS's cost in sc3-sc5, 0\% of Burst-HADS's; removing it widens the gap to +40.7\% \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Burst-HADS (TCC23, REF `IPDPS.py`)}} \\
-& U1 & Planner prediction order & corrected \\
-& U2 & Eq 9 normaliser & corrected \\
-& U3 & On-demand fallback inside the primary schedule & design --- kept, disclosed in the paper body... \\
-& U4 & Planner checkpoint overhead & corrected \\
-& U5 & Proactive burstable allocation guard & kept --- an ADDITION to the published algorit... \\
-& U6 & Migration candidates & corrected \\
-& U7 & ILS relaxation & design \\
-& U8 & Infeasibility score & design \\
-& U9 & Deployment overhead ω & design \\
-& U10 & Checkpoint overhead in Attempt 3's deadline test & inert --- fix 20 \\
-& U11 & Attempt 3's candidate loop & open \\
-& U12 & Algorithm 1 Part 2, step 2: violators the burstables did not take & open --- measured and disclosed \\
+\midrule
+U1 & Planner prediction order & corrected & produced every residual deadline miss in the fixes 1-10 sweep \\
+U2 & Eq 9 normaliser & corrected & with U1 fixed, removed the remaining misses \\
+U3 & On-demand fallback inside the primary schedule & design --- kept, disclosed in the paper body... & fires in 905 of 2,400 runs, all at DF <= 0.5, and in all 150 floor-cell runs; over the 45 cells a reference-faithful Burst-HADS could solve, R vs Burst-HADS is -19.1\% makespan and -7.5\% cost \\
+U4 & Planner checkpoint overhead & corrected & all of HADS's deadline misses before fix 8 \\
+U5 & Proactive burstable allocation guard & kept --- an ADDITION to the published algorit... & R vs Burst-HADS -4.62\% cost as frozen against +2.45\% with TCC23 3.2 followed in full; removing the guard turns 974 clean Burst-HADS runs into missing ones, against 0 the other way \\
+U6 & Migration candidates & corrected & hibernation makespan reduction 14.7 to 21.5\%, 20-cell cost change +38.7 to +16.0\% \\
+U7 & ILS relaxation & design & --- \\
+U8 & Infeasibility score & design & the reference's +inf sentinel gives near-identical results \\
+U9 & Deployment overhead ω & design & --- \\
+U10 & Checkpoint overhead in Attempt 3's deadline test & inert --- fix 20 & changes 0 of 7,200 runs, alone and within the combined set \\
+U11 & Attempt 3's candidate loop & open & exposure 1,455 Burst-HADS and 759 R-BurstHADS mid-run launches; the effect of restricting the loop is unmeasured \\
+U12 & Algorithm 1 Part 2, step 2: violators the burstables did not take & open --- measured and disclosed & 575 of 2,400 runs leave 12,150 violators on spot; implementing it alone takes Burst-HADS from 6 to 302 missed tasks and 4.1 points dearer against HADS, and changes nothing on TCC23's catalogue \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{HADS (CC21, REF `CCScheduler.py`)}} \\
-& H1 & Queue packing & design \\
-& H2 & Migration candidates & corrected \\
-& H3 & Work stealing & design \\
-& H4 & Planner checkpoint overhead & corrected \\
+\midrule
+H1 & Queue packing & design & --- \\
+H2 & Migration candidates & corrected & HADS launches 7.95 to 5.11 spot VMs per run and is 2.6\% dearer and 3.5\% slower against itself \\
+H3 & Work stealing & design & --- \\
+H4 & Planner checkpoint overhead & corrected & as U4 \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{Environment, catalogue and workload}} \\
-& E1 & Instance limits & corrected \\
-& E2 & Migration at a spent limit & design \\
-& E3 & On-demand template when all on-demand VMs have terminated & corrected \\
-& E4 & Spot pool size & design --- 3 kept \\
-& E5 & Job generator (validation) & design \\
-& E6 & Hibernation process & open \\
-& E8 & Hibernations suffered per run & open --- pool size is the owner's decision \\
-& E7 & Per-core speed & design --- kept \\
-& E9 & Burstable baseline performance & design --- recorded \\
-& E10 & Allocation Cycle boundaries & corrected \\
-& E11 & Progress credited at a checkpoint & corrected \\
-& E12 & Deploy time of VMs a scheduler launches & corrected \\
-& E13 & Remaining work in hibernation rescue tests & open \\
-& E14 & Deadline floor & design \\
+\midrule
+E1 & Instance limits & corrected & infeasible runs 250/250/250 to 5/0/0; missed tasks 2,533/1,981/1,090 to 0/0/43 \\
+E2 & Migration at a spent limit & design & fires in 23 of 7,200 runs, all at DF 0.25, one in a headline cell; 0 launches forced past a limit \\
+E3 & On-demand template when all on-demand VMs have terminated & corrected & 0.1 launches per run; not separable from E1, adopted in the same commit \\
+E4 & Spot pool size & design --- 3 kept & J60 makespan change vs HADS -71\% at 3 spot copies, -78\% at 5; Burst-HADS's hibernation premium +94/+47/+62\% at 3/2/1 \\
+E5 & Job generator (validation) & design & both job generators reported side by side \\
+E6 & Hibernation process & open & see B5 \\
+E8 & Hibernations suffered per run & open --- pool size is the owner's decision & our runs see 1.3-3.6x TCC23's hibernations per run, flat across jobs \\
+E7 & Per-core speed & design --- kept & a burst-mode task costs 1.15x a lone task on fresh on-demand in the sweep catalogue, 0.83x in TCC23's \\
+E9 & Burstable baseline performance & design --- recorded & --- \\
+E10 & Allocation Cycle boundaries & corrected & Burst-HADS's hibernation premium +42 to +39\%; sweep mean cost HADS -4.5\%, Burst-HADS -2.2\%, R-BurstHADS -2.9\% \\
+E11 & Progress credited at a checkpoint & corrected & runs changed 1,472/1,769/1,531 of 2,400; R vs Burst-HADS cost -5.39 to -5.30\% \\
+E12 & Deploy time of VMs a scheduler launches & corrected & 36,574 of 42,249 launches started a task early before the fix; 0 of 42,623 after \\
+E13 & Remaining work in hibernation rescue tests & open & exposure 17.4/25.2/27.9 displaced running tasks per run; effect unmeasured \\
+E14 & Deadline floor & design & HADS infeasible in 110 of the 150 floor-cell runs, against 10 before deploy time was charged; every one feasible with limits off \\
 \midrule
 \multicolumn{4}{@{}l}{\textbf{R-BurstHADS (this study's scheduler)}} \\
-& R1 & Deadline test in the saturation re-placement & corrected \\
-& R2 & Saturation response with no launch room & open --- measured and rejected \\
-& R3 & When the saturation response fires & design --- code kept \\
-& R4 & Boot delay of VMs R-BurstHADS provisions & corrected \\
-& R5 & Burstables R-BurstHADS launches mid-run & corrected \\
+\midrule
+R1 & Deadline test in the saturation re-placement & corrected & 108 of the 109 misses at freeze-round-b; fix 17a took them 109 to 1 \\
+R2 & Saturation response with no launch room & open --- measured and rejected & fix 17b: misses 109 to 1 but 337 of 2,400 runs change and dominance 44 to 43; rejected \\
+R3 & When the saturation response fires & design --- code kept & fix 17c: misses 109 to 73, 282 runs change; rejected \\
+R4 & Boot delay of VMs R-BurstHADS provisions & corrected & 6,661 early starts in 1,276 of 2,400 runs; R vs Burst-HADS cost -5.39 to -4.96\% \\
+R5 & Burstables R-BurstHADS launches mid-run & corrected & the branch still fires after the fix: 1,453 tier-3 burstables in 2,400 runs, against 1,477 before \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \section{Appendix: per-cell results}
 \label{sec:percell}

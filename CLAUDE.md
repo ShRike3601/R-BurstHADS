@@ -429,11 +429,42 @@ two are within about a point (−1.2% / −0.8% and −1.0% / +0.7%); at DF 0.5
 R-BurstHADS is significantly slower than Burst-HADS in 7 cells and dearer
 in 6 [T1 DF rows].
 
-**Makespan is the primary claim, and it is qualified** (owner,
-2026-09-23). It holds in every working configuration measured: limits on
-and off, the burstable branch disabled, no hibernation, and the cell set a
-reference-faithful Burst-HADS could solve. The qualification travels with
-it: at DF 0.5 the makespan advantage over Burst-HADS is roughly a wash.
+**Makespan is the unconditional claim; cost is scale-dependent** (owner,
+2026-09-24). Makespan holds in every configuration and regime measured:
+limits on and off, the burstable branch disabled, no hibernation, the cell
+set a reference-faithful Burst-HADS could solve, and against that faithful
+baseline itself. One qualification travels with it: at DF 0.5 the advantage
+over Burst-HADS is roughly a wash.
+
+**The anchor for cost is the faithful DF 2.0 comparison, not the full
+sweep.** At DF ≥ 1.0 neither U3 nor U12 applies, and at DF 2.0 the guard-free
+baseline also misses nothing, so that regime needs no repair from us. There
+the cost result turns on bag size [T12c]:
+
+| DF 2.0, faithful | n=50 | n=100 | n=200 | n=300 |
+|---|---|---|---|---|
+| R vs B cost | +12.7% | +9.6% | −8.8% | −2.0% |
+| R vs B makespan | +0.6% | −7.2% | −19.3% | −18.2% |
+| dominance | 0/5 | 1/5 | 5/5 | 4/5 |
+
+The n ≥ 200 operating point (−18.7% makespan, −5.4% cost, 9 of 10 cells
+dominated) is a **post-hoc subgroup**: 10 cells, 5 scenarios × 2 sizes, 300
+runs, not pre-registered, and **not monotone in n** — the gap is widest at
+200 and narrows at 300. Report it as an operating point needing confirmation,
+never as a scaling law.
+
+**Mechanism, measured not asserted** [T30, `diag_provisioned.txt`,
+pre-registered in `experiments/util_plan.md`]: the capacity R-BurstHADS
+provisions at runtime is 33.6% utilised at n = 50 and 77.8% at n = 200, while
+its share of the run's cost is flat at 13–15%. So the small-bag penalty is
+idle provisioned capacity, not a bigger fleet (1.85–2.11 VMs of a ~13.5 VM
+fleet at every size). It does not explain everything: utilisation at n = 300
+(76.7%) matches n = 200 while the cost gap does not, so a second effect is
+unisolated. Note this is the same shape of hypothesis that was **refuted**
+for sc1 (replacements 68–86% busy), which is why it is stated only where
+measured — and under the guard-kept baseline utilisation at n = 50 is 62.7%,
+so the idleness belongs to the faithful configuration, not to R-BurstHADS in
+general.
 
 **The cost claim is conditional, and the conditions travel with it:**
 - It depends on the U5 guard, an addition of ours to the baselines. Following TCC23 §3.2 in
@@ -446,16 +477,12 @@ it: at DF 0.5 the makespan advantage over Burst-HADS is roughly a wash.
   guard is almost all of the swing: +2.57% with the guard removed alone.
 - It depends on launch headroom: −4.6% with limits, −14.1% without, over
   the same cells [T2b].
-- **It does not survive against a faithful baseline at small bags.** At
-  DF ≥ 1.0 neither U3 nor U12 applies (Phase 3 fires in no run; no violator
-  survives Part 2), so the guard is the only departure left, and at DF 2.0
-  the guard-free baseline also misses nothing — the most faithful comparison
-  available. There R-BurstHADS is −11.0% makespan but **+2.9% cost**,
-  dominating 10 of 20 cells, significantly dearer in 9 and cheaper in 3. It
-  splits by bag size: n ≥ 200 gives −18.7% / −5.4% and 9 of 10 cells
-  dominated; n ≤ 100 gives −3.3% / **+11.2%** and 1 of 10 [T12c]. At DF 1.0
-  the same comparison is −6.4% / +5.0%, but there the guard-free baseline
-  misses in 145 of 600 runs and is not a functioning scheduler.
+- **Against a faithful baseline it is dearer overall and cheaper only at
+  n ≥ 200** (see the anchor above): −11.0% makespan but +2.9% cost over the
+  20 DF 2.0 cells, dominating 10 of 20, significantly dearer in 9 and cheaper
+  in 3 [T12c]. At DF 1.0 the same comparison is −6.4% / +5.0%, but there the
+  guard-free baseline misses in 145 of 600 runs and is not a functioning
+  scheduler.
 - It reverses without hibernation: R-BurstHADS is 3.4% dearer than
   Burst-HADS and 8.9% faster over the 15 cells of the no-hibernation runs
   (`u5_nohib_compare.txt`). That is the expected behaviour of a scheduler

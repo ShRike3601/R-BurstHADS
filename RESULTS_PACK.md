@@ -406,6 +406,23 @@ Against the faithful baseline at DF 2.0 the result splits by bag size, and the s
 | small bags, n ≤ 100 | 10 | -3.3% | +11.2% | 1/10 | 0 / 9 |
 | large bags, n ≥ 200 | 10 | -18.7% | -5.4% | 9/10 | 3 / 0 |
 
+### T30. R-BurstHADS's provisioned capacity at DF 2.0: cost share and utilisation, by bag size
+
+Source: `experiments/diag_provisioned.txt` (record-only probe; all 1,200 probed runs reproduce their committed sweep row exactly and the per-VM costs reproduce the metric). Utilisation is executed core-seconds over billed core-seconds, measured where the simulator sets and clears `exec_start_on_current_vm`. "Provisioned" means the VMs R-BurstHADS launches at runtime (Theorem 1 replacements, tier 3, the saturation response), not the pool or the primary schedule's burstables.
+
+| configuration | n | runs | provisioned VMs per run | fleet VMs per run | provisioned share of cost | provisioned utilisation | whole-fleet utilisation |
+|---|---|---|---|---|---|---|---|
+| faithful (TCC23 §3.2 in full) | 50 | 150 | 1.85 | 13.19 | 13.1% | 33.6% (n=150) | 41.3% |
+| faithful (TCC23 §3.2 in full) | 100 | 150 | 2.10 | 13.55 | 14.7% | 52.5% (n=150) | 57.6% |
+| faithful (TCC23 §3.2 in full) | 200 | 150 | 2.11 | 13.63 | 14.9% | 77.8% (n=150) | 80.7% |
+| faithful (TCC23 §3.2 in full) | 300 | 150 | 2.09 | 13.65 | 15.1% | 76.7% (n=150) | 79.3% |
+| guard kept (as frozen) | 50 | 150 | 1.84 | 13.18 | 14.4% | 62.7% (n=150) | 65.8% |
+| guard kept (as frozen) | 100 | 150 | 2.09 | 13.55 | 15.3% | 69.0% (n=150) | 73.5% |
+| guard kept (as frozen) | 200 | 150 | 2.11 | 13.63 | 14.9% | 77.5% (n=150) | 80.4% |
+| guard kept (as frozen) | 300 | 150 | 2.09 | 13.65 | 15.1% | 76.7% (n=150) | 79.3% |
+
+Reading, fixed before the run (`experiments/util_plan.md`): utilisation of provisioned capacity **does** fall as the bag gets smaller under the faithful baseline (78% at n = 200 against 34% at n = 50), while its share of cost stays flat at 13–15%, so the small-bag cost penalty is idle capacity that the run does not recover — not a larger fleet. It does not explain everything: utilisation at n = 300 (77%) matches n = 200, yet the cost gap against Burst-HADS is −2.0% against −8.8%, so the bag-size pattern is not a single mechanism.
+
 ### T12b. How the U5 guard was decided: the Round A closing grid (historical)
 
 Sources: `experiments/sweep_variant_grid_g1e1_519c868a99f9.jsonl` (guard on) and `experiments/sweep_variant_grid_g0e1_519c868a99f9.jsonl` (guard off), both with billing from launch, Allocation Cycles over uptime and launched-only migration, sweep catalogue, limits on, seeds 0–9; `experiments/diag_cost_gap_nocap_grid_g1e1_c3.json` and `experiments/diag_cost_gap_nocap_grid_g0e1_c3.json` (validation catalogue, limits off). Decision rule pre-registered in `experiments/round_a_grid_plan.md` (commit ec52967): the guard is kept iff removing it turns more runs with no missed task into runs with one than the reverse, for Burst-HADS or R-BurstHADS, in either catalogue.
@@ -995,7 +1012,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 
 | file | SHA-256 (first 16) | last changed in commit |
 |---|---|---|
-| `DEVIATIONS.md` | `5e237c69acafd4e6` | `3697f7f` |
+| `DEVIATIONS.md` | `e6babeede56a5d57` | `ad18335` |
 | `experiments/diag_capped.txt` | `32c9f551bf0275aa` | `0509b29` |
 | `experiments/diag_cost_gap_fix20_capped_c3.json` | `2d6a1193e6b180fb` | `7be365a` |
 | `experiments/diag_cost_gap_fix20_nocap_c3.json` | `02440b12ee2ab44c` | `7be365a` |
@@ -1022,6 +1039,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/diag_launch21_f21b.json` | `6589c60faaf3e04c` | `25a0419` |
 | `experiments/diag_overcredit_boot.json` | `d049bebf5a63d279` | `c11c300` |
 | `experiments/diag_part2.txt` | `87a372e5c39096e9` | `9414054` |
+| `experiments/diag_provisioned.txt` | `733418ba18c1e88a` | `UNCOMMITTED` |
 | `experiments/diag_u10.json` | `e53504f0c84f1458` | `3772258` |
 | `experiments/diag_u10_verify.txt` | `c47efe5874fefd33` | `8901181` |
 | `experiments/diag_u10_window.txt` | `0b34e03085f6c4f6` | `7be365a` |
