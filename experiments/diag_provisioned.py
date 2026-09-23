@@ -114,14 +114,19 @@ def probe(arg):
     busy_p = sum(busy.get(vm.id, 0.0) for vm in prov)
     billed_all = sum(vm.billed_seconds(sim_end) for vm in vms if vm.billed_seconds(sim_end) > 0)
     capacity_all = sum(vm.billed_seconds(sim_end) * vm.vcpu_count for vm in vms)
+    bursts = [vm for vm in vms if vm.is_burstable and vm.billed_seconds(sim_end) > 0]
     stat = dict(
         cost_total=sum(cost_of(vm) for vm in vms),
         cost_prov=sum(cost_of(vm) for vm in prov),
+        cost_burst=sum(cost_of(vm) for vm in bursts),
         n_prov=len(prov),
+        n_burst=len(bursts),
         n_fleet=sum(1 for vm in vms if vm.billed_seconds(sim_end) > 0),
         billed_prov=billed_p, billed_all=billed_all,
         busy_prov=busy_p, busy_all=sum(busy.values()),
+        busy_burst=sum(busy.get(vm.id, 0.0) for vm in bursts),
         cap_prov=capacity_p, cap_all=capacity_all,
+        cap_burst=sum(vm.billed_seconds(sim_end) * vm.vcpu_count for vm in bursts),
     )
     return label, unit, row, stat
 
@@ -166,6 +171,45 @@ def main():
             cap = sum(s["cap_prov"] for s in sel)
             parts.append(f"n={n}: {100 * sum(s['busy_prov'] for s in sel) / cap:.1f}%" if cap else f"n={n}: -")
         print(f"- {lab}: " + "; ".join(parts))
+
+    # ── the substitution test (experiments/util_plan.md, amendment) ──
+    print("\n## Substitution test: where R-BurstHADS's work goes, and whether provisioned capacity idles with it")
+    print("\n| configuration | n | burstable share of executed work | burstable share of cost | "
+          "burstables billed | provisioned utilisation |")
+    print("|---|---|---|---|---|---|")
+    for lab in CONFIGS:
+        for n in NS:
+            sel = [s for l, u, r, s in out if l == lab and s and u[1] == n]
+            if not sel:
+                continue
+            wshare = rp.mean(s["busy_burst"] / s["busy_all"] for s in sel if s["busy_all"] > 0)
+            cshare = rp.mean(s["cost_burst"] / s["cost_total"] for s in sel if s["cost_total"] > 0)
+            util_p = rp.mean(s["busy_prov"] / s["cap_prov"] for s in sel if s["cap_prov"] > 0)
+            print(f"| {lab} | {n} | {100 * wshare:.1f}% | {100 * cshare:.1f}% | "
+                  f"{rp.mean(s['n_burst'] for s in sel):.2f} | {100 * util_p:.1f}% |")
+
+    def corr(xs, ys):
+        n = len(xs)
+        if n < 3:
+            return float("nan")
+        mx, my = sum(xs) / n, sum(ys) / n
+        sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+        sxx = sum((x - mx) ** 2 for x in xs)
+        syy = sum((y - my) ** 2 for y in ys)
+        return sxy / (sxx * syy) ** 0.5 if sxx > 0 and syy > 0 else float("nan")
+
+    print("\nPrediction 2, within n = 50 (correlation across runs between burstable work share and "
+          "provisioned utilisation; quadrants split at each configuration's own medians):")
+    for lab in CONFIGS:
+        sel = [s for l, u, r, s in out if l == lab and s and u[1] == 50 and s["cap_prov"] > 0 and s["busy_all"] > 0]
+        xs = [s["busy_burst"] / s["busy_all"] for s in sel]
+        ys = [s["busy_prov"] / s["cap_prov"] for s in sel]
+        mx = sorted(xs)[len(xs) // 2]
+        my = sorted(ys)[len(ys) // 2]
+        quad = sum(1 for x, y in zip(xs, ys) if x > mx and y < my)
+        print(f"- {lab}: runs {len(sel)}, r = {corr(xs, ys):+.2f}, "
+              f"burstables-busy-and-provisioned-idle in {quad} runs "
+              f"(medians: work share {100 * mx:.1f}%, utilisation {100 * my:.1f}%)")
 
 
 if __name__ == "__main__":

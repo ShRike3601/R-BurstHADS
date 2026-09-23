@@ -56,3 +56,33 @@ saturation response) and for the whole fleet:
 Whatever the outcome, the bag-size split itself is reported as a **post-hoc
 subgroup observation** (owner, 2026-09-23): 5 cells per bag size, not
 pre-registered, and non-monotone in n.
+
+## Amendment, 2026-09-24: the substitution test
+
+The first run refuted the amortisation reading it was written to test. Under
+the faithful baseline, R-BurstHADS's provisioned capacity is 33.6% utilised at
+n = 50; under the guard-kept baseline the same capacity in the same cells is
+62.7% utilised. Utilisation of R-BurstHADS's own VMs cannot depend on the
+baseline unless R-BurstHADS's own behaviour changed -- and it did, because it
+inherits the guard through the shared primary schedule (owner, 2026-09-24).
+
+**Hypothesis (substitution).** Without the guard both schedulers fill their
+burstables unconditionally. At a loose deadline with a small bag, slow cheap
+burstables are a perfectly good strategy, so the work goes there; R-BurstHADS
+provisions spot capacity on top of that, which then sits idle and is billed.
+
+**Predictions, fixed before the run.** At n = 50, DF 2.0:
+1. R-BurstHADS places a materially larger share of its executed work on
+   burstable instances under the faithful configuration than under the
+   guard-kept one.
+2. Within the faithful runs, provisioned capacity is idle in the same runs
+   where burstables are busy: a negative correlation across runs between
+   burstable work share and provisioned utilisation, and a population of runs
+   in the "burstables busy, provisioned idle" quadrant.
+
+**If either prediction fails, the reading is wrong** and the paper says the
+mechanism is unexplained rather than substituting another story.
+
+Reported by bag size and configuration: burstable share of executed
+core-seconds, burstable share of cost, the correlation above, and the quadrant
+counts.
