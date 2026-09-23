@@ -441,7 +441,7 @@ it: at DF 0.5 the makespan advantage over Burst-HADS is roughly a wash.
   step we never implemented) R-BurstHADS is +2.45% cost and −4.50% makespan
   against Burst-HADS with limits on, dominating 35 of 75 cells, against
   −4.62% / −12.00% and 49 of 75 as frozen [T12]. That configuration is not a
-  usable baseline (980 of 2,400 runs miss a deadline), so it bounds what the
+  usable baseline (981 of 2,400 runs miss a deadline; 980 with the guard removed alone), so it bounds what the
   cost claim owes to the departure rather than replacing the comparison. The
   guard is almost all of the swing: +2.57% with the guard removed alone.
 - It depends on launch headroom: −4.6% with limits, −14.1% without, over
