@@ -183,6 +183,9 @@ def main():
     w(r"% Sources: DEVIATIONS.md and the committed sweeps of freeze-fix21 (" + FP + ").")
     w("")
     write_register(w)
+    # longtable cannot break inside a two-column body, so the per-cell appendix
+    # runs single column and \twocolumn restores the document at the end.
+    w(r"\onecolumn")
     w(r"\section{Appendix: per-cell results}")
     w(r"\label{sec:percell}")
     w("")
@@ -191,6 +194,7 @@ def main():
     w("")
     write_cells(w, f"experiments/sweep_raw_{FP}.jsonl", "tab:cells-on", "T3", "launch limits on")
     write_cells(w, f"experiments/sweep_variant_nocap_{FP}.jsonl", "tab:cells-off", "T4", "launch limits off")
+    w(r"\twocolumn")
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)} ({len(lines)} lines)")
 
