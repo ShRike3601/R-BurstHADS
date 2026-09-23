@@ -447,24 +447,35 @@ the cost result turns on bag size [T12c]:
 | R vs B makespan | +0.6% | −7.2% | −19.3% | −18.2% |
 | dominance | 0/5 | 1/5 | 5/5 | 4/5 |
 
-The n ≥ 200 operating point (−18.7% makespan, −5.4% cost, 9 of 10 cells
-dominated) is a **post-hoc subgroup**: 10 cells, 5 scenarios × 2 sizes, 300
-runs, not pre-registered, and **not monotone in n** — the gap is widest at
-200 and narrows at 300. Report it as an operating point needing confirmation,
-never as a scaling law.
+**There is no n ≥ 200 operating point and it must not be written as one**
+(owner, 2026-09-24): two replications of a threshold with no mechanism for why
+200 and not 300 is an artefact. What replicates is the **small-bag penalty**:
+R-BurstHADS is dearer at n = 50 and n = 100 against a faithful baseline in
+every configuration measured — +12.7 / +9.6% at DF 2.0, +9.3 / +13.4% at
+DF 1.0, +13.6 / +12.6% at DF 2.0 with limits off. State it as our own negative
+finding. The n = 300 narrowing is **partly** a launch-limit effect (post-hoc
+check, labelled because it helps us: limits off moves n = 300 to −7.1% and
+n = 200 to −11.5%, closing 2.4 of the 6.8-point discrepancy).
 
-**Mechanism, measured not asserted** [T30, `diag_provisioned.txt`,
-pre-registered in `experiments/util_plan.md`]: the capacity R-BurstHADS
-provisions at runtime is 33.6% utilised at n = 50 and 77.8% at n = 200, while
-its share of the run's cost is flat at 13–15%. So the small-bag penalty is
-idle provisioned capacity, not a bigger fleet (1.85–2.11 VMs of a ~13.5 VM
-fleet at every size). It does not explain everything: utilisation at n = 300
-(76.7%) matches n = 200 while the cost gap does not, so a second effect is
-unisolated. Note this is the same shape of hypothesis that was **refuted**
-for sc1 (replacements 68–86% busy), which is why it is stated only where
-measured — and under the guard-kept baseline utilisation at n = 50 is 62.7%,
-so the idleness belongs to the faithful configuration, not to R-BurstHADS in
-general.
+**Never cite the sweep-wide faithful comparison** (+2.45% over 75 cells): it
+averages over DF 0.25 and 0.5, where that baseline misses 91% and 48% of its
+runs, and it is milder than DF 2.0's +2.9%, so it flatters us. DF 2.0, 20
+cells, is the only legitimate faithful comparison in the study.
+
+**Mechanism: measured, and NOT established** [T30, `diag_provisioned.txt`,
+`experiments/util_plan.md` and its amendment]. What is measured: provisioned
+capacity is 33.6% utilised at n = 50 faithful, 77.8% at n = 200, and 62.7% at
+n = 50 guard-kept, at a flat 13–15% share of cost with the same fleet size, so
+the penalty is idle capacity rather than a bigger fleet, and the idleness
+belongs to the faithful configuration (R-BurstHADS inherits the guard through
+the shared primary schedule). What failed: the pre-registered **substitution**
+reading predicted (1) a larger burstable work share — holds, 24.1% against
+2.8% at n = 50 — and (2) provisioned capacity idle in the same runs where
+burstables are busy — **fails**, r = +0.17 and 37 of 150 runs in the quadrant,
+no more than chance. By the rule fixed in advance the mechanism is open, and
+the paper says so. Do not fit a third story to these numbers without measuring
+it; a hypothesis of this shape was already refuted for sc1 (replacements
+68–86% busy).
 
 **The cost claim is conditional, and the conditions travel with it:**
 - It depends on the U5 guard, an addition of ours to the baselines. Following TCC23 §3.2 in

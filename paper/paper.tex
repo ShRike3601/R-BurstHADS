@@ -36,16 +36,14 @@ hibernation scenarios, four workload sizes, four deadline factors, 30 seeds,
 three schedulers), R-BurstHADS shortens makespan in every configuration and
 every regime we measured: 27.7\% below HADS and 12.0\% below Burst-HADS on the
 full sweep, and 11.0\% below an unmodified Burst-HADS in the one regime where
-that baseline needs no repair from us. The cost result is scale-dependent
-rather than general. Against the unmodified baseline it is 2.9\% dearer on
-average, and the sign turns on the size of the bag: 12.7\% dearer at 50 tasks,
-5.4\% cheaper at 200 and above, where it also dominates on both axes in 9 of
-10 cells. The capacity it provisions is 34\% utilised at the smallest bag
-against 78\% at 200, which is what the money buys or fails to buy. On the
-broader sweep, against our own Burst-HADS, it is 4.6\% cheaper and dominates in
-49 of 75 cells, but that baseline carries three departures from the published
-algorithm which we disclose and quantify, so we report a controlled comparison
-with a documented fidelity audit rather than a reproduction.
+that baseline needs no repair from us. Against that baseline it is 11.0\% faster at
+2.9\% higher cost, and the penalty is concentrated in small bags: 12.7\% dearer
+at 50 tasks and 9.6\% at 100, in the same direction at every deadline factor
+and both launch-limit settings we measured. On the broader sweep, against our
+own Burst-HADS, it is 4.6\% cheaper and dominates in 49 of 75 cells, but that
+baseline carries three departures from the published algorithm which we
+disclose and quantify, so we report a controlled comparison with a documented
+fidelity audit rather than a reproduction.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -105,10 +103,10 @@ three measured departures of our Burst-HADS from the published algorithm
 (Section~\ref{sec:validation}).
 \item We evaluate all three schedulers under the \textbf{hibernation scenarios of
 the source work} across four workload sizes, four deadline factors and 30
-seeds, and separate what holds generally from what does not: the makespan
-advantage holds in every configuration and regime measured, while the cost
-advantage is \textbf{scale-dependent}, absent at small bags against an
-unmodified baseline and present at $|T| \geq 200$
+seeds, and separate what holds from what does not: the makespan advantage
+holds in every configuration and regime measured, while against an unmodified
+baseline the method is \textbf{consistently more expensive on small bags},
+a negative result about our own scheduler that we report as ours
 (Section~\ref{sec:results}).
 \end{itemize}
 
@@ -633,20 +631,24 @@ Because of (i) and (ii), the sensitivity a reader should weigh is not "the
 guard removed" alone, which is neither our behaviour nor the published one, but
 the reference-faithful configuration with both parts of Section 3.2 in place.
 Following Section 3.2 in full --- the guard removed \emph{and} the leftover
-violators sent to on-demand instances --- R-BurstHADS is 4.5\% faster and
-2.5\% \emph{dearer} than Burst-HADS under launch limits, dominating it in 35
-of 75 cells, against 12.0\% faster and 4.6\% cheaper as frozen. Almost all of
-that swing is the guard: with the guard removed but step 2 still absent the
-figure is $+2.57$\%, against $+2.45$\% with both. Neither configuration is a
-usable baseline at our deadlines --- in both, Burst-HADS and R-BurstHADS miss
-a deadline in about 980 of 2{,}400 runs (980 with the guard removed alone, 981
-following Section 3.2 in full) and finish 32\% slower than HADS --- so the
-sensitivity bounds how much our cost claim owes to the departure rather than
-offering an alternative comparison. Implementing step 2 alone, keeping the
-guard, moves our headline by 0.1 points ($-4.62$\% to $-4.51$\%) but makes
-both baselines dearer against HADS ($+19.0$\% to $+23.1$\%) and costs them 296
-additional missed tasks; on the source work's own catalogue, at
-$D = 2700$\,s, it changes nothing at all.
+violators sent to on-demand instances --- produces a baseline that does not
+work at most of our deadlines: it misses a deadline in 91\% of runs at
+$\mathit{DF} = 0.25$, 48\% at 0.5 and 24\% at 1.0, and only at
+$\mathit{DF} = 2.0$ does it meet every deadline. We therefore report no
+sweep-wide comparison against it. Averaging cost over regimes in which the
+comparator fails most of its deadlines is not a comparison, and it would
+flatter us: the sweep-wide figure is milder than the one at
+$\mathit{DF} = 2.0$. The single legitimate faithful comparison in this study
+is $\mathit{DF} = 2.0$, twenty cells, and it is the only one we cite
+(Section~\ref{sec:results}). There the guard accounts for the whole
+difference, because no $D_{\mathit{spot}}$ violator survives Part 2 at that
+deadline factor and step 2 consequently changes nothing.
+
+Implementing step 2 alone, keeping the guard, moves the sweep-wide comparison
+by 0.1 points ($-4.62$\% to $-4.51$\%) but makes both baselines dearer against
+HADS ($+19.0$\% to $+23.1$\%) and costs them 296 additional missed tasks; on
+the source work's own catalogue, at $D = 2700$\,s, it changes nothing at
+all.
 
 None of the three is repaired here: repairing (i) or (ii) would change the
 baselines after the fact, and we prefer a disclosed, measured departure to a
@@ -725,8 +727,8 @@ baseline.} Against our own Burst-HADS, R-BurstHADS's cost premium over HADS is
 guard and lacks Section 3.2's on-demand step, so we take the anchor from the
 regime that needs neither: at $\mathit{DF} = 2.0$ the unmodified baseline both
 follows the published algorithm and meets every deadline
-(Table~\ref{tab:faithful}). There the cost result turns on the size of the bag,
-from 12.7\% dearer at $|T| = 50$ to 5.4\% cheaper at $|T| \geq 200$.
+(Table~\ref{tab:faithful}). There R-BurstHADS is 2.9\% dearer on average, and
+dearer on every small bag we measured.
 
 Three further conditions travel with any cost number here. It depends on the
 retained guard and the unimplemented step of Section~\ref{sec:validation}; it
@@ -754,29 +756,51 @@ guard-free baseline misses a deadline in 145 of 600 runs and is therefore not
 a functioning scheduler, the same comparison gives 6.4\% faster and 5.0\%
 dearer.
 
-\textbf{The operating point, with its caveats.} Over the ten cells with
-$|T| \geq 200$ --- five scenarios at two bag sizes, 30 seeds each, 300 runs
---- R-BurstHADS is 18.7\% faster and 5.4\% cheaper than the faithful baseline
-and dominates it in nine. This is a \emph{post-hoc subgroup}: the split by bag
-size was not pre-registered, it rests on ten cells, and it is not monotone in
-$|T|$, since the gap is widest at 200 and narrows again at 300. We report it
-as an operating point that needs confirmation on an independent grid, not as a
-scaling law.
+\textbf{What replicates is the small-bag penalty.} Against the faithful
+baseline R-BurstHADS is dearer at $|T| = 50$ and $|T| = 100$ in every
+configuration we measured: $+12.7$\% and $+9.6$\% at $\mathit{DF} = 2.0$,
+$+9.3$\% and $+13.4$\% at $\mathit{DF} = 1.0$, and $+13.6$\% and $+12.6$\% at
+$\mathit{DF} = 2.0$ with the launch limits lifted. This is a negative result
+about our own method and we state it as ours: on a small bag, elastic
+provisioning costs more than it returns.
 
-What the money buys is measurable. The capacity R-BurstHADS provisions at
-runtime is 33.6\% utilised at $|T| = 50$ and 77.8\% at $|T| = 200$, while its
-share of the run's cost is flat at 13--15\% (Table~\ref{tab:faithful}). At
-small bags the extra instances are largely idle and the run never recovers
-them; at large bags they are busy and the shorter makespan pays for them. The
-measurement does not explain everything: utilisation at $|T| = 300$ matches
-$|T| = 200$ while the cost gap does not, so a second effect is at work that we
-have not isolated.
+We do not turn the other half of the table into a claim. The gap is $-8.8$\%
+at $|T| = 200$ and $-2.0$\% at $|T| = 300$, so it is not monotone in bag size,
+and a ``200 or more'' threshold would be a post-hoc split of five cells per
+size with no mechanism behind the boundary. Table~\ref{tab:faithful} reports
+every size so that the raggedness is visible.
 
-We state this plainly because it is the sharpest limit on the contribution.
-The cost advantage we report against our own Burst-HADS rests partly on the
-guard, and against a faithful baseline it appears only where the bag is large
-enough for the provisioned capacity to be used. The makespan advantage holds
-in both configurations.
+\textbf{The mechanism is not established.} Two readings were pre-registered
+and measured. The capacity R-BurstHADS provisions at runtime is 33.6\%
+utilised at $|T| = 50$ against 77.8\% at $|T| = 200$, while its share of the
+run's cost is flat at 13--15\% and the fleet is the same size, so the penalty
+is idle capacity rather than a larger fleet. But the same capacity is 62.7\%
+utilised at $|T| = 50$ under our own baseline, which can only happen because
+R-BurstHADS inherits the guard through the shared primary schedule. The
+follow-up reading --- that a guard-free primary fills burstables, which suit a
+small bag at a loose deadline, leaving the provisioned spot capacity idle on
+top of them --- predicted both a larger burstable share and a run-level
+association between the two. The first holds: at $|T| = 50$, 24.1\% of
+R-BurstHADS's executed work runs on burstables under the faithful
+configuration against 2.8\% under ours. The second fails: across those runs
+the correlation between burstable share and provisioned utilisation is
+$+0.17$, and the ``burstables busy, provisioned idle'' quadrant holds 37 of
+150 runs, no more than chance. We report the measurements and leave the
+mechanism open rather than fit a third explanation to them.
+
+\textbf{A post-hoc check on the $|T| = 300$ narrowing}, labelled as such
+because it would help us if it landed: the candidate is the launch limits
+binding on both schedulers and compressing the difference, the same effect
+this paper reports elsewhere. It lands in part. Lifting the limits moves the
+faithful comparison from $-2.0$\% to $-7.1$\% at $|T| = 300$ and from
+$-8.8$\% to $-11.5$\% at $|T| = 200$, so the discrepancy between the two sizes
+falls from 6.8 points to 4.4 without disappearing.
+
+We state all of this plainly because it is the sharpest limit on the
+contribution. The cost advantage we report against our own Burst-HADS rests
+partly on the guard, and against a faithful baseline the method is more
+expensive on small bags. The makespan advantage holds in both
+configurations.
 
 \begin{table}[t]
 \caption{$\mathit{DF} = 2.0$, where the unmodified baseline is both faithful
@@ -941,15 +965,18 @@ below HADS's at every bag size, for a premium that falls from 19.0\% (the price
 Burst-HADS pays) to 11.8\%. The trade is sharper against a faithful Burst-HADS:
 at $\mathit{DF} = 2.0$, the one regime where that baseline both follows the
 published algorithm and meets its deadlines, R-BurstHADS buys 11.0\% makespan
-for 2.9\% more money, and only at $|T| \geq 200$ does it win on both axes at
-once. The measured difference between those regimes is utilisation, not fleet
-size: the capacity R-BurstHADS provisions costs a flat 13--15\% of the run at
-every bag size, but retires 33.6\% of the core-seconds it is billed for at
-$|T| = 50$ against 77.8\% at $|T| = 200$. Idle provisioned capacity is
-therefore the mechanism at small bags --- a hypothesis of this kind was
-refuted earlier in this work for a different regime, so we state it only where
-it is measured --- and it is not the whole story, since utilisation at
-$|T| = 300$ matches $|T| = 200$ while the cost gap does not.
+for 2.9\% more money, and on a small bag it pays more for no makespan gain at
+all. What we can say about the difference between those regimes is that it is
+utilisation rather than fleet size: the capacity R-BurstHADS provisions costs
+a flat 13--15\% of the run at every bag size, but retires 33.6\% of the
+core-seconds it is billed for at $|T| = 50$ against 77.8\% at $|T| = 200$.
+Why it idles there we could not establish. The reading we pre-registered ---
+that the guard-free primary schedule sends the work to burstables and leaves
+the provisioned capacity with nothing to do --- is half confirmed and half
+refuted by the data (Section~\ref{sec:results}), and we prefer to leave the
+question open. A hypothesis of exactly this shape was measured and refuted
+earlier in this work for a different regime, which is why we hold it to the
+same standard here.
 
 \subsection{Limitations}
 
@@ -988,11 +1015,12 @@ Across 7{,}200 runs per launch-limit setting, the makespan result holds
 without qualification: 27.7\% below HADS and 12.0\% below Burst-HADS on the
 full sweep, 11.0\% below an unmodified Burst-HADS at $\mathit{DF} = 2.0$, and
 shorter in every other configuration measured --- limits lifted, burstable tier
-disabled, hibernation switched off. The cost result is scale-dependent. Against
-the unmodified baseline R-BurstHADS is 2.9\% dearer on average and 5.4\%
-cheaper at $|T| \geq 200$, where it dominates in nine of ten cells and where
-the capacity it provisions is 78\% utilised rather than 34\%; that bag-size
-split is a post-hoc subgroup of ten cells and needs confirmation. On the
+disabled, hibernation switched off. The cost result does not hold in general. Against
+the unmodified baseline R-BurstHADS is 2.9\% dearer on average, and dearer on
+small bags in every configuration measured --- 12.7\% at 50 tasks and 9.6\% at
+100 --- which we report as a limit of the method rather than of the
+experiment. Its provisioned capacity is 33.6\% utilised at 50 tasks against
+77.8\% at 200; why it idles there is measured but not explained. On the
 broader sweep, against our own Burst-HADS, it is 4.6\% cheaper and dominates in
 49 of 75 cells, with the three departures of that baseline disclosed and
 quantified. Under launch limits Burst-HADS and R-BurstHADS miss 6 and 5 tasks

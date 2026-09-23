@@ -29,7 +29,7 @@ U1 & Planner prediction order & corrected & produced every residual deadline mis
 U2 & Eq 9 normaliser & corrected & with U1 fixed, removed the remaining misses \\
 U3 & On-demand fallback inside the primary schedule & design --- kept, disclosed in the paper body... & fires in 905 of 2,400 runs, all at DF <= 0.5, and in all 150 floor-cell runs; over the 45 cells a reference-faithful Burst-HADS could solve, R vs Burst-HADS is -19.1\% makespan and -7.5\% cost \\
 U4 & Planner checkpoint overhead & corrected & all of HADS's deadline misses before fix 8 \\
-U5 & Proactive burstable allocation guard & kept --- an ADDITION to the published algorit... & R vs Burst-HADS -4.62\% cost as frozen against +2.45\% with TCC23 3.2 followed in full; removing the guard turns 974 clean Burst-HADS runs into missing ones, against 0 the other way \\
+U5 & Proactive burstable allocation guard & kept --- an ADDITION to the published algorit... & at DF 2.0, the only regime where the guard-free baseline meets every deadline, R vs Burst-HADS is -14.3\% cost as frozen against +2.9\% with TCC23 3.2 followed in full; removing the guard turns 974 clean Burst-HADS runs into missing ones, against 0 the other way. The sweep-wide faithful average is not cited: that baseline misses 91\% of runs at DF 0.25 and 48\% at 0.5 \\
 U6 & Migration candidates & corrected & hibernation makespan reduction 14.7 to 21.5\%, 20-cell cost change +38.7 to +16.0\% \\
 U7 & ILS relaxation & design & --- \\
 U8 & Infeasibility score & design & the reference's +inf sentinel gives near-identical results \\

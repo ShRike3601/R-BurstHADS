@@ -722,7 +722,7 @@ def u3_table(d_on, d_off):
     w()
 
 
-def faithful_regime_table(d_on):
+def faithful_regime_table(d_on, d_off):
     """T12c: the deadline factors at which the reference-faithful baseline is
     also a functioning one. Phase 3 (U3) fires in no run at DF >= 1.0 and
     §3.2's step 2 (U12) is inert there, so at those DFs the guard is the only
@@ -757,26 +757,43 @@ def faithful_regime_table(d_on):
             w(f"| {df} | {label} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
               f"{g['fast']} / {g['slow']} | {g['cheap']} / {g['dear']} | {bm} |")
     w()
-    w("Against the faithful baseline at DF 2.0 the result splits by bag size, and the split is what the paper "
-      "should state:")
+    w("**By bag size, and why the paper does not turn it into an operating point.** The gap is not monotone in "
+      "|T|: it is widest at 200 and narrows again at 300, so a \"n ≥ 200\" threshold would be a post-hoc split of "
+      "five cells per size with no mechanism behind the boundary. What replicates is the small-bag penalty: "
+      "R-BurstHADS is dearer at |T| = 50 and 100 in every faithful configuration measured, at both deadline "
+      "factors and under both limit settings.")
     w()
-    w("| DF 2.0, reference-faithful | cells | R mk vs B | R $ vs B | R dominates B | R sig. cheaper / dearer |")
-    w("|---|---|---|---|---|---|")
-    d = dict(d_on)
-    try:
-        d.update(load_jsonl(SRC["ref_p2"]))
-    except FileNotFoundError:
-        w("| (reference-faithful sweep missing) | | | | | |")
-        w()
-        return
-    cells = cells_of(d)
-    comp = [c for c, s in cells.items() if complete(s) and c[2] == 2.0]
-    stats = {c: cell_stats(cells[c]) for c in comp}
-    for name, sel in (("small bags, n ≤ 100", [c for c in comp if c[1] <= 100]),
-                      ("large bags, n ≥ 200", [c for c in comp if c[1] >= 200])):
-        g = group_row(stats, sorted(sel))
-        w(f"| {name} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
-          f"{g['cheap']} / {g['dear']} |")
+    w("| DF | limits | configuration | n=50 | n=100 | n=200 | n=300 |")
+    w("|---|---|---|---|---|---|---|")
+    rows_n = (("2.0", "on", d_on, SRC["ref_p2"]), ("2.0", "off", d_off, SRC["ref_p2_nocap"]),
+              ("1.0", "on", d_on, SRC["ref_p2"]), ("2.0", "on", d_on, None), ("2.0", "off", d_off, None))
+    seen = set()
+    for df_s, lim, base, var in rows_n:
+        key = (df_s, lim, bool(var))
+        if key in seen:
+            continue
+        seen.add(key)
+        d = dict(base)
+        if var:
+            try:
+                d.update(load_jsonl(var))
+            except FileNotFoundError:
+                continue
+        cells = cells_of(d)
+        comp = [c for c, s in cells.items() if complete(s) and c[2] == float(df_s)]
+        stats = {c: cell_stats(cells[c]) for c in comp}
+        vals = []
+        for n in (50, 100, 200, 300):
+            g = group_row(stats, sorted(c for c in comp if c[1] == n))
+            vals.append(f"{g['rbc']:+.1f}%" if g["cells"] else "—")
+        w(f"| {df_s} | {lim} | {'reference-faithful' if var else 'guard kept'} | " + " | ".join(vals) + " |")
+    w()
+    w("**Post-hoc check on the n = 300 narrowing** (labelled as such because it would help us if it landed): the "
+      "candidate is the launch limits binding on both schedulers and compressing the difference. It lands in part. "
+      "Lifting the limits moves the faithful comparison at n = 300 from −2.0% to −7.1% and at n = 200 from −8.8% to "
+      "−11.5%, so the discrepancy between the two sizes narrows from 6.8 to 4.4 points but does not disappear, and "
+      "the same pattern holds under the guard-kept baseline. Every R-BurstHADS run at |T| ≥ 100 reaches a launch "
+      "limit in both configurations. The narrowing is therefore partly a limit effect and partly unexplained.")
     w()
 
 
@@ -802,11 +819,22 @@ def provisioned_table():
     for line in keep:
         w(line)
     w()
-    w("Reading, fixed before the run (`experiments/util_plan.md`): utilisation of provisioned capacity **does** fall "
-      "as the bag gets smaller under the faithful baseline (78% at n = 200 against 34% at n = 50), while its share "
-      "of cost stays flat at 13–15%, so the small-bag cost penalty is idle capacity that the run does not recover — "
-      "not a larger fleet. It does not explain everything: utilisation at n = 300 (77%) matches n = 200, yet the "
-      "cost gap against Burst-HADS is −2.0% against −8.8%, so the bag-size pattern is not a single mechanism.")
+    w("**What the two pre-registered readings returned.** Utilisation of provisioned capacity does fall as the bag "
+      "gets smaller under the faithful baseline (77.8% at n = 200 against 33.6% at n = 50) while its share of cost "
+      "stays flat at 13–15% and the fleet stays the same size, so the penalty is idle capacity rather than a bigger "
+      "fleet. But the same capacity is 62.7% utilised at n = 50 under the guard-kept baseline, which can only "
+      "happen because R-BurstHADS inherits the guard through the shared primary schedule: the idleness is a "
+      "property of that configuration, not of the method.")
+    w()
+    w("The follow-up **substitution** reading — the guard-free primary fills burstables, slow cheap capacity suits "
+      "a small bag at a loose deadline, and R-BurstHADS's spot provisioning then idles on top of it — was "
+      "pre-registered with two predictions (`experiments/util_plan.md`, amendment). The first holds: at n = 50 "
+      "R-BurstHADS runs 24.1% of its executed work on burstables under the faithful configuration against 2.8% "
+      "guard-kept, and the share converges to about 11% at n ≥ 200 in both. **The second fails**: within the "
+      "faithful runs at n = 50 the correlation across runs between burstable work share and provisioned "
+      "utilisation is +0.17, not negative, and the \"burstables busy, provisioned idle\" quadrant holds 37 of 150 "
+      "runs, no more than chance. By the rule fixed in advance the mechanism is therefore **not established**, and "
+      "the paper reports the measurements without an explanation.")
     w()
 
 
@@ -1593,7 +1621,7 @@ def main():
     w("## Disclosures")
     w()
     u5s = u5_sensitivity_table(d_on, d_off)
-    faithful_regime_table(d_on)
+    faithful_regime_table(d_on, d_off)
     provisioned_table()
     guard = guard_tables()
     ablation_table(d_on, d_off)

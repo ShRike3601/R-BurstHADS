@@ -399,12 +399,17 @@ Sources: `experiments/sweep_raw_2439a00d7f74.jsonl`, `experiments/sweep_variant_
 | 2.0 | guard removed only | 20 | -11.0% | +2.9% | 10/20 | 12 / 0 | 3 / 9 | 0 |
 | 2.0 | reference-faithful: §3.2 in full | 20 | -11.0% | +2.9% | 10/20 | 12 / 0 | 3 / 9 | 0 |
 
-Against the faithful baseline at DF 2.0 the result splits by bag size, and the split is what the paper should state:
+**By bag size, and why the paper does not turn it into an operating point.** The gap is not monotone in |T|: it is widest at 200 and narrows again at 300, so a "n ≥ 200" threshold would be a post-hoc split of five cells per size with no mechanism behind the boundary. What replicates is the small-bag penalty: R-BurstHADS is dearer at |T| = 50 and 100 in every faithful configuration measured, at both deadline factors and under both limit settings.
 
-| DF 2.0, reference-faithful | cells | R mk vs B | R $ vs B | R dominates B | R sig. cheaper / dearer |
-|---|---|---|---|---|---|
-| small bags, n ≤ 100 | 10 | -3.3% | +11.2% | 1/10 | 0 / 9 |
-| large bags, n ≥ 200 | 10 | -18.7% | -5.4% | 9/10 | 3 / 0 |
+| DF | limits | configuration | n=50 | n=100 | n=200 | n=300 |
+|---|---|---|---|---|---|---|
+| 2.0 | on | reference-faithful | +12.7% | +9.6% | -8.8% | -2.0% |
+| 2.0 | off | reference-faithful | +13.6% | +12.6% | -11.5% | -7.1% |
+| 1.0 | on | reference-faithful | +9.3% | +13.4% | -2.8% | +0.3% |
+| 2.0 | on | guard kept | -31.5% | -14.3% | -9.4% | -2.0% |
+| 2.0 | off | guard kept | -34.9% | -20.0% | -12.4% | -7.1% |
+
+**Post-hoc check on the n = 300 narrowing** (labelled as such because it would help us if it landed): the candidate is the launch limits binding on both schedulers and compressing the difference. It lands in part. Lifting the limits moves the faithful comparison at n = 300 from −2.0% to −7.1% and at n = 200 from −8.8% to −11.5%, so the discrepancy between the two sizes narrows from 6.8 to 4.4 points but does not disappear, and the same pattern holds under the guard-kept baseline. Every R-BurstHADS run at |T| ≥ 100 reaches a launch limit in both configurations. The narrowing is therefore partly a limit effect and partly unexplained.
 
 ### T30. R-BurstHADS's provisioned capacity at DF 2.0: cost share and utilisation, by bag size
 
@@ -420,8 +425,20 @@ Source: `experiments/diag_provisioned.txt` (record-only probe; all 1,200 probed 
 | guard kept (as frozen) | 100 | 150 | 2.09 | 13.55 | 15.3% | 69.0% (n=150) | 73.5% |
 | guard kept (as frozen) | 200 | 150 | 2.11 | 13.63 | 14.9% | 77.5% (n=150) | 80.4% |
 | guard kept (as frozen) | 300 | 150 | 2.09 | 13.65 | 15.1% | 76.7% (n=150) | 79.3% |
+| configuration | n | burstable share of executed work | burstable share of cost | burstables billed | provisioned utilisation |
+|---|---|---|---|---|---|
+| faithful (TCC23 §3.2 in full) | 50 | 24.1% | 39.4% | 2.45 | 33.6% |
+| faithful (TCC23 §3.2 in full) | 100 | 14.2% | 36.3% | 2.53 | 52.5% |
+| faithful (TCC23 §3.2 in full) | 200 | 11.0% | 36.2% | 2.61 | 77.8% |
+| faithful (TCC23 §3.2 in full) | 300 | 10.6% | 34.6% | 2.63 | 76.7% |
+| guard kept (as frozen) | 50 | 2.8% | 33.5% | 2.45 | 62.7% |
+| guard kept (as frozen) | 100 | 8.8% | 33.9% | 2.53 | 69.0% |
+| guard kept (as frozen) | 200 | 10.9% | 36.1% | 2.61 | 77.5% |
+| guard kept (as frozen) | 300 | 10.6% | 34.6% | 2.63 | 76.7% |
 
-Reading, fixed before the run (`experiments/util_plan.md`): utilisation of provisioned capacity **does** fall as the bag gets smaller under the faithful baseline (78% at n = 200 against 34% at n = 50), while its share of cost stays flat at 13–15%, so the small-bag cost penalty is idle capacity that the run does not recover — not a larger fleet. It does not explain everything: utilisation at n = 300 (77%) matches n = 200, yet the cost gap against Burst-HADS is −2.0% against −8.8%, so the bag-size pattern is not a single mechanism.
+**What the two pre-registered readings returned.** Utilisation of provisioned capacity does fall as the bag gets smaller under the faithful baseline (77.8% at n = 200 against 33.6% at n = 50) while its share of cost stays flat at 13–15% and the fleet stays the same size, so the penalty is idle capacity rather than a bigger fleet. But the same capacity is 62.7% utilised at n = 50 under the guard-kept baseline, which can only happen because R-BurstHADS inherits the guard through the shared primary schedule: the idleness is a property of that configuration, not of the method.
+
+The follow-up **substitution** reading — the guard-free primary fills burstables, slow cheap capacity suits a small bag at a loose deadline, and R-BurstHADS's spot provisioning then idles on top of it — was pre-registered with two predictions (`experiments/util_plan.md`, amendment). The first holds: at n = 50 R-BurstHADS runs 24.1% of its executed work on burstables under the faithful configuration against 2.8% guard-kept, and the share converges to about 11% at n ≥ 200 in both. **The second fails**: within the faithful runs at n = 50 the correlation across runs between burstable work share and provisioned utilisation is +0.17, not negative, and the "burstables busy, provisioned idle" quadrant holds 37 of 150 runs, no more than chance. By the rule fixed in advance the mechanism is therefore **not established**, and the paper reports the measurements without an explanation.
 
 ### T12b. How the U5 guard was decided: the Round A closing grid (historical)
 
@@ -1012,7 +1029,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 
 | file | SHA-256 (first 16) | last changed in commit |
 |---|---|---|
-| `DEVIATIONS.md` | `e6babeede56a5d57` | `ad18335` |
+| `DEVIATIONS.md` | `d231e596d6e8616a` | `ad18335` |
 | `experiments/diag_capped.txt` | `32c9f551bf0275aa` | `0509b29` |
 | `experiments/diag_cost_gap_fix20_capped_c3.json` | `2d6a1193e6b180fb` | `7be365a` |
 | `experiments/diag_cost_gap_fix20_nocap_c3.json` | `02440b12ee2ab44c` | `7be365a` |
@@ -1039,7 +1056,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/diag_launch21_f21b.json` | `6589c60faaf3e04c` | `25a0419` |
 | `experiments/diag_overcredit_boot.json` | `d049bebf5a63d279` | `c11c300` |
 | `experiments/diag_part2.txt` | `87a372e5c39096e9` | `9414054` |
-| `experiments/diag_provisioned.txt` | `733418ba18c1e88a` | `UNCOMMITTED` |
+| `experiments/diag_provisioned.txt` | `4943f67a04167638` | `d7793bd` |
 | `experiments/diag_u10.json` | `e53504f0c84f1458` | `3772258` |
 | `experiments/diag_u10_verify.txt` | `c47efe5874fefd33` | `8901181` |
 | `experiments/diag_u10_window.txt` | `0b34e03085f6c4f6` | `7be365a` |

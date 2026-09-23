@@ -16,3 +16,20 @@ diag_provisioned on 2439a00d7f74: R-BurstHADS, DF 2.0, 1200 runs (600 per config
 Pooled over runs (total busy core-seconds / total billed core-seconds), by bag size:
 - faithful (TCC23 §3.2 in full): n=50: 27.4%; n=100: 48.8%; n=200: 77.5%; n=300: 74.9%
 - guard kept (as frozen): n=50: 60.8%; n=100: 67.5%; n=200: 77.1%; n=300: 74.9%
+
+## Substitution test: where R-BurstHADS's work goes, and whether provisioned capacity idles with it
+
+| configuration | n | burstable share of executed work | burstable share of cost | burstables billed | provisioned utilisation |
+|---|---|---|---|---|---|
+| faithful (TCC23 §3.2 in full) | 50 | 24.1% | 39.4% | 2.45 | 33.6% |
+| faithful (TCC23 §3.2 in full) | 100 | 14.2% | 36.3% | 2.53 | 52.5% |
+| faithful (TCC23 §3.2 in full) | 200 | 11.0% | 36.2% | 2.61 | 77.8% |
+| faithful (TCC23 §3.2 in full) | 300 | 10.6% | 34.6% | 2.63 | 76.7% |
+| guard kept (as frozen) | 50 | 2.8% | 33.5% | 2.45 | 62.7% |
+| guard kept (as frozen) | 100 | 8.8% | 33.9% | 2.53 | 69.0% |
+| guard kept (as frozen) | 200 | 10.9% | 36.1% | 2.61 | 77.5% |
+| guard kept (as frozen) | 300 | 10.6% | 34.6% | 2.63 | 76.7% |
+
+Prediction 2, within n = 50 (correlation across runs between burstable work share and provisioned utilisation; quadrants split at each configuration's own medians):
+- faithful (TCC23 §3.2 in full): runs 150, r = +0.17, burstables-busy-and-provisioned-idle in 37 runs (medians: work share 23.4%, utilisation 26.6%)
+- guard kept (as frozen): runs 150, r = -0.05, burstables-busy-and-provisioned-idle in 16 runs (medians: work share 0.0%, utilisation 62.4%)
