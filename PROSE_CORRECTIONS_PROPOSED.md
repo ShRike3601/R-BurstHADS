@@ -1,3 +1,11 @@
+> **Applied on 2026-09-23** to CLAUDE.md, PAPER_SKELETON.md, FIGURE_SPEC.md, `paper/paper.tex`,
+> `paper/fig/FIGURES.md` (now generated) and the pack's fixed strings. Two items changed at the
+> owner's instruction while applying: **A2** (E14) was withdrawn — the floor-cell behaviour is
+> credited to DEVIATIONS U3 instead — and **A4** (the burstable tier) was rewritten from the
+> pre-registered ablation rather than from the hypothesis. The figure set was replaced at the same
+> time (six absolute-value figures; FIGURE_SPEC.md rewritten). This file is the record of what was
+> proposed and why; the documents themselves are now the source of truth.
+
 # Prose corrections, proposed: every claim now false, with corrected wording
 
 Prepared for the owner. **No listed file has been edited.** This covers

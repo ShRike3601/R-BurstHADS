@@ -1,3 +1,7 @@
+> **Adopted on 2026-09-23** into `DEVIATIONS.md`, with the U5 re-measurement, the new U12 row,
+> the U3 and E2 measurements, the E14 attribution and the direction statement added at adoption.
+> This file is the record of what was proposed; `DEVIATIONS.md` is the register.
+
 # Deviations from the published algorithms
 
 Every place this simulator's HADS and Burst-HADS differ from what Teylo et

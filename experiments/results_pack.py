@@ -63,6 +63,23 @@ SRC = {
     "val_f21c": "experiments/diag_cost_gap_fix21c_nocap_c3.json",
     "val_f21_off": "experiments/diag_cost_gap_fix21v_nocap_c3.json",
     "val_f21_on": "experiments/diag_cost_gap_fix21v_capped_c3.json",
+    # Counterfactuals on freeze-fix21: the burstable-branch ablation, U5 re-measured,
+    # the guard without hibernation, and TCC23 §3.2 in full (experiments/*_plan.md)
+    "tier_off": f"experiments/sweep_variant_no_burst_branch_{FP}.jsonl",
+    "tier_off_nocap": f"experiments/sweep_variant_nocap+no_burst_branch_{FP}.jsonl",
+    "u5_off": f"experiments/sweep_variant_burst_fill_{FP}.jsonl",
+    "u5_off_nocap": f"experiments/sweep_variant_nocap+burst_fill_{FP}.jsonl",
+    "u5_nohib_kept": f"experiments/sweep_variant_u5nohib_kept_{FP}.jsonl",
+    "u5_nohib_removed": f"experiments/sweep_variant_u5nohib_removed_{FP}.jsonl",
+    "p2_od": f"experiments/sweep_variant_p2_od_{FP}.jsonl",
+    "p2_od_nocap": f"experiments/sweep_variant_nocap+p2_od_{FP}.jsonl",
+    "ref_p2": f"experiments/sweep_variant_ref_p2_{FP}.jsonl",
+    "ref_p2_nocap": f"experiments/sweep_variant_nocap+ref_p2_{FP}.jsonl",
+    "val_refp2": "experiments/diag_cost_gap_refp2_nocap_c3.json",
+    "val_p2od": "experiments/diag_cost_gap_p2od_nocap_c3.json",
+    "part2_probe": "experiments/diag_part2.txt",
+    "u3_exposure": "experiments/u3_exposure.txt",
+    "capped_probe": "experiments/diag_capped.txt",
     "launch_base": "experiments/diag_launch21_base.json",
     "launch_f21b": "experiments/diag_launch21_f21b.json",
     "launch_f21": "experiments/diag_launch21_f21.json",
@@ -211,6 +228,56 @@ def summary_table(d, title, ident, source):
           f"{g['fast']} / {g['slow']} | {g['cheap']} / {g['dear']} |")
     w()
     return stats, rows
+
+
+def absolute_table(d, ident, title, source):
+    """Absolute cell-mean makespan and cost per group: what the six figures plot.
+
+    Same cells and same grouping as the summary table, so a figure and its
+    percentage row describe one set of runs. Each entry is the mean over the
+    group's cells of that cell's mean over its seeds."""
+    cells = cells_of(d)
+    stats = {c: cell_stats(s) for c, s in cells.items()}
+    comp = sorted(c for c, s in cells.items() if complete(s))
+    w(f"### {ident}. {title}")
+    w()
+    w(f"Source: `{source}`. The {len(comp)} cells where every scheduler is feasible in every seed, grouped as T1. "
+      "Makespan in seconds, cost in dollars; each value is the mean over the group's cells of the cell's mean over "
+      "its 30 seeds. **These are the numbers the six figures plot** (`experiments/make_figures.py`); the percentage "
+      "changes against HADS are in T1, not in the figures.")
+    w()
+    w("| group | cells | HADS mk (s) | Burst-HADS mk (s) | R-BurstHADS mk (s) | HADS cost ($) | Burst-HADS cost ($) | R-BurstHADS cost ($) |")
+    w("|---|---|---|---|---|---|---|---|")
+    groups = [("all", lambda c: True)]
+    groups += [(f"DF={x}", (lambda x: lambda c: c[2] == x)(x)) for x in sorted({c[2] for c in comp})]
+    groups += [(sc, (lambda x: lambda c: c[0] == x)(sc)) for sc in sorted({c[0] for c in comp})]
+    groups += [(f"n={x}", (lambda x: lambda c: c[1] == x)(x)) for x in sorted({c[1] for c in comp})]
+    rows = {}
+    for name, sel in groups:
+        sub = [c for c in comp if sel(c)]
+        vals = {(k, f): mean(stats[c][k][f][0] for c in sub) for k in KEYS for f in ("mk", "cost")}
+        rows[name] = vals
+        w(f"| {name} | {len(sub)} | " + " | ".join(f"{vals[(k, 'mk')]:.0f}" for k in KEYS) + " | "
+          + " | ".join(f"{vals[(k, 'cost')]:.4f}" for k in KEYS) + " |")
+    w()
+    return rows
+
+
+def headline_table(g):
+    """The former Fig. 1, as a table (owner, 2026-09-23: the figures plot
+    absolute values, so the trade-off against HADS is a table)."""
+    w("### T27. Headline trade-off against HADS, limits on (replaces the former Fig. 1)")
+    w()
+    w(f"Source: `{SRC['on']}`, the {g['cells']} cells where every scheduler is feasible in every seed. The same numbers "
+      "as T1's \"all\" row, isolated because the paper cites them together. Absolute values: T1b.")
+    w()
+    w("| scheduler | makespan vs HADS | cost vs HADS | dominates Burst-HADS |")
+    w("|---|---|---|---|")
+    w(f"| Burst-HADS | {g['bmk']:+.1f}% | {g['bc']:+.1f}% | — |")
+    w(f"| R-BurstHADS | {g['rmk']:+.1f}% | {g['rc']:+.1f}% | {g['dom']}/{g['cells']} cells |")
+    w(f"| R-BurstHADS vs Burst-HADS | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | significantly faster in {g['fast']}, "
+      f"slower in {g['slow']}; cheaper in {g['cheap']}, dearer in {g['dear']} |")
+    w()
 
 
 def matched_table(d_on, d_off):
@@ -480,7 +547,7 @@ def validation_tables():
 def audit_trajectory(pub):
     w("### T11. Fidelity audit trajectory on the validation catalogue (limits off)")
     w()
-    w("How the baseline changes adopted in Rounds A–B moved the validation numbers. Each row is a committed run of the "
+    w("How the baseline changes adopted in Rounds A–B and in the post-freeze rounds (fixes 17a–20, 21) moved the validation numbers. Each row is a committed run of the "
       "same 1,440 units (4 jobs × 6 scenarios × 30 seeds × 2 schedulers). Fix numbers and deviation IDs refer to "
       "CLAUDE.md and DEVIATIONS.md.")
     w()
@@ -507,8 +574,155 @@ def audit_trajectory(pub):
     return out
 
 
+def u5_sensitivity_table(d_on, d_off):
+    """T12: what the paper cites for U5, at freeze-fix21.
+
+    Four configurations of Algorithm 1 Part 2. TCC23 §3.2 has three steps:
+    violators to the burstables, the rest to the cheapest on-demand VMs, then
+    an idle burstable takes the latest-finishing task. The frozen code has the
+    U5 guard on step 1 and no step 2 at all, so "guard removed" alone is
+    neither our behaviour nor TCC23's; the reference-faithful row is the one
+    the paper cites (owner, 2026-09-23)."""
+    rows = [("as frozen (U5 guard, no step 2)", None, None),
+            ("guard removed only — neither ours nor TCC23's", SRC["u5_off"], SRC["u5_off_nocap"]),
+            ("the missing step 2 alone, guard kept", SRC["p2_od"], SRC["p2_od_nocap"]),
+            ("reference-faithful: TCC23 §3.2 in full", SRC["ref_p2"], SRC["ref_p2_nocap"]),
+    ]
+    w("### T12. U5 sensitivity: the guard and the missing §3.2 step, freeze-fix21")
+    w()
+    w(f"Sources: `{SRC['on']}`, `{SRC['off']}` and the variant sweeps named below; pre-registrations "
+      "`experiments/u5_remeasure_plan.md` and `experiments/ref_p2_plan.md`. Burst-HADS and R-BurstHADS change "
+      "together (they share the primary schedule); HADS rows come from the baselines. Each set is averaged over its "
+      "own complete cells, and the cell count is given because a configuration that misses deadlines does not change "
+      "which cells are feasible — feasibility is decided by the primary schedule. "
+      "**The paper cites the reference-faithful row**: TCC23 §3.2 sends the violators the burstables did not take to "
+      "the cheapest regular on-demand VMs, so removing the guard alone measures half of the reference and flatters "
+      "our choice.")
+    w()
+    w("| configuration | limits | cells | R mk vs B | R $ vs B | R dominates B | B mk vs H | B $ vs H | "
+      "missed tasks B / R | runs with a miss B / R |")
+    w("|---|---|---|---|---|---|---|---|---|---|")
+    out = {}
+    for label, f_on, f_off in rows:
+        for lim, base, var in (("on", d_on, f_on), ("off", d_off, f_off)):
+            d = dict(base)
+            if var:
+                try:
+                    d.update(load_jsonl(var))
+                except FileNotFoundError:
+                    w(f"| {label} | {lim} | file missing: `{var}` | | | | | | | |")
+                    continue
+            cells = cells_of(d)
+            comp = sorted(c for c, s in cells.items() if complete(s))
+            g = group_row({c: cell_stats(cells[c]) for c in comp}, comp)
+            fe = {k: [r for u, r in d.items() if u[4] == k and ok(r)] for k in ("burst", "rburst")}
+            mt = {k: sum(r["misses"] for r in v) for k, v in fe.items()}
+            rw = {k: sum(1 for r in v if r["misses"]) for k, v in fe.items()}
+            out[(label, lim)] = dict(g, miss_b=mt["burst"], miss_r=mt["rburst"])
+            w(f"| {label} | {lim} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
+              f"{g['bmk']:+.1f}% | {g['bc']:+.1f}% | {mt['burst']} / {mt['rburst']} | {rw['burst']} / {rw['rburst']} |")
+    w()
+    w("Two further measurements on the same configurations:")
+    w()
+    try:
+        nh_k, nh_r = load_jsonl(SRC["u5_nohib_kept"]), load_jsonl(SRC["u5_nohib_removed"])
+        for lbl, d in (("guard kept", nh_k), ("guard removed", nh_r)):
+            b = [r for u, r in d.items() if u[4] == "burst" and ok(r)]
+            w(f"- **No hibernation** (scenario `none`, 480 runs per scheduler, limits on), {lbl}: Burst-HADS misses "
+              f"{sum(r['misses'] for r in b)} tasks in {sum(1 for r in b if r['misses'])} runs "
+              f"({100 * sum(1 for r in b if r['misses']) / len(b):.1f}%). The guard-free failure rate is the same "
+              "without hibernation as with it, so it is not a hibernation-rescue effect (`u5_nohib_compare.txt`).")
+    except FileNotFoundError:
+        pass
+    w(f"- **What Part 2 leaves behind** (`{SRC['part2_probe']}`): with the guard, 575 of 2,400 runs reach Part 2 with "
+      "Dspot violators on spot and it leaves 12,150 of the 12,345 there, none planned past D. Under §3.2 they would "
+      "go to on-demand VMs. All of those runs are at DF 0.25 and DF 0.5.")
+    w()
+    return out
+
+
+def ablation_table(d_on, d_off):
+    """T28: R-BurstHADS with its burstable branch disabled (tier 3's burstable
+    and the saturation response), pre-registered in experiments/tier_off_plan.md.
+    Reported, not acted on: the tier stays in R-BurstHADS (owner, 2026-09-23)."""
+    w("### T28. Ablation: R-BurstHADS without its burstable branch")
+    w()
+    w(f"Sources: `{SRC['tier_off']}`, `{SRC['tier_off_nocap']}`, against `{SRC['on']}` and `{SRC['off']}`. "
+      "Only R-BurstHADS changes. The branch is the one place a burstable is created mid-run (tier 3 and the "
+      "saturation response); with it disabled the task goes to Algorithm 4's on-demand attempt instead. In the "
+      "disabled sets R-BurstHADS launches exactly Burst-HADS's t3.large count, i.e. the branch fires in no run. "
+      "**The ablation is reported, not acted on**: it was measured after the evaluation was designed, and the tier "
+      "is kept as pre-registered.")
+    w()
+    w("| limits | branch | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | "
+      "R missed tasks | R runs with a miss | R runs changed |")
+    w("|---|---|---|---|---|---|---|---|---|---|---|")
+    for lim, base, var in (("on", d_on, SRC["tier_off"]), ("off", d_off, SRC["tier_off_nocap"])):
+        for label in ("with branch", "disabled"):
+            d = dict(base)
+            if label == "disabled":
+                try:
+                    d.update(load_jsonl(var))
+                except FileNotFoundError:
+                    w(f"| {lim} | {label} | file missing: `{var}` | | | | | | | | |")
+                    continue
+            cells = cells_of(d)
+            comp = sorted(c for c, s in cells.items() if complete(s))
+            g = group_row({c: cell_stats(cells[c]) for c in comp}, comp)
+            rs = {u: r for u, r in d.items() if u[4] == "rburst"}
+            fe = [r for r in rs.values() if ok(r)]
+            ch = "—" if label == "with branch" else f"{sum(1 for u in rs if not _same_row(rs[u], base[u]))}/{len(rs)}"
+            w(f"| {lim} | {label} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
+              f"{g['fast']} / {g['slow']} | {g['cheap']} / {g['dear']} | {sum(r['misses'] for r in fe)} | "
+              f"{sum(1 for r in fe if r['misses'])} | {ch} |")
+    w()
+
+
+def u3_table(d_on, d_off):
+    """T29: DEVIATIONS U3, Burst-HADS's on-demand fallback in the initial
+    solution, and the cell set a reference-faithful Burst-HADS could solve."""
+    w("### T29. U3: Burst-HADS's Phase 3 on-demand fallback, and the reference-faithful cell set")
+    w()
+    w(f"Sources: `{SRC['launch_adopted']}` (which launch site opened each VM), `{SRC['on']}`, `{SRC['off']}`. "
+      "The reference `IPDPS.py` raises \"no solution\" where our `_initial_solution` reaches Phase 3. The initial "
+      "solution is a deterministic greedy pass that runs before any search, so a reference-faithful Burst-HADS — and "
+      "R-BurstHADS, which shares the primary schedule — would be infeasible in exactly the runs where Phase 3 placed "
+      "a task, and the evaluation would drop those cells. Limits off was not probed; the limits-on units are used as "
+      "a proxy there.")
+    w()
+    try:
+        probe = json.loads((ROOT / SRC["launch_adopted"]).read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        w("(launch probe missing)")
+        w()
+        return
+    ph3 = {tuple(e["unit"]) for e in probe
+           if sum(c[0] for s, c in e["sites"] if s[1] == "primary" and s[3] == "ondemand" and "Phase" in s[4]) > 0}
+    w("| scheduler | runs using the on-demand phase | DF 0.25 / 0.5 / 1.0 / 2.0 | in the floor cells (of 150) |")
+    w("|---|---|---|---|")
+    for k in KEYS:
+        us = [u for u in ph3 if u[4] == k]
+        note = " (HADS's Phase (c) is in the reference; shown for comparison)" if k == "hads" else ""
+        w(f"| {LAB[k]}{note} | {len(us)} of 2400 | "
+          + " / ".join(str(sum(1 for u in us if u[2] == df)) for df in (0.25, 0.5, 1.0, 2.0))
+          + f" | {sum(1 for u in us if u[1] == 100 and u[2] == 0.25)} |")
+    w()
+    w("| limits | comparison | cells | B mk vs H | B $ vs H | R mk vs B | R $ vs B | R dominates B |")
+    w("|---|---|---|---|---|---|---|---|")
+    drop = {u[:3] for u in ph3 if u[4] in ("burst", "rburst")}
+    for lim, d in (("on", d_on), ("off (proxy)", d_off)):
+        cells = cells_of(d)
+        comp = {c for c, s in cells.items() if complete(s)}
+        stats = {c: cell_stats(cells[c]) for c in comp}
+        for name, sel in (("as frozen (U3 kept)", sorted(comp)), ("reference-faithful: Phase-3 cells dropped", sorted(comp - drop))):
+            g = group_row(stats, sel)
+            w(f"| {lim} | {name} | {g['cells']} | {g['bmk']:+.1f}% | {g['bc']:+.1f}% | {g['rbmk']:+.1f}% | "
+              f"{g['rbc']:+.1f}% | {g['dom']}/{g['cells']} |")
+    w()
+
+
 def guard_tables():
-    w("### T12. Disclosure: the retained proactive-burstable guard (DEVIATIONS U5)")
+    w("### T12b. How the U5 guard was decided: the Round A closing grid (historical)")
     w()
     w(f"Sources: `{SRC['grid_g1e1']}` (guard on) and `{SRC['grid_g0e1']}` (guard off), both with billing from launch, "
       "Allocation Cycles over uptime and launched-only migration, sweep catalogue, limits on, seeds 0–9; "
@@ -546,7 +760,7 @@ def guard_tables():
     cells_on, cells_off = cells_of(on), cells_of(off)
     comp = sorted(c for c in cells_on if complete(cells_on[c]) and c in cells_off and complete(cells_off[c]))
     vprem = {"on": vstats(von)["prem_b"], "off": vstats(voff)["prem_b"]}
-    for label, cells, key in (("kept (frozen code)", cells_on, "on"), ("removed", cells_off, "off")):
+    for label, cells, key in (("kept (Round A grid)", cells_on, "on"), ("removed (Round A grid)", cells_off, "off")):
         g = group_row({c: cell_stats(cells[c]) for c in comp}, comp)
         w(f"| {label} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | {vprem[key]:+.0f}% |")
     w()
@@ -1244,6 +1458,13 @@ def main():
     SRC.update(on=f"experiments/sweep_raw_{FP}.jsonl", off=f"experiments/sweep_variant_nocap_{FP}.jsonl",
                val_off=f"experiments/diag_cost_gap_{args.val}_nocap_c3.json",
                val_on=f"experiments/diag_cost_gap_{args.val}_capped_c3.json")
+    # counterfactuals measured on this baseline (experiments/*_plan.md)
+    for k, stem in (("tier_off", "no_burst_branch"), ("tier_off_nocap", "nocap+no_burst_branch"),
+                    ("u5_off", "burst_fill"), ("u5_off_nocap", "nocap+burst_fill"),
+                    ("u5_nohib_kept", "u5nohib_kept"), ("u5_nohib_removed", "u5nohib_removed"),
+                    ("p2_od", "p2_od"), ("p2_od_nocap", "nocap+p2_od"),
+                    ("ref_p2", "ref_p2"), ("ref_p2_nocap", "nocap+ref_p2")):
+        SRC[k] = f"experiments/sweep_variant_{stem}_{FP}.jsonl"
     d_on, d_off = load_jsonl(SRC["on"]), load_jsonl(SRC["off"])
     assert len(d_on) == 7200 and len(d_off) == 7200, (len(d_on), len(d_off))
     body = OUT
@@ -1266,8 +1487,10 @@ def main():
     w("## Headline tables")
     w()
     st_on, g_on = summary_table(d_on, "Results, instance limits ON (provider limits)", "T1", SRC["on"])
+    absolute_table(d_on, "T1b", "Absolute makespan and cost, instance limits ON (what the figures plot)", SRC["on"])
     st_off, g_off = summary_table(d_off, "Results, instance limits OFF", "T2", SRC["off"])
     g_mt = matched_table(d_on, d_off)
+    headline_table(g_on["all"])
     w("## Misses and feasibility")
     w()
     miss = misses_table(d_on, d_off)
@@ -1280,7 +1503,10 @@ def main():
     cause_tables(pub)
     w("## Disclosures")
     w()
+    u5s = u5_sensitivity_table(d_on, d_off)
     guard = guard_tables()
+    ablation_table(d_on, d_off)
+    u3_table(d_on, d_off)
     part2_table(d_on)
     economics_table()
     deviations_table()
@@ -1331,8 +1557,18 @@ def main():
         f"- Validation [T9]: Burst-HADS cost change vs HADS under hibernation {voff['cost_change']:+.1f}% against TCC23's {pub['cost_change']:+.2f}%; "
         f"makespan reduction {voff['mk_red']:.1f}% against {pub['mk_red']:.2f}%; Burst-HADS hibernation premium {voff['prem_b']:+.0f}% against {pub['prem_b']:+.0f}%, "
         f"HADS {voff['prem_h']:+.0f}% against {pub['prem_h']:+.0f}%.",
-        f"- Guard disclosure [T12]: removing it turns {guard['burst']['prot']} Burst-HADS and {guard['rburst']['prot']} R-BurstHADS clean runs into missing runs "
-        f"(reverse: {guard['burst']['harm']} and {guard['rburst']['harm']}).",
+        f"- Guard disclosure [T12b, the Round A grid that decided it]: removing it turns {guard['burst']['prot']} Burst-HADS and "
+        f"{guard['rburst']['prot']} R-BurstHADS clean runs into missing runs (reverse: {guard['burst']['harm']} and {guard['rburst']['harm']}).",
+    ]
+    frozen_on = u5s.get(("as frozen (U5 guard, no step 2)", "on"))
+    refp2_on = u5s.get(("reference-faithful: TCC23 §3.2 in full", "on"))
+    if frozen_on and refp2_on:
+        key.append(
+            f"- U5 sensitivity at freeze-fix21 [T12]: R-BurstHADS vs Burst-HADS cost {frozen_on['rbc']:+.1f}% as frozen against "
+            f"{refp2_on['rbc']:+.1f}% with TCC23 §3.2 followed in full (guard removed and the violators the burstables did not take "
+            f"sent to on-demand), makespan {frozen_on['rbmk']:+.1f}% against {refp2_on['rbmk']:+.1f}%; Burst-HADS missed tasks "
+            f"{frozen_on['miss_b']} against {refp2_on['miss_b']}. The reference-faithful row is the one to cite.")
+    key += [
         "",
     ]
     final = OUT[:3] + key + OUT[3:]

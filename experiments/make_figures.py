@@ -3,10 +3,17 @@ The six single-column figures of FIGURE_SPEC.md, from RESULTS_PACK.md only.
 
     python experiments\\make_figures.py      (from the project root)
 
+The set is orthogonal: cost and makespan, each against deadline factor,
+interruption scenario and bag size (owner, 2026-09-23). Every figure plots
+absolute values -- three real series, seconds and dollars, y axis from zero.
+Percentage changes against HADS live in the tables (T1, T27), never in a
+chart, so HADS is a plotted series here and not a zero line; `zero_line` is
+no longer used by this script.
+
 No simulation and no result file other than RESULTS_PACK.md is read: every
-plotted value is parsed out of the pack's markdown tables (T1, T5), so a
-figure cannot drift from the pack. Output: paper/fig/<stem>.pdf (plus a .png
-preview) via ieee_figs.save.
+plotted value is parsed out of the pack's T1b table, so a figure cannot drift
+from the pack. Output: paper/fig/<stem>.pdf (plus a .png preview) via
+ieee_figs.save.
 """
 import re
 import sys
@@ -17,10 +24,9 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
 import matplotlib
-import matplotlib.ticker
 matplotlib.rcParams["pdf.fonttype"] = 42    # TrueType, not Type 3: IEEE PDF eXpress rejects Type 3
 matplotlib.rcParams["ps.fonttype"] = 42
-from ieee_figs import single, save, grouped_bars, trend, zero_line, legend_above, C, INK, INK_SOFT, MARK, ZERO
+from ieee_figs import single, save, grouped_bars, trend, legend_above, INK, S
 
 import argparse
 _ap = argparse.ArgumentParser()
@@ -34,7 +40,7 @@ def table(ident):
     """Rows of the first markdown table under '### <ident>.' as dicts."""
     m = re.search(rf"^### {re.escape(ident)}\. .*?$", PACK, flags=re.M)
     if not m:
-        raise SystemExit(f"{ident} not found in RESULTS_PACK.md")
+        raise SystemExit(f"{ident} not found in {_ARGS.pack}")
     lines = PACK[m.end():].splitlines()
     start = next(i for i, l in enumerate(lines) if l.startswith("|"))
     rows = []
@@ -46,123 +52,87 @@ def table(ident):
     return rows
 
 
-def pct(s):
-    return float(s.replace("%", "").replace("−", "-"))
-
-
-T1 = {r["group"]: r for r in table("T1")}
-T5 = table("T5")
-
-B, R = "Burst-HADS", "R-BurstHADS"
+T1B = {r["group"]: r for r in table("T1b")}
+COL = {"mk": {k: f"{k} mk (s)" for k in S}, "cost": {k: f"{k} cost ($)" for k in S}}
 OUT = ROOT / _ARGS.outdir
 made = []
 
 
-def label_bars(ax, xs, vals, fmt, dy=2):
-    for x, v in zip(xs, vals):
-        ax.annotate(fmt.format(v).replace("-", "−"), xy=(x, v), xytext=(0, dy if v >= 0 else -dy),
-                    textcoords="offset points", ha="center",
-                    va="bottom" if v >= 0 else "top", fontsize=6, color=INK)
+def series(metric, groups):
+    """{scheduler: [value per group]} from T1b."""
+    return {k: [float(T1B[g][COL[metric][k]]) for g in groups] for k in S}
 
 
-def baseline_below(ax):
-    """zero_line, with its label under the line instead of over the right-most bar."""
-    zero_line(ax, label=None)
-    ax.annotate("HADS baseline", xy=(0.995, 0), xycoords=("axes fraction", "data"),
-                xytext=(0, -2), textcoords="offset points", ha="right", va="top",
-                fontsize=6, color=INK_SOFT)
+def from_zero(ax, vals, headroom=1.06):
+    ax.set_ylim(0, max(v for vs in vals.values() for v in vs) * headroom)
 
 
-# ── Fig. 1: headline trade-off, limits on, 75 fully feasible cells ─────────
-row = T1["all"]
-fig, ax = single()
-vals = {B: [pct(row["B mk vs H"]), pct(row["B $ vs H"])],
-        R: [pct(row["R mk vs H"]), pct(row["R $ vs H"])]}
-grouped_bars(ax, ["Makespan", "Cost"], vals, ylabel="Change vs HADS (%)")
-baseline_below(ax)
-w, g = 0.26, 0.02
-for k, name in enumerate((B, R)):
-    off = (k - 0.5) * (w + g)
-    label_bars(ax, [0 + off, 1 + off], vals[name], "{:+.1f}%")
-ax.set_ylim(-36, 30)
-legend_above(fig, ax)
-made.append(save(fig, "fig1_headline", outdir=str(OUT)))
+DFS = [0.25, 0.5, 1.0, 2.0]
+NS = [50, 100, 200, 300]
+SCS = ["sc1", "sc2", "sc3", "sc4", "sc5"]
+KHKR = {"sc1": "(1, 0)", "sc2": "(5, 0)", "sc3": "(1, 5)", "sc4": "(5, 5)", "sc5": "(3, 2.5)"}
+METRICS = {"cost": "Mean cost ($)", "mk": "Mean makespan (s)"}
 
-# ── Figs. 2, 3: cost / makespan against deadline slack ──────────────────────
-dfs = [0.25, 0.5, 1.0, 2.0]
-for stem, bcol, rcol, ylabel in (("fig2_cost_vs_df", "B $ vs H", "R $ vs H", "Cost change vs HADS (%)"),
-                                 ("fig3_makespan_vs_df", "B mk vs H", "R mk vs H", "Makespan change vs HADS (%)")):
+# ── Figs. 1, 2: cost / makespan against the deadline factor ─────────────────
+for stem, metric in (("fig1_cost_vs_df", "cost"), ("fig2_makespan_vs_df", "mk")):
     fig, ax = single()
-    vals = {B: [pct(T1[f"DF={d}"][bcol]) for d in dfs], R: [pct(T1[f"DF={d}"][rcol]) for d in dfs]}
-    trend(ax, dfs, vals, ylabel=ylabel, xlabel="Deadline factor DF")
+    vals = series(metric, [f"DF={d}" for d in DFS])
+    trend(ax, DFS, vals, ylabel=METRICS[metric], xlabel="Deadline factor DF")
     ax.set_xscale("log", base=2)
-    ax.set_xticks(dfs)
-    ax.set_xticklabels([str(d) for d in dfs])
+    ax.set_xticks(DFS)
+    ax.set_xticklabels([str(d) for d in DFS])
     ax.minorticks_off()
-    zero_line(ax)
+    from_zero(ax, vals)
     legend_above(fig, ax)
     made.append(save(fig, stem, outdir=str(OUT)))
 
-# ── Fig. 4: cost by interruption scenario ───────────────────────────────────
-scs = ["sc1", "sc2", "sc3", "sc4", "sc5"]
-khkr = {"sc1": "(1, 0)", "sc2": "(5, 0)", "sc3": "(1, 5)", "sc4": "(5, 5)", "sc5": "(3, 2.5)"}
-fig, ax = single()
-vals = {B: [pct(T1[s]["B $ vs H"]) for s in scs], R: [pct(T1[s]["R $ vs H"]) for s in scs]}
-grouped_bars(ax, [f"{s}\n{khkr[s]}" for s in scs], vals, ylabel="Cost change vs HADS (%)")
-ax.set_xlabel("Scenario (kh, kr)", color=INK)
-ax.set_ylim(-4, None)
-baseline_below(ax)
-legend_above(fig, ax)
-made.append(save(fig, "fig4_scenarios", outdir=str(OUT)))
+# ── Figs. 3, 4: cost / makespan by interruption scenario ────────────────────
+for stem, metric in (("fig3_cost_vs_scenario", "cost"), ("fig4_makespan_vs_scenario", "mk")):
+    fig, ax = single()
+    vals = series(metric, SCS)
+    grouped_bars(ax, [f"{s}\n{KHKR[s]}" for s in SCS], vals, ylabel=METRICS[metric])
+    ax.set_xlabel("Scenario (kh, kr)", color=INK)
+    from_zero(ax, vals)
+    legend_above(fig, ax)
+    made.append(save(fig, stem, outdir=str(OUT)))
 
-# ── Fig. 5: cost against bag size ───────────────────────────────────────────
-ns = [50, 100, 200, 300]
-fig, ax = single()
-vals = {B: [pct(T1[f"n={n}"]["B $ vs H"]) for n in ns], R: [pct(T1[f"n={n}"]["R $ vs H"]) for n in ns]}
-trend(ax, ns, vals, ylabel="Cost change vs HADS (%)", xlabel="Tasks in the bag, n")
-ax.set_xticks(ns)
-zero_line(ax)
-rb300 = T1["n=300"]["R $ vs B"]
-ax.annotate(f"n = 300: R-BurstHADS {rb300.replace('-', chr(0x2212))} vs Burst-HADS",
-            xy=(300, min(vals[B][-1], vals[R][-1])), xytext=(0, -7),
-            textcoords="offset points", ha="right", va="top", fontsize=6, color=INK_SOFT)
-legend_above(fig, ax)
-made.append(save(fig, "fig5_cost_vs_n", outdir=str(OUT)))
+# ── Figs. 5, 6: cost / makespan against bag size ────────────────────────────
+for stem, metric in (("fig5_cost_vs_n", "cost"), ("fig6_makespan_vs_n", "mk")):
+    fig, ax = single()
+    vals = series(metric, [f"n={n}" for n in NS])
+    trend(ax, NS, vals, ylabel=METRICS[metric], xlabel="Tasks in the bag, n")
+    ax.set_xticks(NS)
+    from_zero(ax, vals)
+    legend_above(fig, ax)
+    made.append(save(fig, stem, outdir=str(OUT)))
 
-# ── Fig. 6: limits on against limits off, both axes, the same cells ─────────
-# T2b holds both settings over identical cells (T1's and T2's "all" rows do not).
-T2B = {r["limits"]: r for r in table("T2b")}
-fig, ax = single()
-ax.axhline(0, color=ZERO, linewidth=0.7, zorder=1)
-ax.axvline(0, color=ZERO, linewidth=0.7, zorder=1)
-ax.annotate("HADS", xy=(0, 0), xytext=(3, 3), textcoords="offset points", fontsize=6, color=INK_SOFT)
-xs, ys = [0.0], [0.0]
-P6 = {name: [(pct(T2B[s][c_col]), pct(T2B[s][mk_col])) for s in ("on", "off")]
-      for name, mk_col, c_col in ((B, "B mk vs H", "B $ vs H"), (R, "R mk vs H", "R $ vs H"))}
-for (x_, y_) in [p for v in P6.values() for p in v]:
-    xs.append(x_)
-    ys.append(y_)
-x_mid = (min(xs) + max(xs)) / 2
-for name in (B, R):
-    marker, _ = MARK[name]
-    (x0, y0), (x1, y1) = P6[name]
-    ax.annotate("", xy=(x1, y1), xytext=(x0, y0), zorder=2,
-                arrowprops=dict(arrowstyle="-|>", color=C[name], lw=0.8, shrinkA=4, shrinkB=4, mutation_scale=7))
-    ax.plot([x0], [y0], marker=marker, linestyle="none", color=C[name], markeredgecolor="white",
-            markeredgewidth=0.5, markersize=6, label=f"{name}, limits on", zorder=3)
-    ax.plot([x1], [y1], marker=marker, linestyle="none", markerfacecolor="white", markeredgecolor=C[name],
-            markeredgewidth=1.0, markersize=6, label=f"{name}, limits off", zorder=3)
-    # Shift when limits are lifted, in points (off minus on over the same cells, T2b).
-    right = (x0 + x1) / 2 > x_mid          # keep the label inside the axes
-    ax.annotate(f"limits off: cost {x1 - x0:+.1f} pts, makespan {y1 - y0:+.1f} pts".replace("-", "−"),
-                xy=(max(x0, x1) if right else min(x0, x1), min(y0, y1)), xytext=(0, -8),
-                textcoords="offset points", ha="right" if right else "left", va="top",
-                fontsize=6, color=C[name])
-ax.set_xlabel("Cost change vs HADS (%)", color=INK)
-ax.set_ylabel("Makespan change vs HADS (%)", color=INK)
-ax.set_xlim(min(xs) - 3, max(xs) + 3)
-ax.set_ylim(min(ys) - 8, max(ys) + 4)
-legend_above(fig, ax)
-made.append(save(fig, "fig6_limits_on_off", outdir=str(OUT)))
+RECORD = [
+    ("fig1_cost_vs_df.pdf", "cost", [f"DF={d}" for d in DFS], [f"DF {d}" for d in DFS], "Mean cost ($) against the deadline factor"),
+    ("fig2_makespan_vs_df.pdf", "mk", [f"DF={d}" for d in DFS], [f"DF {d}" for d in DFS], "Mean makespan (s) against the deadline factor"),
+    ("fig3_cost_vs_scenario.pdf", "cost", SCS, [f"{s} {KHKR[s]}" for s in SCS], "Mean cost ($) by hibernation scenario"),
+    ("fig4_makespan_vs_scenario.pdf", "mk", SCS, [f"{s} {KHKR[s]}" for s in SCS], "Mean makespan (s) by hibernation scenario"),
+    ("fig5_cost_vs_n.pdf", "cost", [f"n={n}" for n in NS], [f"n = {n}" for n in NS], "Mean cost ($) against bag size"),
+    ("fig6_makespan_vs_n.pdf", "mk", [f"n={n}" for n in NS], [f"n = {n}" for n in NS], "Mean makespan (s) against bag size"),
+]
+rec = ["# Figures — record (not prose)", "",
+       "Generated by `experiments/make_figures.py` from `RESULTS_PACK.md` table **T1b** only "
+       "(values parsed from the table; nothing typed by hand), with `experiments/ieee_figs.py`, per "
+       "`experiments/FIGURE_SPEC.md`. Single column, one graph each, Times New Roman embedded as TrueType "
+       "(no Type 3).", "",
+       "The set is orthogonal: cost and makespan, each against deadline factor, scenario and bag size. "
+       "**Every figure plots absolute values** — three real series, seconds and dollars, y axis from zero. "
+       "Percentage changes against HADS are in the tables (T1, T27), never in a chart; HADS is a plotted "
+       "series, not a zero line.", "",
+       "Cells: the 75 where every scheduler is feasible in every seed, launch limits on [T1b].", ""]
+for stem, metric, groups, labels, title in RECORD:
+    vals = series(metric, groups)
+    fmt = (lambda v: f"{v:.4f}") if metric == "cost" else (lambda v: f"{v:.0f}")
+    rec.append(f"## {stem}")
+    rec.append(f"- {title}; source T1b, rows {', '.join(groups)}.")
+    for k in S:
+        rec.append(f"- {k}: " + ", ".join(f"{lab} {fmt(v)}" for lab, v in zip(labels, vals[k])))
+    rec.append("")
+(OUT / "FIGURES.md").write_text("\n".join(rec) + "\n", encoding="utf-8")
+made.append(str(OUT / "FIGURES.md"))
 
 print("\n".join(made))

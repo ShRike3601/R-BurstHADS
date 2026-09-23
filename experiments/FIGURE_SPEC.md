@@ -15,27 +15,33 @@ Use `single()` from `ieee_figs.py`. Do not use `double()` — it is left in
 the module only so old scripts still import, and it must not appear in this
 paper.
 
-## Two things the toolkit now enforces
+## Two things the toolkit enforces
 
 **Legend placement.** Three 8 pt legend entries do not fit across 3.4 in, so
-they used to sit on top of the plot. `legend_above()` now lays the legend
-out in two columns at 6.5 pt in a reserved strip above the axes, sized from
-the number of rows it actually needs.
+they used to sit on top of the plot. `legend_above()` lays the legend out in
+two columns at 6.5 pt in a reserved strip above the axes, sized from the
+number of rows it actually needs.
 
-**HADS is the zero line, not a series.** On any "change vs HADS" chart,
-plotting HADS gives a flat line at zero: an invisible set of bars and a
-wasted legend slot. Plot the other two schedulers and call `zero_line(ax)`,
-which draws and labels the baseline. HADS appears as a real series only in
-Fig. 6, where the quantity is absolute.
+**Absolute values, three real series, y axis from zero** (owner,
+2026-09-23). Every figure plots seconds or dollars, with HADS, Burst-HADS
+and R-BurstHADS all drawn. Percentage changes against HADS live in the
+tables and never in a chart.
+
+This reverses the earlier rule that HADS was the zero line and must not be
+plotted. `zero_line()` stays in `ieee_figs.py` for older scripts but is not
+used by any figure in this paper, and `make_figures.py` no longer imports
+it. A chart of changes hides the quantities being traded: at DF 0.25 a
+7 percentage-point difference is a few cents, at DF 2.0 the same difference
+is not, and the reader cannot see that from a bar of percentages.
 
 ## Placement
 
 ```latex
 \begin{figure}[!t]
   \centering
-  \includegraphics{fig/fig1_headline.pdf}   % NO width= — already 3.40in
+  \includegraphics{fig/fig1_cost_vs_df.pdf}   % NO width= — already 3.40in
   \caption{...}
-  \label{fig:headline}
+  \label{fig:cost-df}
 \end{figure}
 ```
 
@@ -60,72 +66,73 @@ marker and dash. That is the required secondary encoding — do not strip it.
 
 ## The six figures
 
-All numbers come from `RESULTS_PACK.md` only. Each figure names its table.
+The set is orthogonal: **cost and makespan, each against deadline factor,
+interruption scenario and bag size.** All six read one table, **T1b**
+(absolute cell-mean makespan and cost, limits on, the 75 cells where every
+scheduler is feasible in every seed). `make_figures.py` parses T1b out of
+`RESULTS_PACK.md`, so a figure cannot drift from the pack.
 
-**Fig. 1 — headline trade-off.** Grouped bars, two groups (makespan, cost),
-two series. Limits on. Source T1. This is what the abstract points at.
-Caption must state that these are the 75 cells feasible for every scheduler
-in every seed, and give the all-80-cell figures (26.4 % and 11.9 %) too.
+| figure | file | chart | x axis |
+|---|---|---|---|
+| 1 | `fig1_cost_vs_df.pdf` | three lines | DF ∈ {0.25, 0.5, 1.0, 2.0}, log₂ |
+| 2 | `fig2_makespan_vs_df.pdf` | three lines | the same |
+| 3 | `fig3_cost_vs_scenario.pdf` | grouped bars | sc1–sc5, labelled with (kh, kr) |
+| 4 | `fig4_makespan_vs_scenario.pdf` | grouped bars | the same |
+| 5 | `fig5_cost_vs_n.pdf` | three lines | n ∈ {50, 100, 200, 300} |
+| 6 | `fig6_makespan_vs_n.pdf` | three lines | the same |
 
-**Fig. 2 — cost against deadline slack.** Two lines over
-DF ∈ {0.25, 0.5, 1.0, 2.0}. Source T1/T3. Shows R-BurstHADS crossing from
-dearer to cheaper as slack grows. Set `ax.set_xticks(x)` explicitly.
+Lines for DF and n because both are ordered magnitudes; bars for scenarios
+because they are categories. Cost figures are in dollars, makespan figures
+in seconds, both axes starting at zero.
 
-**Fig. 3 — makespan against deadline slack.** Two lines, same x axis.
-Source T1/T3. Separate from Fig. 2 because four lines on one axis at this
-width is unreadable, and because the two quantities move in opposite
-directions — which is the point.
+## What the captions must say
 
-**Fig. 4 — cost by interruption scenario.** Grouped bars over sc1–sc5, two
-series. Source T5/T1. This is where sc3 appears and where the sc1 weakness
-is visible instead of buried in an average.
+Each caption names the cell set (75 cells, limits on, every scheduler
+feasible in every seed) and points at the table holding the percentage
+changes for the same cells (T1, and T27 for the headline pair). Cite pack
+cells rather than repeating numbers here, so this file cannot go stale
+against the pack.
 
-**Fig. 5 — cost against bag size.** Two lines over n ∈ {50, 100, 200, 300}.
-Source T1/T3. Include this specifically because the advantage *reverses*:
-at n = 300 R-BurstHADS is 1.1 % more expensive than Burst-HADS. A figure
-that shows its own limit is worth more than one that doesn't.
-
-**Fig. 6 — missed tasks.** Grouped bars, two groups (limits on, limits off),
-three series — here HADS is a real series. Source T5/T7. Under limits:
-HADS 0, Burst-HADS 1 task in 1 run, R-BurstHADS 109 tasks in 104 runs.
-Without limits all three miss nothing.
-
-## Wording the figures and captions must respect
-
-Claude Code's audit of the results pack found three lead claims that do not
-match the data. Use the corrected forms everywhere, including captions:
-
-- The cost premium falls from 21.3 % to 12.9 %, an **8.4-point cut — 39 % of
-  the premium**. Not "roughly half".
-- R-BurstHADS is **not the only scheduler that misses**: Burst-HADS misses
-  1 task in 1 run under limits. HADS misses none.
-- The misses are **not demonstrably "caused by the cap"**. Every missing run
-  had hit a launch limit, but so had 93.5 % of its clean runs, so hitting a
-  limit does not single out the misses. The evidence is the matched
-  counterfactual: the same 7,200 runs without limits miss nothing.
-- 27.9 % and 12.7 % are over the 75 fully feasible cells; over all 80 they
-  are 26.4 % and 11.9 %. State which is which.
-- Under limits R-BurstHADS is significantly **slower** than Burst-HADS in 9
-  cells and **dearer** in 7. This belongs in Fig. 4's or Fig. 5's caption.
+- **Makespan is the primary claim, qualified** (owner, 2026-09-23). It holds
+  in every working configuration measured. The qualification travels with
+  it: at DF 0.5 the advantage over Burst-HADS is roughly a wash, with more
+  cells significantly slower than faster [T1 DF=0.5]. Figs. 2, 4 and 6
+  carry it.
+- **Cost is conditional**, and the condition belongs in the cost captions:
+  the cost advantage over Burst-HADS depends on the retained U5 guard and on
+  launch headroom [T12, T2b], and it reverses without hibernation
+  [`u5_nohib_compare.txt`], which is expected of a scheduler that provisions
+  in anticipation of interruptions.
+- **Dominance** means both cell means no greater, means only [T1 caption].
+- **Misses** are floor-cell rescues, and the floor cells are excluded from
+  the averages: state which figure covers which cells [T5, T6].
+- Never present a composed percentage (a ratio of two averaged changes) as
+  measured; the pack marks the premium share as derived.
 
 ## Everything else is a table
 
-The results pack already holds them. Map straight across:
+The results pack holds them. Map straight across:
 
 | paper table | pack source |
 |---|---|
 | instance catalogue | T15 |
-| experiment grid | T2 |
-| headline results, limits on / off, ± 95 % CI | T1, T2 |
-| per-cell means ± CI | T3, T4 |
+| experiment grid | pack header |
+| headline trade-off against HADS (the former Fig. 1) | T27, with T1 |
+| headline results, limits on and off | T1, T2, T2b |
+| limits on against limits off (the former Fig. 6) | T2b |
+| absolute makespan and cost behind the figures | T1b |
+| per-cell means ± 95 % CI | T3, T4 |
 | both miss measures, infeasible runs | T5, T6, T7 |
-| validation against TCC23, incl. what fails | T8–T11, T14 |
-| deviation register (appendix) | T12, T13, T16, T17 |
+| validation against TCC23, including what fails | T8–T11, T14 |
+| the U5 sensitivity, the guard and the reference-faithful Part 2 | T12 |
+| deviation register and adoption checks | T16, T17 |
+| post-freeze fixes and the deploy-time invariant | T18–T26 |
 
-T6 (validation failures) and the deviation register are not padding. They
-turn "our baselines do not reproduce TCC23's hibernation cost" from a hole
-into a disclosed, quantified limitation, and they are what makes the rest
-of the paper credible.
+T8–T11 and T14 (the validation failures) and the deviation register are not
+padding. They turn "our baselines do not reproduce TCC23's hibernation cost"
+from a hole into a disclosed, quantified limitation, and they are what makes
+the rest of the paper credible.
 
-Six figures, seven tables. That satisfies "many comparisons" without a
-single float landing in the wrong place.
+**The limits result gets its own called-out paragraph in the results text**
+(owner, 2026-09-23), not only a table row: it is the strongest finding in
+the work, and as a row in T2b it disappears.

@@ -12,7 +12,8 @@ Frozen simulator: tag `freeze-fix21`, code fingerprint `2439a00d7f74`. Generated
 - R-BurstHADS runs with a miss that had reached a launch limit [T7]: 5 of 5; runs without a miss that had: 2276 of 2395. Same units with limits off: 0 missed tasks.
 - Infeasible runs [T6]: 110 with limits on, 0 with limits off.
 - Validation [T9]: Burst-HADS cost change vs HADS under hibernation +17.9% against TCC23's +1.92%; makespan reduction 21.8% against 25.87%; Burst-HADS hibernation premium +43% against +25%, HADS +110% against +95%.
-- Guard disclosure [T12]: removing it turns 85 Burst-HADS and 92 R-BurstHADS clean runs into missing runs (reverse: 0 and 3).
+- Guard disclosure [T12b, the Round A grid that decided it]: removing it turns 85 Burst-HADS and 92 R-BurstHADS clean runs into missing runs (reverse: 0 and 3).
+- U5 sensitivity at freeze-fix21 [T12]: R-BurstHADS vs Burst-HADS cost -4.6% as frozen against +2.4% with TCC23 §3.2 followed in full (guard removed and the violators the burstables did not take sent to on-demand), makespan -12.0% against -4.5%; Burst-HADS missed tasks 6 against 3204. The reference-faithful row is the one to cite.
 
 
 Conventions. A cell is (scenario, n, DF). "X vs Y" in every table is the change of X's cell mean against Y's, averaged over the cells named, computed from the runs of the two schedulers it names. R-BurstHADS dominates Burst-HADS in a cell when both its mean makespan and its mean cost are no greater than Burst-HADS's; the count uses means only, so it moves when a cell's mean crosses the boundary on either axis, however small the move (T26). Significant counts use the paired per-seed 95% CI. A run counts as changed between two result sets when its makespan differs by more than 1e-9 s, its cost by more than 1e-12 $, or its missed-task count differs; reproduction checks compare exactly.
@@ -40,6 +41,27 @@ Source: `experiments/sweep_raw_2439a00d7f74.jsonl`. Cells where every scheduler 
 | n=200 | 20 | 96% | -21.4% | +14.3% | -25.7% | +10.7% | -8.3% | -2.9% | 13/20 | 11 / 4 | 9 / 3 |
 | n=300 | 20 | 98% | -24.1% | +11.5% | -27.7% | +11.3% | -7.6% | -0.2% | 12/20 | 10 / 4 | 3 / 2 |
 | all 80 cells, feasible seeds only | 80 | 94% | -18.4% | +18.2% | -26.0% | +11.5% | -11.3% | -4.3% | 49/80 | 43 / 9 | 25 / 8 |
+
+### T1b. Absolute makespan and cost, instance limits ON (what the figures plot)
+
+Source: `experiments/sweep_raw_2439a00d7f74.jsonl`. The 75 cells where every scheduler is feasible in every seed, grouped as T1. Makespan in seconds, cost in dollars; each value is the mean over the group's cells of the cell's mean over its 30 seeds. **These are the numbers the six figures plot** (`experiments/make_figures.py`); the percentage changes against HADS are in T1, not in the figures.
+
+| group | cells | HADS mk (s) | Burst-HADS mk (s) | R-BurstHADS mk (s) | HADS cost ($) | Burst-HADS cost ($) | R-BurstHADS cost ($) |
+|---|---|---|---|---|---|---|---|
+| all | 75 | 1823 | 1156 | 1008 | 0.2130 | 0.2402 | 0.2345 |
+| DF=0.25 | 15 | 608 | 578 | 575 | 0.2898 | 0.3250 | 0.3219 |
+| DF=0.5 | 20 | 949 | 913 | 913 | 0.1989 | 0.2369 | 0.2416 |
+| DF=1.0 | 20 | 1840 | 1436 | 1254 | 0.1893 | 0.2060 | 0.2031 |
+| DF=2.0 | 20 | 3593 | 1552 | 1181 | 0.1932 | 0.2139 | 0.1932 |
+| sc1 | 15 | 1880 | 1020 | 828 | 0.1709 | 0.2151 | 0.2003 |
+| sc2 | 15 | 1936 | 1472 | 1323 | 0.2378 | 0.2820 | 0.2832 |
+| sc3 | 15 | 1761 | 963 | 806 | 0.1845 | 0.2161 | 0.2044 |
+| sc4 | 15 | 1730 | 1177 | 1070 | 0.2422 | 0.2469 | 0.2499 |
+| sc5 | 15 | 1809 | 1150 | 1011 | 0.2297 | 0.2406 | 0.2348 |
+| n=50 | 20 | 524 | 447 | 340 | 0.0835 | 0.0971 | 0.0878 |
+| n=100 | 15 | 1235 | 865 | 710 | 0.1223 | 0.1487 | 0.1412 |
+| n=200 | 20 | 2121 | 1324 | 1182 | 0.2548 | 0.2859 | 0.2797 |
+| n=300 | 20 | 3266 | 1915 | 1724 | 0.3688 | 0.4060 | 0.4059 |
 
 ### T2. Results, instance limits OFF
 
@@ -71,6 +93,16 @@ Sources: `experiments/sweep_raw_2439a00d7f74.jsonl`, `experiments/sweep_variant_
 | on | 75 | 93% | -19.6% | +19.0% | -27.7% | +11.8% | -12.0% | -4.6% | 49/75 | 42 / 9 | 25 / 8 |
 | off | 75 | 94% | -19.5% | +20.3% | -32.0% | +1.9% | -17.6% | -14.1% | 67/75 | 66 / 0 | 53 / 2 |
 | off − on | 75 | +0 pts | +0.1 pts | +1.3 pts | -4.3 pts | -9.9 pts | -5.6 pts | -9.5 pts | +18 | +24 / -9 | +28 / -6 |
+
+### T27. Headline trade-off against HADS, limits on (replaces the former Fig. 1)
+
+Source: `experiments/sweep_raw_2439a00d7f74.jsonl`, the 75 cells where every scheduler is feasible in every seed. The same numbers as T1's "all" row, isolated because the paper cites them together. Absolute values: T1b.
+
+| scheduler | makespan vs HADS | cost vs HADS | dominates Burst-HADS |
+|---|---|---|---|
+| Burst-HADS | -19.6% | +19.0% | — |
+| R-BurstHADS | -27.7% | +11.8% | 49/75 cells |
+| R-BurstHADS vs Burst-HADS | -12.0% | -4.6% | significantly faster in 42, slower in 9; cheaper in 25, dearer in 8 |
 
 ## Misses and feasibility
 
@@ -294,7 +326,7 @@ Sources: `experiments/diag_cost_gap_fix21_nocap_c3.json`, `experiments/tcc23_tab
 
 ### T11. Fidelity audit trajectory on the validation catalogue (limits off)
 
-How the baseline changes adopted in Rounds A–B moved the validation numbers. Each row is a committed run of the same 1,440 units (4 jobs × 6 scenarios × 30 seeds × 2 schedulers). Fix numbers and deviation IDs refer to CLAUDE.md and DEVIATIONS.md.
+How the baseline changes adopted in Rounds A–B and in the post-freeze rounds (fixes 17a–20, 21) moved the validation numbers. Each row is a committed run of the same 1,440 units (4 jobs × 6 scenarios × 30 seeds × 2 schedulers). Fix numbers and deviation IDs refer to CLAUDE.md and DEVIATIONS.md.
 
 | state | source | B vs H cost (Table 9) | makespan reduction | HADS premium | Burst-HADS premium | J60 no-hib mk change | J60 no-hib cost change |
 |---|---|---|---|---|---|---|---|
@@ -333,7 +365,28 @@ Sources: `experiments/diag_cost_gap_nocap_c3.json` (state before Round B: fixes 
 
 ## Disclosures
 
-### T12. Disclosure: the retained proactive-burstable guard (DEVIATIONS U5)
+### T12. U5 sensitivity: the guard and the missing §3.2 step, freeze-fix21
+
+Sources: `experiments/sweep_raw_2439a00d7f74.jsonl`, `experiments/sweep_variant_nocap_2439a00d7f74.jsonl` and the variant sweeps named below; pre-registrations `experiments/u5_remeasure_plan.md` and `experiments/ref_p2_plan.md`. Burst-HADS and R-BurstHADS change together (they share the primary schedule); HADS rows come from the baselines. Each set is averaged over its own complete cells, and the cell count is given because a configuration that misses deadlines does not change which cells are feasible — feasibility is decided by the primary schedule. **The paper cites the reference-faithful row**: TCC23 §3.2 sends the violators the burstables did not take to the cheapest regular on-demand VMs, so removing the guard alone measures half of the reference and flatters our choice.
+
+| configuration | limits | cells | R mk vs B | R $ vs B | R dominates B | B mk vs H | B $ vs H | missed tasks B / R | runs with a miss B / R |
+|---|---|---|---|---|---|---|---|---|---|
+| as frozen (U5 guard, no step 2) | on | 75 | -12.0% | -4.6% | 49/75 | -19.6% | +19.0% | 6 / 5 | 6 / 5 |
+| as frozen (U5 guard, no step 2) | off | 80 | -16.5% | -13.2% | 67/80 | -18.4% | +19.5% | 2 / 3 | 2 / 3 |
+| guard removed only — neither ours nor TCC23's | on | 75 | -4.5% | +2.6% | 31/75 | +32.0% | +73.2% | 2981 / 2978 | 980 / 980 |
+| guard removed only — neither ours nor TCC23's | off | 80 | -7.5% | -4.2% | 40/80 | +42.4% | +82.9% | 3121 / 3121 | 980 / 980 |
+| the missing step 2 alone, guard kept | on | 75 | -11.7% | -4.5% | 52/75 | -16.8% | +23.1% | 302 / 299 | 191 / 190 |
+| the missing step 2 alone, guard kept | off | 80 | -16.0% | -12.8% | 71/80 | -15.7% | +23.6% | 229 / 220 | 151 / 144 |
+| reference-faithful: TCC23 §3.2 in full | on | 75 | -4.5% | +2.4% | 35/75 | +32.0% | +72.9% | 3204 / 3208 | 981 / 981 |
+| reference-faithful: TCC23 §3.2 in full | off | 80 | -7.5% | -4.2% | 46/80 | +42.4% | +83.0% | 3357 / 3350 | 981 / 981 |
+
+Two further measurements on the same configurations:
+
+- **No hibernation** (scenario `none`, 480 runs per scheduler, limits on), guard kept: Burst-HADS misses 0 tasks in 0 runs (0.0%). The guard-free failure rate is the same without hibernation as with it, so it is not a hibernation-rescue effect (`u5_nohib_compare.txt`).
+- **No hibernation** (scenario `none`, 480 runs per scheduler, limits on), guard removed: Burst-HADS misses 595 tasks in 196 runs (40.8%). The guard-free failure rate is the same without hibernation as with it, so it is not a hibernation-rescue effect (`u5_nohib_compare.txt`).
+- **What Part 2 leaves behind** (`experiments/diag_part2.txt`): with the guard, 575 of 2,400 runs reach Part 2 with Dspot violators on spot and it leaves 12,150 of the 12,345 there, none planned past D. Under §3.2 they would go to on-demand VMs. All of those runs are at DF 0.25 and DF 0.5.
+
+### T12b. How the U5 guard was decided: the Round A closing grid (historical)
 
 Sources: `experiments/sweep_variant_grid_g1e1_519c868a99f9.jsonl` (guard on) and `experiments/sweep_variant_grid_g0e1_519c868a99f9.jsonl` (guard off), both with billing from launch, Allocation Cycles over uptime and launched-only migration, sweep catalogue, limits on, seeds 0–9; `experiments/diag_cost_gap_nocap_grid_g1e1_c3.json` and `experiments/diag_cost_gap_nocap_grid_g0e1_c3.json` (validation catalogue, limits off). Decision rule pre-registered in `experiments/round_a_grid_plan.md` (commit ec52967): the guard is kept iff removing it turns more runs with no missed task into runs with one than the reverse, for Burst-HADS or R-BurstHADS, in either catalogue.
 
@@ -347,8 +400,36 @@ What the guard does to the comparison (sweep catalogue, cells where every schedu
 
 | guard | cells | R vs B makespan | R vs B cost | R dominates B | Burst-HADS hibernation premium, validation catalogue |
 |---|---|---|---|---|---|
-| kept (frozen code) | 55 | -17.9% | -5.3% | 34/55 | +39% |
-| removed | 55 | -6.7% | +5.8% | 14/55 | +17% |
+| kept (Round A grid) | 55 | -17.9% | -5.3% | 34/55 | +39% |
+| removed (Round A grid) | 55 | -6.7% | +5.8% | 14/55 | +17% |
+
+### T28. Ablation: R-BurstHADS without its burstable branch
+
+Sources: `experiments/sweep_variant_no_burst_branch_2439a00d7f74.jsonl`, `experiments/sweep_variant_nocap+no_burst_branch_2439a00d7f74.jsonl`, against `experiments/sweep_raw_2439a00d7f74.jsonl` and `experiments/sweep_variant_nocap_2439a00d7f74.jsonl`. Only R-BurstHADS changes. The branch is the one place a burstable is created mid-run (tier 3 and the saturation response); with it disabled the task goes to Algorithm 4's on-demand attempt instead. In the disabled sets R-BurstHADS launches exactly Burst-HADS's t3.large count, i.e. the branch fires in no run. **The ablation is reported, not acted on**: it was measured after the evaluation was designed, and the tier is kept as pre-registered.
+
+| limits | branch | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | R missed tasks | R runs with a miss | R runs changed |
+|---|---|---|---|---|---|---|---|---|---|---|
+| on | with branch | 75 | -12.0% | -4.6% | 49/75 | 42 / 9 | 25 / 8 | 5 | 5 | — |
+| on | disabled | 75 | -14.0% | -9.1% | 65/75 | 54 / 0 | 51 / 2 | 5 | 5 | 682/2400 |
+| off | with branch | 80 | -16.5% | -13.2% | 67/80 | 66 / 0 | 53 / 4 | 3 | 3 | — |
+| off | disabled | 80 | -16.6% | -13.6% | 67/80 | 69 / 0 | 56 / 3 | 3 | 3 | 278/2400 |
+
+### T29. U3: Burst-HADS's Phase 3 on-demand fallback, and the reference-faithful cell set
+
+Sources: `experiments/diag_launch21_adopted.json` (which launch site opened each VM), `experiments/sweep_raw_2439a00d7f74.jsonl`, `experiments/sweep_variant_nocap_2439a00d7f74.jsonl`. The reference `IPDPS.py` raises "no solution" where our `_initial_solution` reaches Phase 3. The initial solution is a deterministic greedy pass that runs before any search, so a reference-faithful Burst-HADS — and R-BurstHADS, which shares the primary schedule — would be infeasible in exactly the runs where Phase 3 placed a task, and the evaluation would drop those cells. Limits off was not probed; the limits-on units are used as a proxy there.
+
+| scheduler | runs using the on-demand phase | DF 0.25 / 0.5 / 1.0 / 2.0 | in the floor cells (of 150) |
+|---|---|---|---|
+| HADS (HADS's Phase (c) is in the reference; shown for comparison) | 905 of 2400 | 600 / 305 / 0 / 0 | 150 |
+| Burst-HADS | 905 of 2400 | 600 / 305 / 0 / 0 | 150 |
+| R-BurstHADS | 905 of 2400 | 600 / 305 / 0 / 0 | 150 |
+
+| limits | comparison | cells | B mk vs H | B $ vs H | R mk vs B | R $ vs B | R dominates B |
+|---|---|---|---|---|---|---|---|
+| on | as frozen (U3 kept) | 75 | -19.6% | +19.0% | -12.0% | -4.6% | 49/75 |
+| on | reference-faithful: Phase-3 cells dropped | 45 | -27.8% | +23.4% | -19.1% | -7.5% | 33/45 |
+| off (proxy) | as frozen (U3 kept) | 80 | -18.4% | +19.5% | -16.5% | -13.2% | 67/80 |
+| off (proxy) | reference-faithful: Phase-3 cells dropped | 45 | -27.8% | +24.1% | -26.5% | -17.9% | 43/45 |
 
 ### T13. Effect of the three-type on-demand catalogue alone (DEVIATIONS E1/E3), main sweep, limits on, seeds 0–9
 
@@ -387,18 +468,20 @@ Sources: `main.py` (`build_vms_dburst`, the sweep catalogue) and `experiments/pa
 
 Source: `DEVIATIONS.md`. Rows counted by section and by the first word of their Status cell.
 
-| section | corrected | design | kept | open | total |
-|---|---|---|---|---|---|
-| Cost and billing model | 1 | 2 | 0 | 2 | 5 |
-| Burst-HADS (TCC23, REF `IPDPS.py`) | 4 | 4 | 1 | 1 | 10 |
-| HADS (CC21, REF `CCScheduler.py`) | 2 | 2 | 0 | 0 | 4 |
-| Environment, catalogue and workload | 3 | 5 | 0 | 2 | 10 |
-| **all** | 10 | 13 | 1 | 5 | 29 |
+| section | corrected | design | inert | kept | open | total |
+|---|---|---|---|---|---|---|
+| Cost and billing model | 1 | 2 | 0 | 0 | 2 | 5 |
+| Burst-HADS (TCC23, REF `IPDPS.py`) | 4 | 4 | 1 | 1 | 2 | 12 |
+| HADS (CC21, REF `CCScheduler.py`) | 2 | 2 | 0 | 0 | 0 | 4 |
+| Environment, catalogue and workload | 5 | 6 | 0 | 0 | 3 | 14 |
+| R-BurstHADS (this study's scheduler) | 3 | 1 | 0 | 0 | 1 | 5 |
+| **all** | 15 | 15 | 1 | 1 | 8 | 40 |
 
-- corrected: B1, U1, U2, U4, U6, H2, H4, E1, E3, E10
-- design: B3, B4, U3, U7, U8, U9, H1, H3, E2, E4, E5, E7, E9
+- corrected: B1, U1, U2, U4, U6, H2, H4, E1, E3, E10, E11, E12, R1, R4, R5
+- design: B3, B4, U3, U7, U8, U9, H1, H3, E2, E4, E5, E7, E9, E14, R3
+- inert: U10
 - kept: U5
-- open: B2, B5, U10, E6, E8
+- open: B2, B5, U11, U12, E6, E8, E13, R2
 
 ### T17. Adopted code reproduces the pre-registered variant, row for row (Round B part 1; fixes 17a–20)
 
@@ -892,7 +975,8 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 
 | file | SHA-256 (first 16) | last changed in commit |
 |---|---|---|
-| `DEVIATIONS.md` | `8d3e19ae98a1d62b` | `b5a8553` |
+| `DEVIATIONS.md` | `5e237c69acafd4e6` | `b5a8553` |
+| `experiments/diag_capped.txt` | `32c9f551bf0275aa` | `0509b29` |
 | `experiments/diag_cost_gap_fix20_capped_c3.json` | `2d6a1193e6b180fb` | `7be365a` |
 | `experiments/diag_cost_gap_fix20_nocap_c3.json` | `02440b12ee2ab44c` | `7be365a` |
 | `experiments/diag_cost_gap_fix21_capped_c3.json` | `565da4cb6c0bb27b` | `ca3b23a` |
@@ -909,12 +993,15 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/diag_cost_gap_nocap_mig_launched_c3.json` | `5f3d0ace022c5b72` | `eeba129` |
 | `experiments/diag_cost_gap_nocap_mig_launched_launch_bill_c3.json` | `ba49a1c677464038` | `b5a8553` |
 | `experiments/diag_cost_gap_nocap_no_release_c3.json` | `4bada115de356ad1` | `eeba129` |
+| `experiments/diag_cost_gap_p2od_nocap_c3.json` | `76d3cfda189a8b6b` | `UNCOMMITTED` |
 | `experiments/diag_cost_gap_rb1_verify_c3.json` | `4f4cf5a35fbcf03c` | `42bff94` |
+| `experiments/diag_cost_gap_refp2_nocap_c3.json` | `0916cab19eee81df` | `UNCOMMITTED` |
 | `experiments/diag_launch21_adopted.json` | `8c1dbe79feb3bdac` | `ca3b23a` |
 | `experiments/diag_launch21_base.json` | `d56acd623b955928` | `25a0419` |
 | `experiments/diag_launch21_f21.json` | `8c1dbe79feb3bdac` | `25a0419` |
 | `experiments/diag_launch21_f21b.json` | `6589c60faaf3e04c` | `25a0419` |
 | `experiments/diag_overcredit_boot.json` | `d049bebf5a63d279` | `c11c300` |
+| `experiments/diag_part2.txt` | `87a372e5c39096e9` | `9414054` |
 | `experiments/diag_u10.json` | `e53504f0c84f1458` | `3772258` |
 | `experiments/diag_u10_verify.txt` | `c47efe5874fefd33` | `8901181` |
 | `experiments/diag_u10_window.txt` | `0b34e03085f6c4f6` | `7be365a` |
@@ -928,6 +1015,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/sweep_variant_base_2c6576897779.jsonl` | `6ce0d741430ad06f` | `42bff94` |
 | `experiments/sweep_variant_boot_u10_4f08f48ac35c.jsonl` | `3b1db9fa41e6e759` | `8901181` |
 | `experiments/sweep_variant_boot_wait_4f08f48ac35c.jsonl` | `c404bf11c9e469a6` | `c11c300` |
+| `experiments/sweep_variant_burst_fill_2439a00d7f74.jsonl` | `b7c0ce3d25752ef7` | `95f4ded` |
 | `experiments/sweep_variant_ckpt_exec_4f08f48ac35c.jsonl` | `2305cfd21e4fa5fa` | `c11c300` |
 | `experiments/sweep_variant_f17a_4f08f48ac35c.jsonl` | `21cecfb5f1608697` | `c11c300` |
 | `experiments/sweep_variant_f17ab_4f08f48ac35c.jsonl` | `850010fe3d88dd23` | `c11c300` |
@@ -950,8 +1038,18 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/sweep_variant_fx_no20_4f08f48ac35c.jsonl` | `77545c7f099a2488` | `8901181` |
 | `experiments/sweep_variant_grid_g0e1_519c868a99f9.jsonl` | `088922105975925d` | `b5a8553` |
 | `experiments/sweep_variant_grid_g1e1_519c868a99f9.jsonl` | `ee4fdd99ec89e2f3` | `b5a8553` |
+| `experiments/sweep_variant_no_burst_branch_2439a00d7f74.jsonl` | `ce8b169cfedc04fc` | `95f4ded` |
+| `experiments/sweep_variant_nocap+burst_fill_2439a00d7f74.jsonl` | `1f937262779098d3` | `95f4ded` |
+| `experiments/sweep_variant_nocap+no_burst_branch_2439a00d7f74.jsonl` | `f6bf22c02b73faa1` | `95f4ded` |
+| `experiments/sweep_variant_nocap+p2_od_2439a00d7f74.jsonl` | `93751f11b44f85c1` | `UNCOMMITTED` |
+| `experiments/sweep_variant_nocap+ref_p2_2439a00d7f74.jsonl` | `394161f96d15412b` | `UNCOMMITTED` |
 | `experiments/sweep_variant_nocap_2439a00d7f74.jsonl` | `ce11fe8547249e29` | `ca3b23a` |
+| `experiments/sweep_variant_p2_od_2439a00d7f74.jsonl` | `48a071fd15b20789` | `UNCOMMITTED` |
+| `experiments/sweep_variant_ref_p2_2439a00d7f74.jsonl` | `9cd477361ca198cf` | `UNCOMMITTED` |
 | `experiments/sweep_variant_u10_ovh_4f08f48ac35c.jsonl` | `2c6ba4a99a7c5b44` | `3772258` |
+| `experiments/sweep_variant_u5nohib_kept_2439a00d7f74.jsonl` | `bda7e9f5701ed91a` | `0509b29` |
+| `experiments/sweep_variant_u5nohib_removed_2439a00d7f74.jsonl` | `8ee9fd8317a16be2` | `0509b29` |
 | `experiments/tcc23_tables.py` | `e8a9e9a652c58007` | `9629ff2` |
+| `experiments/u3_exposure.txt` | `59afdf5c50d50230` | `309dd6b` |
 | `main.py` | `6428a2790fc8f668` | `685d80d` |
 

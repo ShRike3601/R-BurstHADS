@@ -53,8 +53,11 @@ wants many comparison figures and tables.
    Round B: adopt the settled fidelity fixes, rerun the sweep with and
    without instance limits, then FREEZE the simulator and tag the commit.
    Round C: final sweep, confidence intervals, write-up — no code changes.
-   After the freeze, a newly found defect goes into the paper's
-   limitations, not into the code. Between now and the freeze a baseline
+   After `freeze-round-b` the owner lifted the freeze twice, for fixes
+   17a–20 and for fix 21, each pre-registered. From `freeze-fix21` a newly
+   found defect goes into DEVIATIONS.md as a limitation, not into the code;
+   measurement runs (pre-registered counterfactuals and diagnostics)
+   continue. While a freeze is lifted, a baseline
    change is allowed only for (a) an asymmetry, (b) a dimensional error,
    (c) code contradicting its own specification, or (d) a defect that
    makes a baseline worse than published — never because the baseline's
@@ -116,12 +119,16 @@ folder. Start sessions in this folder.
   10), and must list-schedule a queue in **execution order**, memory
   descending, because multi-core list scheduling is order-dependent
   (fix 11). The HADS / Burst-HADS `_attempt_ondemand_fallback` deadline
-  test (start + omega + remaining / speed) omits the overhead. That was
-  harmless while there was one on-demand type; since fix 16 it picks the
-  TYPE, so it can choose a cheaper type that then finishes past D. Found
-  while writing fix 16, unmeasured, not fixed: DEVIATIONS U10. The Section
+  test is start + omega + remaining / speed × (1 + ovh) (fix 20). It
+  changes no run in either catalogue, because no dearer on-demand type
+  runs a task faster than a cheaper one (DEVIATIONS U10). The Section
   3.4 spare-time margin deliberately uses `exec_time / speed`, as the paper
   states it.
+- **Deploy time.** Every VM a scheduler launches, at t = 0 or mid-run, runs
+  no task before launch + `STARTUP_LATENCY` (45 s, `VM.ready_time`), and
+  every finish predicted on it charges that, as execution does (fixes 18,
+  21). Only the builder's initial fleet, deployed by a primary schedule at
+  t = 0, is exempt.
 - Eq 9: an infeasible candidate scores 1.0, which is only an upper bound
   on feasible scores if normalised cost is <= 1, so the normaliser covers
   every VM the search can use — the spot pool plus the initial solution's
@@ -137,14 +144,23 @@ folder. Start sessions in this folder.
   run**, not an error. Migration at a spent limit places the task on the
   active VM that would finish it soonest (the reference leaves it
   unallocated, which would drop it from every metric; launches forced past
-  a limit are counted in `limit_overrides`: 0 in all 7,200 freeze-sweep
-  runs). R-BurstHADS's own provisioning is limited too. The pool holds
-  `SPOT_COPIES = 3` spot VMs per type, under the limit of 5, so the spot
-  limit binds only on R-BurstHADS's launches — and at the freeze it binds
-  hard (Where the result stands).
-- Feasibility is decided by the primary schedule. At the freeze only HADS
-  is ever infeasible (10 runs, n=100 at the DF=0.25 deadline floor), so
-  cross-scheduler cell means exclude a cell with an infeasible HADS seed.
+  a limit are counted in `limit_overrides`: 0 in all 7,200 runs of the
+  freeze-fix21 sweep; the fallback itself placed a task on an active VM in
+  only 12 Burst-HADS and 11 R-BurstHADS runs, all at DF 0.25,
+  `diag_capped.txt`). R-BurstHADS's own provisioning is limited too. The
+  pool holds `SPOT_COPIES = 3` spot VMs per type, under the limit of 5, so
+  the spot limit binds only on R-BurstHADS's launches: at freeze-fix21 it
+  reaches a launch limit in 2,281 of its 2,400 runs [T7], and the spot
+  limit is what selects 1,401 of its 1,453 mid-run burstables [T24].
+- Feasibility is decided by the primary schedule. At freeze-fix21 only HADS
+  is ever infeasible: 110 runs, all in the five n = 100, DF = 0.25 cells at
+  the deadline floor [T6], so cross-scheduler cell means exclude a cell
+  with an infeasible HADS seed. Its t = 0 on-demand VMs now wait their
+  deploy time; with limits off every one of those runs is feasible
+  (DEVIATIONS E14). Burst-HADS and R-BurstHADS are feasible everywhere only
+  because of our Phase 3 addition (DEVIATIONS U3): the reference raises
+  "no solution" where Phase 3 places a task, which it does in all 150 runs
+  of those cells and in 905 of 2,400 runs overall (`u3_exposure.txt`).
 - `PER_CORE_SPEED` in `main.py` is the single source for speeds. Do not
   hardcode a speed anywhere.
 - Deadline: `D = DF * DEADLINE_SLACK * ideal_makespan(n)`, floored at
@@ -152,7 +168,9 @@ folder. Start sessions in this folder.
   and DEADLINE_SLACK only ever appear as a product, sweeping DF makes the
   constant non-load-bearing — **report across DF, do not recalibrate.**
   In the sweep grid the floor binds at n=50 for DF ≤ 0.5 (so those two
-  DF points are the same cell) and at n=100 for DF = 0.25.
+  DF points are the same cell) and at n=100 for DF = 0.25. The floor has
+  no deploy-time term; since fix 21 it binds HADS's feasibility in the
+  n = 100, DF = 0.25 cells (DEVIATIONS E14).
 - Billing is one rule: launch to genuine shutdown (TCC23 §3.1). A VM's
   meter opens when a scheduler launches it (`LaunchCounter.commit`, fix
   13), used or not, and stops on hibernation or termination.
@@ -165,10 +183,20 @@ folder. Start sessions in this folder.
   uptime (`VM.start_ac`, fix 14; TCC23 §3.3, reference
   `Dispatcher.next_period_end`).
 - Migration (HADS stages 1–2, Burst-HADS Attempts 1–2) takes only VMs the
-  run has launched (fix 15); stage / Attempt 3 launches new on-demand
-  capacity. Burst-HADS's proactive burstable allocation keeps its
-  improvement guard — our addition, kept by the pre-registered Round A grid
-  (DEVIATIONS U5).
+  run has launched (fix 15); stage / Attempt 3 launches on-demand capacity:
+  Burst-HADS's first takes any on-demand pool VM with launch room, launched
+  or not (DEVIATIONS U11), then a fresh VM from M^o.
+- **Our Burst-HADS departs from TCC23's Algorithm 1 Part 2 in two ways, and
+  from Algorithm 2 in one.** §3.2 has three steps: Dspot violators to the
+  burstables, the violators left over to the cheapest regular on-demand
+  VMs, and an idle burstable takes the latest-finishing task. Ours adds the
+  improvement guard to step 1 (DEVIATIONS U5, kept by the pre-registered
+  Round A grid) and has no step 2 at all (DEVIATIONS U12), so violators the
+  guard declines stay on spot past Dspot: 12,150 of them in 575 of 2,400
+  runs, all at DF ≤ 0.5 (`diag_part2.txt`). Algorithm 2 has only spot
+  phases and the reference raises "no solution" where ours falls back to
+  on-demand (DEVIATIONS U3). All three are disclosed in the paper body and
+  measured; none is adopted or removed.
 - A burstable VM holds **exactly one task at a time**, in both baseline
   and burst mode. Verified against the paper's pseudocode.
 - Table 9 scenarios: `lambda_h = kh/D`, `lambda_r = kr/D`, for **every**
@@ -291,9 +319,33 @@ fix 4, `fix3b*` = fixes 5–7 together, then `fix8_df*` … `fix12_df*`.
     infeasibility (250 runs each → 5 HADS runs); R-BurstHADS 1,090 → 43.
     DEVIATIONS E1 / E3.
 
-**FROZEN at tag `freeze-round-b` (code fingerprint `4f08f48ac35c`).** No
-further simulator changes: a newly found defect goes into DEVIATIONS.md as a
-limitation, with its measured effect where one exists.
+17a. **Saturation re-placement deadline test** (`r_burst_hads.py`;
+    `34558bc`) — `_respond_to_saturation` re-placed every queued task on the
+    earliest-finishing target without testing D. It caused 108 of
+    R-BurstHADS's 109 misses at `freeze-round-b`; the launch limit was only
+    the trigger. DEVIATIONS R1.
+18. **Boot delay of R-BurstHADS's provisioned spot VMs** (`34558bc`) — a
+    task placed on a still-booting VM started at once: 6,661 early starts
+    in 1,276 of 2,400 runs. DEVIATIONS R4.
+19. **Checkpoint credits executed progress** (`34558bc`) — `save_checkpoint`
+    credited elapsed × speed, ignoring the overhead execution charges.
+    DEVIATIONS E11.
+20. **Overhead in the fallback deadline test** (`34558bc`) — adopted because
+    the test should charge what execution charges; it changes no run.
+    DEVIATIONS U10 (inert).
+21. **Deploy time for every VM a scheduler launches** (`467b438`) — 21a
+    mid-run launches, 21b R-BurstHADS's mid-run burstables, 21c the t = 0
+    launches of a primary schedule. Before it, 36,574 of 42,249 launches
+    that should pay ω started a task early; after it, 0 of 42,623.
+    DEVIATIONS E12, R5.
+
+**FROZEN at tag `freeze-fix21` (code fingerprint `2439a00d7f74`).** The
+freeze of `freeze-round-b` (`4f08f48ac35c`) was lifted twice by the owner,
+for fixes 17a–20 (`freeze-fix20`, `d40a1c917c63`) and for fix 21, each
+pre-registered (`experiments/fix17_plan.md`, `fix18_20_plan.md`,
+`fix21_plan.md`) and adopted only when the adopted code reproduced its
+variant row for row. From here a newly found defect goes into DEVIATIONS.md
+as a limitation, with its measured effect where one exists.
 
 Documentation-only corrections (`042bef7`): main.py's claim that
 R-BurstHADS "detects risk via risk-adjusted WRR weights" (no such
@@ -302,74 +354,106 @@ Theorem 1's docstring horizon (now states what the code computes).
 
 ## Where the result stands
 
-**Freeze sweep** (tag `freeze-round-b`, fingerprint `4f08f48ac35c`): Table 9
+**Freeze sweep** (tag `freeze-fix21`, fingerprint `2439a00d7f74`): Table 9
 sc1–sc5 × n 50/100/200/300 × DF 0.25/0.5/1.0/2.0 × 30 seeds, 7,200 runs,
-0 errors, instance limits on (`sweep_raw_4f08f48ac35c.jsonl`,
-`sweep_summary_4f08f48ac35c.*`, `sweep_analysis_4f08f48ac35c.txt`); the
-same 7,200 units with limits off (`sweep_variant_nocap_4f08f48ac35c.*`).
-The checkpoint harness reproduces all 450 checkpoint runs in the sweep
-(`checkpoint_freeze_df*`). No launch was forced past a limit.
+0 errors, instance limits on (`sweep_raw_2439a00d7f74.jsonl`,
+`sweep_summary_2439a00d7f74.*`, `sweep_analysis_2439a00d7f74.txt`); the
+same 7,200 units with limits off (`sweep_variant_nocap_2439a00d7f74.*`).
+The checkpoint harness check: 450 runs compared, 0 differ, 0 not in the
+sweep (`checkpoint_fix21_df*`). No launch was forced past a limit.
 
-**Feasibility.** 10 runs are infeasible, all HADS (2 seeds in each
-sc1–sc5 n=100 DF=0.25 cell, the deadline floor). The tables are over the
-75 cells where every scheduler is feasible in every seed (ratios of cell
-means, averaged over cells); `sweep_analysis` also reports all 80 cells
-with 28–30 seeds (Burst −18.0% / +20.0%, R −26.4% / +12.2%, R vs Burst
-−11.9% / −5.0%, dominance 44/80).
+**Feasibility.** 110 runs are infeasible, all HADS (22 of 30 seeds in each
+sc1–sc5 n = 100, DF = 0.25 cell, the deadline floor). The tables are over
+the 75 cells where every scheduler is feasible in every seed (ratios of
+cell means, averaged over cells); over all 80 cells with their feasible
+seeds: Burst −18.4% / +18.2%, R −26.0% / +11.5%, R vs Burst −11.3% /
+−4.3%, dominance 49/80 [T1 last row].
 
 Relative to HADS, **limits on** (the reference's account):
 
 | cells | Burst mk | Burst $ | R mk | R $ | R vs Burst mk | R vs Burst $ | R dominates Burst |
 |---|---|---|---|---|---|---|---|
-| all 75 | −19.1% | +21.3% | −27.9% | +12.9% | −12.7% | −5.4% | 44/75 |
-| DF=0.25 (15) | −7.3% | +9.7% | −8.9% | +8.4% | −1.8% | −1.3% | 7/15 |
-| DF=0.5 (20) | −6.2% | +18.6% | −7.4% | +18.6% | −1.4% | −0.0% | 10/20 |
-| DF=1.0 (20) | −13.1% | +24.2% | −27.0% | +16.6% | −15.9% | −4.3% | 10/20 |
-| DF=2.0 (20) | −46.6% | +30.0% | −63.6% | +7.1% | −28.9% | −14.9% | 17/20 |
+| all 75 | −19.6% | +19.0% | −27.7% | +11.8% | −12.0% | −4.6% | 49/75 |
+| DF=0.25 (15) | −7.4% | +8.3% | −8.4% | +7.4% | −1.2% | −0.8% | 9/15 |
+| DF=0.5 (20) | −6.1% | +17.4% | −7.0% | +18.1% | −1.0% | +0.7% | 9/20 |
+| DF=1.0 (20) | −14.8% | +19.6% | −26.8% | +14.7% | −14.7% | −3.1% | 12/20 |
+| DF=2.0 (20) | −47.0% | +27.9% | −63.7% | +6.1% | −28.5% | −14.3% | 19/20 |
 
 **Limits off** (all 80 cells feasible):
 
 | cells | Burst mk | Burst $ | R mk | R $ | R vs Burst mk | R vs Burst $ | R dominates Burst |
 |---|---|---|---|---|---|---|---|
-| all 80 | −18.1% | +21.9% | −31.0% | +2.6% | −17.8% | −14.6% | 69/80 |
-| DF=0.25 (20) | −6.0% | +12.6% | −8.2% | +8.7% | −2.4% | −3.4% | 12/20 |
-| DF=0.5 (20) | −6.4% | +20.5% | −13.2% | −2.1% | −7.2% | −18.2% | 19/20 |
-| DF=1.0 (20) | −13.1% | +24.6% | −34.2% | +2.3% | −24.0% | −16.8% | 18/20 |
-| DF=2.0 (20) | −46.6% | +30.0% | −68.5% | +1.4% | −37.7% | −19.9% | 20/20 |
+| all 80 | −18.4% | +19.5% | −30.1% | +2.4% | −16.5% | −13.2% | 67/80 |
+| DF=0.25 (20) | −5.6% | +10.5% | −7.1% | +7.5% | −1.6% | −2.6% | 11/20 |
+| DF=0.5 (20) | −6.1% | +18.8% | −12.0% | −1.7% | −6.2% | −16.6% | 18/20 |
+| DF=1.0 (20) | −14.8% | +20.8% | −33.3% | +2.1% | −22.2% | −14.9% | 19/20 |
+| DF=2.0 (20) | −47.0% | +27.9% | −67.9% | +1.5% | −35.9% | −18.6% | 19/20 |
 
-By scenario, limits on, R-BurstHADS vs HADS (makespan / cost, 80 cells):
-sc1 −37.1% / +18.9%, sc2 −17.0% / +17.6%, sc3 −35.6% / +9.9%,
-sc4 −17.7% / +9.4%, sc5 −24.3% / +5.1%.
+By scenario, limits on, R-BurstHADS vs HADS (makespan / cost, 80 cells with
+their feasible seeds; `sweep_analysis_2439a00d7f74.txt`): sc1 −36.5% /
++18.1%, sc2 −16.3% / +17.6%, sc3 −34.5% / +10.3%, sc4 −18.4% / +7.5%,
+sc5 −24.4% / +4.0%.
 
 - The instance limit binds on R-BurstHADS's own launches (spot c5.xlarge
   reaches the limit of 5; the baselines cannot exceed the pool's 3).
-  Lifting it changes mainly R-BurstHADS: its cost lead over Burst-HADS
-  grows from −5.4% to −14.6% and its misses vanish. **Report both; lead
+  Lifting it changes mainly R-BurstHADS. Over the same 75 cells [T2b], its
+  cost change vs Burst-HADS goes from −4.6% to −14.1% and its makespan
+  change from −12.0% to −17.6%; Burst-HADS vs HADS moves from +19.0% to
+  +20.3% cost. With limits off Burst-HADS and R-BurstHADS still miss 5
+  tasks between them, in the same floor cells [T5]. **Report both; lead
   with limits on.**
-- Burst-HADS is cheaper than HADS in 15 of 80 cells. R-BurstHADS ranges
-  from −22.5% (sc4 n=200 DF=2.0) to +43.8% (sc1 n=50 DF=2.0) and is no
-  more expensive than HADS in 18 of 75 cells.
-- HADS's makespan is 62–100% of D; it never exceeds D.
+- Burst-HADS is cheaper than HADS in 16 of 80 cells. R-BurstHADS ranges
+  from −23.5% (sc4 n=300 DF=2.0) to +41.6% (sc4 n=50 DF=1.0) and is no
+  more expensive than HADS in 18 of 75 cells [T3].
+- HADS's makespan is 63–100% of D (cell means; 47–100% per run); it never
+  exceeds D.
 
-**Deadline misses** (feasible runs, limits on): HADS 0; Burst-HADS 1 task
-in one run; **R-BurstHADS 109 tasks, in 4.3% of runs and 22 of 80 cells**,
-worst 0.50 per run of 300 tasks (sc4 and sc5, n=300, DF=0.5), 0.13 per run
-at DF=0.5. With limits off nobody misses. R-BurstHADS is the only scheduler
-that misses deadlines, and only when the instance limit blocks its
-provisioning.
+**Deadline misses** (feasible runs, limits on): HADS 0; Burst-HADS 6 tasks
+in 6 runs; R-BurstHADS 5 tasks in 5 runs [T5]. With limits off, Burst-HADS
+2 and R-BurstHADS 3. Every one is in the n = 100, DF = 0.25 floor cells: a
+hibernation rescue that no on-demand VM the fallback was allowed to launch
+could finish by D after its 45 s deploy time. With limits on the faster
+types were at their launch limits; with limits off every type failed the
+fallback's own deadline test (`diag_f21_misses.txt`,
+`diag_f21_misses_nocap.txt`). At `freeze-round-b`, R-BurstHADS's 109 misses
+came from its own saturation response re-placing tasks without a deadline
+test, with the launch limit only as the trigger (DEVIATIONS R1; fix 17a
+removed 108 of them).
 
 **The contribution statement this supports** (limits on): Burst-HADS buys
-−19.1% makespan for +21.3% cost over HADS. R-BurstHADS delivers −27.9% for
-+12.9% — about 1.5× the makespan benefit at about 60% of the premium — and
-is 12.7% faster and 5.4% cheaper than Burst-HADS on average, dominating it
-on both axes in 44 of 75 cells. The advantage lives at DF ≥ 1.0 (−15.9% /
-−4.3% and −28.9% / −14.9%); at DF ≤ 0.5 R-BurstHADS and Burst-HADS cost the
-same (−1.3%, −0.0%) and R-BurstHADS alone misses deadlines, in 4.3% of runs
-overall where the baselines essentially never miss. Two disclosures travel
-with every number: the baselines keep one addition of ours, the U5 guard,
-which favours this comparison (DEVIATIONS U5: without it R vs Burst +5.8%
-cost and 14/55 dominance on the grid); and our Burst-HADS still does not
-reproduce TCC23's hibernation costs (Open items).
+−19.6% makespan for +19.0% cost over HADS. R-BurstHADS delivers −27.7% for
++11.8%. It is 12.0% faster and 4.6% cheaper than Burst-HADS on average and
+dominates it on both axes in 49 of 75 cells [T1 all]. The advantage lives
+at DF ≥ 1.0 (−14.7% / −3.1% and −28.5% / −14.3%). At DF 0.25 and 0.5 the
+two are within about a point (−1.2% / −0.8% and −1.0% / +0.7%); at DF 0.5
+R-BurstHADS is significantly slower than Burst-HADS in 7 cells and dearer
+in 6 [T1 DF rows].
+
+**Makespan is the primary claim, and it is qualified** (owner,
+2026-09-23). It holds in every working configuration measured: limits on
+and off, the burstable branch disabled, no hibernation, and the cell set a
+reference-faithful Burst-HADS could solve. The qualification travels with
+it: at DF 0.5 the makespan advantage over Burst-HADS is roughly a wash.
+
+**The cost claim is conditional, and the conditions travel with it:**
+- It depends on the U5 guard, an addition of ours to the baselines. Following TCC23 §3.2 in
+  full (the guard removed and the leftover violators sent to on-demand, the
+  step we never implemented) R-BurstHADS is +2.45% cost and −4.50% makespan
+  against Burst-HADS with limits on, dominating 35 of 75 cells, against
+  −4.62% / −12.00% and 49 of 75 as frozen [T12]. That configuration is not a
+  usable baseline (980 of 2,400 runs miss a deadline), so it bounds what the
+  cost claim owes to the departure rather than replacing the comparison. The
+  guard is almost all of the swing: +2.57% with the guard removed alone.
+- It depends on launch headroom: −4.6% with limits, −14.1% without, over
+  the same cells [T2b].
+- It reverses without hibernation: R-BurstHADS is 3.4% dearer than
+  Burst-HADS and 8.9% faster over the 15 cells of the no-hibernation runs
+  (`u5_nohib_compare.txt`). That is the expected behaviour of a scheduler
+  that provisions in anticipation of interruptions, and it is reported as
+  a sanity check on the method, not as a weakness.
+- Our Burst-HADS still does not reproduce TCC23's hibernation costs (Open
+  items), and departs from its published Algorithm 1 and Algorithm 2 in
+  three measured, disclosed ways (U5, U12, U3).
 
 Claims that are **dead** and must not reappear: the pre-freeze sweep
 headline (`519c868a99f9`: −34.0% / +15.4% vs HADS, −20.3% / −17.5% vs
@@ -386,7 +470,15 @@ deadlines and the others do not" (fix 8 artefact); Burst-HADS's residual
 misses as a property (fix 11 artefact); risk-aware WRR weighting;
 risk-awareness as a source of benefit; the ILS explanation for HADS's
 misses (HADS has no ILS); sc1's premium being unpriced idle time; and the
-old −52% / −74% figures (the speed artefact).
+old −52% / −74% figures (the speed artefact). Dead since fix 21: the
+`freeze-round-b` headline (−27.9% / +12.9% vs HADS, −12.7% / −5.4% vs
+Burst-HADS, 44/75) and the `freeze-fix20` one (−27.6% / +13.7%, −12.4% /
+−4.7%, 42/75); "109 missed tasks in 4.3% of runs"; "the misses are caused
+by the launch cap"; "R-BurstHADS is the only scheduler that misses";
+"−5.4% → −14.6% when limits are lifted" (mixed cell sets — use T2b);
+"about 1.5× the makespan benefit at about 60% of the premium" (a ratio of
+two averaged percentages); and "R-BurstHADS's advantage reverses at
+n = 300" (it no longer does: −0.2% at n = 300 [T1 n rows]).
 
 ## Open items
 
@@ -527,15 +619,26 @@ old −52% / −74% figures (the speed artefact).
        idle-billed spot VMs, which points at a new, unmeasured deviation
        in Allocation Cycle boundaries (DEVIATIONS E10). Closed by the
        pre-registered grid and Round B: E10 adopted (fix 14), guard kept (U5).
-  - **At the freeze** (`diag_cost_gap_compare_freeze.txt`, validation
-    catalogue, 3 copies, 30 seeds): Table 9 cost change vs HADS +18.8%
-    (TCC23 +1.92%); makespan reduction 22.2% (25.87%), J60 35.4% (40.10%),
-    ED200 5.3% (10.24%); hibernation premium HADS +105% (+95%), Burst-HADS
-    +40% (+25%). Without hibernation Burst-HADS's makespans are unchanged
-    (J60 −70.9% vs HADS against −44.4%) and its J60 cost change is +87%
-    (+67%). Limits on and off agree to a tenth of a point. **The baselines
-    still do not reproduce TCC23. After the freeze that is a limitation the
-    paper states, not a code task.**
+  - **At freeze-fix21** (`diag_cost_gap_fix21_nocap_c3`, `_capped_c3`,
+    validation catalogue, 3 copies, 30 seeds) [T9]: Table 9 cost change vs
+    HADS +17.9% limits off and +17.7% on (TCC23 +1.92%); makespan reduction
+    21.8% (25.87%), J60 34.5% (40.10%), ED200 4.8% (10.24%); hibernation
+    premium HADS +110% (+95%), Burst-HADS +43% (+25%). Without hibernation
+    Burst-HADS's makespan change is −70.9% vs HADS (−44.4%) and its J60
+    cost change +87% (+67%) [T8]. Limits on and off agree within 0.15
+    points. **The baselines still do not reproduce TCC23. That is a
+    limitation the paper states, not a code task.**
+  - **The U5 guard is what separates our no-hibernation Burst-HADS from
+    the published one.** Removing it takes the no-hibernation makespan
+    change vs HADS from −70.9% to −42.0% for J60 (published −44.4%) and to
+    −42.0% for J80 (−42.1%), while the cost overshoots further (J60 +190%
+    against the published +67%). Under hibernation it changes the cost gap
+    hardly at all (+17.9% → +18.1%), so the gap is not the guard's doing.
+    TCC23 evaluates at D = 2,700 s, far looser than our sweep's deadlines;
+    the guard is our adaptation to a harder experiment, not a patch over a
+    defect in the rescue path. The unconditional move the paper describes
+    costs deadlines here in a way it cannot at D = 2,700 s, and that holds
+    with hibernation switched off (`u5_nohib_compare.txt`).
 - **Declared per-type risk is untested in every Table 9 cell — a
   limitation to state, not a benefit to claim.** Table 9 hibernates every
   spot VM at kh/D, so the c5 / m5.xlarge risk differential R-BurstHADS
@@ -557,20 +660,27 @@ old −52% / −74% figures (the speed artefact).
   per type; the limit allows 5, and R-BurstHADS can launch up to it, so it
   can still use 2 c5.xlarge per type the baselines' planners never see.
   `SPOT_COPIES = 3` was chosen to reproduce the paper's reported gap and is
-  kept (owner, 2026-09-14). At the freeze R-BurstHADS's deadline misses
-  all disappear with instance limits off (RESULTS_PACK T5, T7). Pool-size
-  sensitivity was cut from Round C and is future work.
+  kept (owner, 2026-09-14). At freeze-fix21 R-BurstHADS misses 5 tasks with
+  limits on and 3 with limits off, and Burst-HADS 6 and 2; all are
+  floor-cell rescues that no on-demand VM the fallback could launch would
+  finish by D after its deploy time [T5, `diag_f21_misses.txt`,
+  `diag_f21_misses_nocap.txt`]. Pool-size sensitivity was cut from Round C
+  and is future work.
 - **Migration at a spent limit deviates from the reference** (task placed
   on the soonest-finishing active VM instead of left unallocated).
-  `limit_overrides` is 0 in all 7,200 freeze-sweep runs.
+  `limit_overrides` is 0 in all 7,200 freeze-fix21 runs, and the fallback
+  placed a task at all in only 12 Burst-HADS and 11 R-BurstHADS runs, all
+  at DF 0.25, one of them in a headline cell (`diag_capped.txt`).
 - **sc1 and replacement-use diagnostics predate the freeze**
   (`diag_rb_provisioning.*`, `diag_rb_replacement_use.*`, run on the
   post-fix-9 uncapped code). Their conclusions — replacements 68–86%
   utilised in sc1, switching Theorem 1 off costs more, rescue vs work
   stealing split — are not cited in the paper; re-running them is future
   work.
-- **Round C is analysis only (owner, after the freeze): no simulation runs
-  of any kind.** Done: `RESULTS_PACK.md` (every table and number the paper
+- **Round C began as analysis only; the owner then reopened the simulator
+  twice** (fixes 17a–20 and fix 21), under pre-registration, and re-froze it
+  at `freeze-fix21`. Measurement runs continue (counterfactuals and
+  diagnostics, each pre-registered); the code does not change. Done: `RESULTS_PACK.md` (every table and number the paper
   needs, generated by `experiments/results_pack.py` from committed result
   files, with file hashes) and `PAPER_SKELETON.md` (sections, claims, and
   the pack cell behind each). Cut to one future-work sentence each:
@@ -582,10 +692,17 @@ old −52% / −74% figures (the speed artefact).
   its way there. Report across DF and keep the `mk/D` column.
 - **Work stealing onto a baseline-mode burstable is not slack-checked**
   the way a burst-mode rescue is.
-- **`paper/` is entirely pre-fix.** Rebuild from the freeze sweep, leading
-  with it, with DEVIATIONS.md as its deviations section.
-- Figures: the owner has a separate unresolved issue with graph
-  generation. **Do not generate figures until they raise it.**
+- **`paper/` is entirely pre-fix.** Rebuild from the freeze-fix21 sweep,
+  leading with it, with DEVIATIONS.md as its deviations section.
+- Figures: six single-column figures, built from RESULTS_PACK.md by
+  `experiments/make_figures.py` per `experiments/FIGURE_SPEC.md`. Since
+  2026-09-23 they are the orthogonal set — cost and makespan against
+  deadline factor, scenario and bag size — plotting **absolute** values,
+  three series, y axis from zero, with every percentage in the tables. The
+  displaced headline trade-off is T27 and the limits-on-against-off figure
+  is T2b. The paper's set lives in `paper/fig/` (regenerate with
+  `python experiments\make_figures.py`); `experiments/fig_fix20/` and
+  `fig_fix21/` are records of earlier states.
 
 ## Commands
 
@@ -606,9 +723,9 @@ python experiments\variant_sweep.py --variant cap_od --seeds 0-9 --base-fp <fp>
 python experiments\dynamic_comparison.py
 python experiments\dynamic_comparison.py run
 python experiments\dynamic_comparison.py summarize
-python experiments\sweep_analysis.py --checkpoint-tag freeze   # verifies first
+python experiments\sweep_analysis.py --checkpoint-tag fix21   # verifies first
 # the same units with instance limits off
-python experiments\variant_sweep.py --variant nocap --seeds 0-29 --base-fp 4f08f48ac35c
+python experiments\variant_sweep.py --variant nocap --seeds 0-29 --base-fp 2439a00d7f74
 # validation against TCC23 (paper catalogue); compare several tags
 python experiments\diag_cost_gap.py --tag NAME --variant nocap --copies 3
 python experiments\diag_cost_gap_compare.py --rule=R0 TAG [TAG ...]
