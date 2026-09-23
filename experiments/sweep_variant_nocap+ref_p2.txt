@@ -1,0 +1,5 @@
+variant nocap+ref_p2: 4800 units on 20 workers -> sweep_variant_nocap+ref_p2_2439a00d7f74.jsonl
+infeasible runs: 0
+done in 475s, 0 errors
+identical to base 2439a00d7f74: 715/4800 units (base rows found: 4800)
+scheduler subset: cross-scheduler summary skipped

@@ -1,0 +1,87 @@
+# The U5 sensitivity table, freeze-fix21 `2439a00d7f74`, sweep catalogue, seeds 0–29
+
+Pre-registration `experiments/ref_p2_plan.md`. Burst-HADS and R-BurstHADS rows of a variant set come from its sweep file; HADS rows from the baselines. §3.2 step 2 sends Dspot violators the burstables did not take to the cheapest regular on-demand VMs.
+
+## Fidelity: the copy with step 2 switched off, against the baseline (exact)
+- limits on (`p2_copy`): 4800/4800 rows identical
+- limits off (`nocap+p2_copy`): 4800/4800 rows identical
+
+## Limits on, over each set's own complete cells
+| configuration | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | B mk vs H | B $ vs H | R mk vs H | R $ vs H |
+|---|---|---|---|---|---|---|---|---|---|---|
+| as frozen (the U5 guard, no step 2) | 75 | -12.00% | -4.62% | 49 | 42 / 9 | 25 / 8 | -19.58% | +18.98% | -27.67% | +11.84% |
+| guard removed only (neither ours nor TCC23's) | 75 | -4.50% | +2.57% | 31 | 21 / 6 | 11 / 30 | +31.98% | +73.19% | +29.73% | +79.20% |
+| the missing step alone (guard kept, maximal reading) | 75 | -11.66% | -4.51% | 52 | 38 / 8 | 25 / 6 | -16.76% | +23.06% | -24.58% | +16.06% |
+| reference-faithful: TCC23 §3.2 in full | 75 | -4.50% | +2.45% | 35 | 21 / 6 | 11 / 23 | +31.98% | +72.95% | +29.74% | +78.44% |
+
+## Limits off, over each set's own complete cells
+| configuration | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | B mk vs H | B $ vs H | R mk vs H | R $ vs H |
+|---|---|---|---|---|---|---|---|---|---|---|
+| as frozen (the U5 guard, no step 2) | 80 | -16.50% | -13.16% | 67 | 66 / 0 | 53 / 4 | -18.38% | +19.53% | -30.09% | +2.35% |
+| guard removed only (neither ours nor TCC23's) | 80 | -7.47% | -4.17% | 40 | 37 / 0 | 35 / 25 | +42.38% | +82.93% | +37.89% | +80.95% |
+| the missing step alone (guard kept, maximal reading) | 80 | -16.01% | -12.76% | 71 | 62 / 0 | 52 / 3 | -15.75% | +23.62% | -27.05% | +6.93% |
+| reference-faithful: TCC23 §3.2 in full | 80 | -7.47% | -4.21% | 46 | 37 / 0 | 34 / 17 | +42.39% | +82.96% | +37.89% | +80.52% |
+
+## Limits on, over the 75 cells complete in every set
+| configuration | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | B mk vs H | B $ vs H | R mk vs H | R $ vs H |
+|---|---|---|---|---|---|---|---|---|---|---|
+| as frozen (the U5 guard, no step 2) | 75 | -12.00% | -4.62% | 49 | 42 / 9 | 25 / 8 | -19.58% | +18.98% | -27.67% | +11.84% |
+| guard removed only (neither ours nor TCC23's) | 75 | -4.50% | +2.57% | 31 | 21 / 6 | 11 / 30 | +31.98% | +73.19% | +29.73% | +79.20% |
+| the missing step alone (guard kept, maximal reading) | 75 | -11.66% | -4.51% | 52 | 38 / 8 | 25 / 6 | -16.76% | +23.06% | -24.58% | +16.06% |
+| reference-faithful: TCC23 §3.2 in full | 75 | -4.50% | +2.45% | 35 | 21 / 6 | 11 / 23 | +31.98% | +72.95% | +29.74% | +78.44% |
+
+## Limits off, over the 75 cells complete in every set
+| configuration | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | B mk vs H | B $ vs H | R mk vs H | R $ vs H |
+|---|---|---|---|---|---|---|---|---|---|---|
+| as frozen (the U5 guard, no step 2) | 75 | -17.57% | -14.09% | 67 | 66 / 0 | 53 / 2 | -19.52% | +20.31% | -31.99% | +1.93% |
+| guard removed only (neither ours nor TCC23's) | 75 | -7.97% | -4.51% | 40 | 37 / 0 | 35 / 22 | +32.78% | +75.71% | +27.99% | +73.40% |
+| the missing step alone (guard kept, maximal reading) | 75 | -17.07% | -13.64% | 71 | 62 / 0 | 52 / 0 | -16.87% | +24.30% | -28.91% | +6.47% |
+| reference-faithful: TCC23 §3.2 in full | 75 | -7.97% | -4.52% | 46 | 37 / 0 | 34 / 15 | +32.78% | +75.70% | +27.99% | +72.99% |
+
+## Deadline behaviour per scheduler (all runs of the set, not only complete cells)
+| configuration | limits | scheduler | infeasible runs | runs with a miss | missed tasks | runs changed vs as frozen |
+|---|---|---|---|---|---|---|
+| as frozen (the U5 guard, no step 2) | on | HADS | 110 | 0 | 0 | — |
+| as frozen (the U5 guard, no step 2) | on | Burst-HADS | 0 | 6 | 6 | — |
+| as frozen (the U5 guard, no step 2) | on | R-BurstHADS | 0 | 5 | 5 | — |
+| as frozen (the U5 guard, no step 2) | off | HADS | 0 | 0 | 0 | — |
+| as frozen (the U5 guard, no step 2) | off | Burst-HADS | 0 | 2 | 2 | — |
+| as frozen (the U5 guard, no step 2) | off | R-BurstHADS | 0 | 3 | 3 | — |
+| guard removed only (neither ours nor TCC23's) | on | HADS | 110 | 0 | 0 | 0/2400 |
+| guard removed only (neither ours nor TCC23's) | on | Burst-HADS | 0 | 980 | 2981 | 1584/2400 |
+| guard removed only (neither ours nor TCC23's) | on | R-BurstHADS | 0 | 980 | 2978 | 1592/2400 |
+| guard removed only (neither ours nor TCC23's) | off | HADS | 0 | 0 | 0 | 0/2400 |
+| guard removed only (neither ours nor TCC23's) | off | Burst-HADS | 0 | 980 | 3121 | 1584/2400 |
+| guard removed only (neither ours nor TCC23's) | off | R-BurstHADS | 0 | 980 | 3121 | 1592/2400 |
+| the missing step alone (guard kept, maximal reading) | on | HADS | 110 | 0 | 0 | 0/2400 |
+| the missing step alone (guard kept, maximal reading) | on | Burst-HADS | 0 | 191 | 302 | 567/2400 |
+| the missing step alone (guard kept, maximal reading) | on | R-BurstHADS | 0 | 190 | 299 | 564/2400 |
+| the missing step alone (guard kept, maximal reading) | off | HADS | 0 | 0 | 0 | 0/2400 |
+| the missing step alone (guard kept, maximal reading) | off | Burst-HADS | 0 | 151 | 229 | 577/2400 |
+| the missing step alone (guard kept, maximal reading) | off | R-BurstHADS | 0 | 144 | 220 | 574/2400 |
+| reference-faithful: TCC23 §3.2 in full | on | HADS | 110 | 0 | 0 | 0/2400 |
+| reference-faithful: TCC23 §3.2 in full | on | Burst-HADS | 0 | 981 | 3204 | 1585/2400 |
+| reference-faithful: TCC23 §3.2 in full | on | R-BurstHADS | 0 | 981 | 3208 | 1594/2400 |
+| reference-faithful: TCC23 §3.2 in full | off | HADS | 0 | 0 | 0 | 0/2400 |
+| reference-faithful: TCC23 §3.2 in full | off | Burst-HADS | 0 | 981 | 3357 | 1585/2400 |
+| reference-faithful: TCC23 §3.2 in full | off | R-BurstHADS | 0 | 981 | 3350 | 1592/2400 |
+
+## By DF, limits on, over each set's own complete cells
+| configuration | DF | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | B mk vs H | B $ vs H | R mk vs H | R $ vs H |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| as frozen (the U5 guard, no step 2) | DF 0.25 | 15 | -1.16% | -0.82% | 9 | 4 / 2 | 4 / 1 | -7.37% | +8.30% | -8.35% | +7.37% |
+| as frozen (the U5 guard, no step 2) | DF 0.5 | 20 | -1.01% | +0.65% | 9 | 6 / 7 | 4 / 6 | -6.12% | +17.43% | -7.01% | +18.08% |
+| as frozen (the U5 guard, no step 2) | DF 1.0 | 20 | -14.67% | -3.08% | 12 | 12 / 0 | 6 / 1 | -14.77% | +19.58% | -26.81% | +14.66% |
+| as frozen (the U5 guard, no step 2) | DF 2.0 | 20 | -28.46% | -14.30% | 19 | 20 / 0 | 11 / 0 | -46.99% | +27.93% | -63.68% | +6.14% |
+| guard removed only (neither ours nor TCC23's) | DF 0.25 | 15 | +0.02% | -0.06% | 8 | 0 / 1 | 3 / 4 | +100.13% | +108.23% | +100.16% | +109.20% |
+| guard removed only (neither ours nor TCC23's) | DF 0.5 | 20 | +0.53% | +1.75% | 7 | 2 / 5 | 3 / 10 | +72.35% | +94.45% | +72.87% | +97.64% |
+| guard removed only (neither ours nor TCC23's) | DF 1.0 | 20 | -6.37% | +5.04% | 6 | 7 / 0 | 2 / 7 | +12.39% | +53.46% | +8.05% | +64.00% |
+| guard removed only (neither ours nor TCC23's) | DF 2.0 | 20 | -11.04% | +2.88% | 10 | 12 / 0 | 3 / 9 | -39.92% | +45.37% | -44.54% | +53.45% |
+| the missing step alone (guard kept, maximal reading) | DF 0.25 | 15 | -0.14% | -0.71% | 11 | 2 / 2 | 4 / 0 | -0.30% | +17.74% | -0.43% | +16.92% |
+| the missing step alone (guard kept, maximal reading) | DF 0.5 | 20 | -0.50% | +1.02% | 10 | 4 / 6 | 4 / 5 | -0.85% | +25.67% | -1.36% | +26.75% |
+| the missing step alone (guard kept, maximal reading) | DF 1.0 | 20 | -14.67% | -3.08% | 12 | 12 / 0 | 6 / 1 | -14.77% | +19.58% | -26.81% | +14.66% |
+| the missing step alone (guard kept, maximal reading) | DF 2.0 | 20 | -28.46% | -14.30% | 19 | 20 / 0 | 11 / 0 | -46.99% | +27.93% | -63.68% | +6.14% |
+| reference-faithful: TCC23 §3.2 in full | DF 0.25 | 15 | +0.02% | -0.58% | 11 | 0 / 1 | 3 / 0 | +100.13% | +106.89% | +100.16% | +106.07% |
+| reference-faithful: TCC23 §3.2 in full | DF 0.5 | 20 | +0.52% | +1.70% | 8 | 2 / 5 | 3 / 7 | +72.37% | +94.55% | +72.88% | +97.16% |
+| reference-faithful: TCC23 §3.2 in full | DF 1.0 | 20 | -6.37% | +5.04% | 6 | 7 / 0 | 2 / 7 | +12.39% | +53.46% | +8.05% | +64.00% |
+| reference-faithful: TCC23 §3.2 in full | DF 2.0 | 20 | -11.04% | +2.88% | 10 | 12 / 0 | 3 / 9 | -39.92% | +45.37% | -44.54% | +53.45% |
