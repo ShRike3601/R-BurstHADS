@@ -386,6 +386,26 @@ Two further measurements on the same configurations:
 - **No hibernation** (scenario `none`, 480 runs per scheduler, limits on), guard removed: Burst-HADS misses 595 tasks in 196 runs (40.8%). The guard-free failure rate is the same without hibernation as with it, so it is not a hibernation-rescue effect (`u5_nohib_compare.txt`).
 - **What Part 2 leaves behind** (`experiments/diag_part2.txt`): with the guard, 575 of 2,400 runs reach Part 2 with Dspot violators on spot and it leaves 12,150 of the 12,345 there, none planned past D. Under §3.2 they would go to on-demand VMs. All of those runs are at DF 0.25 and DF 0.5.
 
+### T12c. DF 1.0 and DF 2.0: R-BurstHADS against a reference-faithful Burst-HADS
+
+Sources: `experiments/sweep_raw_2439a00d7f74.jsonl`, `experiments/sweep_variant_burst_fill_2439a00d7f74.jsonl`, `experiments/sweep_variant_ref_p2_2439a00d7f74.jsonl`; exposure from `experiments/u3_exposure.txt`. At DF 1.0 and DF 2.0 neither U3 (Phase 3 fires in 0 runs) nor U12 (no Dspot violators remain, so the reference-faithful and guard-removed configurations are identical) applies, so the U5 guard is the only departure left. **At DF 2.0 the guard-free baseline also misses no deadline**, so it is an unmodified Burst-HADS that works, and the comparison there is the most faithful one this study can make. Cell sets are identical across configurations.
+
+| DF | configuration | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | R sig. cheaper / dearer | Burst-HADS missed tasks (of 600 runs) |
+|---|---|---|---|---|---|---|---|---|
+| 1.0 | guard kept (as frozen) | 20 | -14.7% | -3.1% | 12/20 | 12 / 0 | 6 / 1 | 0 |
+| 1.0 | guard removed only | 20 | -6.4% | +5.0% | 6/20 | 7 / 0 | 2 / 7 | 260 |
+| 1.0 | reference-faithful: §3.2 in full | 20 | -6.4% | +5.0% | 6/20 | 7 / 0 | 2 / 7 | 260 |
+| 2.0 | guard kept (as frozen) | 20 | -28.5% | -14.3% | 19/20 | 20 / 0 | 11 / 0 | 0 |
+| 2.0 | guard removed only | 20 | -11.0% | +2.9% | 10/20 | 12 / 0 | 3 / 9 | 0 |
+| 2.0 | reference-faithful: §3.2 in full | 20 | -11.0% | +2.9% | 10/20 | 12 / 0 | 3 / 9 | 0 |
+
+Against the faithful baseline at DF 2.0 the result splits by bag size, and the split is what the paper should state:
+
+| DF 2.0, reference-faithful | cells | R mk vs B | R $ vs B | R dominates B | R sig. cheaper / dearer |
+|---|---|---|---|---|---|
+| small bags, n ≤ 100 | 10 | -3.3% | +11.2% | 1/10 | 0 / 9 |
+| large bags, n ≥ 200 | 10 | -18.7% | -5.4% | 9/10 | 3 / 0 |
+
 ### T12b. How the U5 guard was decided: the Round A closing grid (historical)
 
 Sources: `experiments/sweep_variant_grid_g1e1_519c868a99f9.jsonl` (guard on) and `experiments/sweep_variant_grid_g0e1_519c868a99f9.jsonl` (guard off), both with billing from launch, Allocation Cycles over uptime and launched-only migration, sweep catalogue, limits on, seeds 0–9; `experiments/diag_cost_gap_nocap_grid_g1e1_c3.json` and `experiments/diag_cost_gap_nocap_grid_g0e1_c3.json` (validation catalogue, limits off). Decision rule pre-registered in `experiments/round_a_grid_plan.md` (commit ec52967): the guard is kept iff removing it turns more runs with no missed task into runs with one than the reverse, for Burst-HADS or R-BurstHADS, in either catalogue.
@@ -975,7 +995,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 
 | file | SHA-256 (first 16) | last changed in commit |
 |---|---|---|
-| `DEVIATIONS.md` | `5e237c69acafd4e6` | `b5a8553` |
+| `DEVIATIONS.md` | `5e237c69acafd4e6` | `3697f7f` |
 | `experiments/diag_capped.txt` | `32c9f551bf0275aa` | `0509b29` |
 | `experiments/diag_cost_gap_fix20_capped_c3.json` | `2d6a1193e6b180fb` | `7be365a` |
 | `experiments/diag_cost_gap_fix20_nocap_c3.json` | `02440b12ee2ab44c` | `7be365a` |
@@ -993,9 +1013,9 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/diag_cost_gap_nocap_mig_launched_c3.json` | `5f3d0ace022c5b72` | `eeba129` |
 | `experiments/diag_cost_gap_nocap_mig_launched_launch_bill_c3.json` | `ba49a1c677464038` | `b5a8553` |
 | `experiments/diag_cost_gap_nocap_no_release_c3.json` | `4bada115de356ad1` | `eeba129` |
-| `experiments/diag_cost_gap_p2od_nocap_c3.json` | `76d3cfda189a8b6b` | `UNCOMMITTED` |
+| `experiments/diag_cost_gap_p2od_nocap_c3.json` | `76d3cfda189a8b6b` | `e3fa46c` |
 | `experiments/diag_cost_gap_rb1_verify_c3.json` | `4f4cf5a35fbcf03c` | `42bff94` |
-| `experiments/diag_cost_gap_refp2_nocap_c3.json` | `0916cab19eee81df` | `UNCOMMITTED` |
+| `experiments/diag_cost_gap_refp2_nocap_c3.json` | `0916cab19eee81df` | `e3fa46c` |
 | `experiments/diag_launch21_adopted.json` | `8c1dbe79feb3bdac` | `ca3b23a` |
 | `experiments/diag_launch21_base.json` | `d56acd623b955928` | `25a0419` |
 | `experiments/diag_launch21_f21.json` | `8c1dbe79feb3bdac` | `25a0419` |
@@ -1041,11 +1061,11 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/sweep_variant_no_burst_branch_2439a00d7f74.jsonl` | `ce8b169cfedc04fc` | `95f4ded` |
 | `experiments/sweep_variant_nocap+burst_fill_2439a00d7f74.jsonl` | `1f937262779098d3` | `95f4ded` |
 | `experiments/sweep_variant_nocap+no_burst_branch_2439a00d7f74.jsonl` | `f6bf22c02b73faa1` | `95f4ded` |
-| `experiments/sweep_variant_nocap+p2_od_2439a00d7f74.jsonl` | `93751f11b44f85c1` | `UNCOMMITTED` |
-| `experiments/sweep_variant_nocap+ref_p2_2439a00d7f74.jsonl` | `394161f96d15412b` | `UNCOMMITTED` |
+| `experiments/sweep_variant_nocap+p2_od_2439a00d7f74.jsonl` | `93751f11b44f85c1` | `e3fa46c` |
+| `experiments/sweep_variant_nocap+ref_p2_2439a00d7f74.jsonl` | `394161f96d15412b` | `e3fa46c` |
 | `experiments/sweep_variant_nocap_2439a00d7f74.jsonl` | `ce11fe8547249e29` | `ca3b23a` |
-| `experiments/sweep_variant_p2_od_2439a00d7f74.jsonl` | `48a071fd15b20789` | `UNCOMMITTED` |
-| `experiments/sweep_variant_ref_p2_2439a00d7f74.jsonl` | `9cd477361ca198cf` | `UNCOMMITTED` |
+| `experiments/sweep_variant_p2_od_2439a00d7f74.jsonl` | `48a071fd15b20789` | `e3fa46c` |
+| `experiments/sweep_variant_ref_p2_2439a00d7f74.jsonl` | `9cd477361ca198cf` | `e3fa46c` |
 | `experiments/sweep_variant_u10_ovh_4f08f48ac35c.jsonl` | `2c6ba4a99a7c5b44` | `3772258` |
 | `experiments/sweep_variant_u5nohib_kept_2439a00d7f74.jsonl` | `bda7e9f5701ed91a` | `0509b29` |
 | `experiments/sweep_variant_u5nohib_removed_2439a00d7f74.jsonl` | `8ee9fd8317a16be2` | `0509b29` |

@@ -721,6 +721,64 @@ def u3_table(d_on, d_off):
     w()
 
 
+def faithful_regime_table(d_on):
+    """T12c: the deadline factors at which the reference-faithful baseline is
+    also a functioning one. Phase 3 (U3) fires in no run at DF >= 1.0 and
+    §3.2's step 2 (U12) is inert there, so at those DFs the guard is the only
+    departure left; at DF 2.0 the guard-free baseline also misses nothing, so
+    it is an unmodified TCC23 Burst-HADS that works."""
+    w("### T12c. DF 1.0 and DF 2.0: R-BurstHADS against a reference-faithful Burst-HADS")
+    w()
+    w(f"Sources: `{SRC['on']}`, `{SRC['u5_off']}`, `{SRC['ref_p2']}`; exposure from `{SRC['u3_exposure']}`. "
+      "At DF 1.0 and DF 2.0 neither U3 (Phase 3 fires in 0 runs) nor U12 (no Dspot violators remain, so the "
+      "reference-faithful and guard-removed configurations are identical) applies, so the U5 guard is the only "
+      "departure left. **At DF 2.0 the guard-free baseline also misses no deadline**, so it is an unmodified "
+      "Burst-HADS that works, and the comparison there is the most faithful one this study can make. Cell sets are "
+      "identical across configurations.")
+    w()
+    w("| DF | configuration | cells | R mk vs B | R $ vs B | R dominates B | R sig. faster / slower | "
+      "R sig. cheaper / dearer | Burst-HADS missed tasks (of 600 runs) |")
+    w("|---|---|---|---|---|---|---|---|---|")
+    rows = (("guard kept (as frozen)", None), ("guard removed only", SRC["u5_off"]),
+            ("reference-faithful: §3.2 in full", SRC["ref_p2"]))
+    for df in (1.0, 2.0):
+        for label, var in rows:
+            d = dict(d_on)
+            if var:
+                try:
+                    d.update(load_jsonl(var))
+                except FileNotFoundError:
+                    continue
+            cells = cells_of(d)
+            comp = sorted(c for c, s in cells.items() if complete(s) and c[2] == df)
+            g = group_row({c: cell_stats(cells[c]) for c in comp}, comp)
+            bm = sum(r["misses"] for u, r in d.items() if u[4] == "burst" and u[2] == df and ok(r))
+            w(f"| {df} | {label} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
+              f"{g['fast']} / {g['slow']} | {g['cheap']} / {g['dear']} | {bm} |")
+    w()
+    w("Against the faithful baseline at DF 2.0 the result splits by bag size, and the split is what the paper "
+      "should state:")
+    w()
+    w("| DF 2.0, reference-faithful | cells | R mk vs B | R $ vs B | R dominates B | R sig. cheaper / dearer |")
+    w("|---|---|---|---|---|---|")
+    d = dict(d_on)
+    try:
+        d.update(load_jsonl(SRC["ref_p2"]))
+    except FileNotFoundError:
+        w("| (reference-faithful sweep missing) | | | | | |")
+        w()
+        return
+    cells = cells_of(d)
+    comp = [c for c, s in cells.items() if complete(s) and c[2] == 2.0]
+    stats = {c: cell_stats(cells[c]) for c in comp}
+    for name, sel in (("small bags, n ≤ 100", [c for c in comp if c[1] <= 100]),
+                      ("large bags, n ≥ 200", [c for c in comp if c[1] >= 200])):
+        g = group_row(stats, sorted(sel))
+        w(f"| {name} | {g['cells']} | {g['rbmk']:+.1f}% | {g['rbc']:+.1f}% | {g['dom']}/{g['cells']} | "
+          f"{g['cheap']} / {g['dear']} |")
+    w()
+
+
 def guard_tables():
     w("### T12b. How the U5 guard was decided: the Round A closing grid (historical)")
     w()
@@ -1504,6 +1562,7 @@ def main():
     w("## Disclosures")
     w()
     u5s = u5_sensitivity_table(d_on, d_off)
+    faithful_regime_table(d_on)
     guard = guard_tables()
     ablation_table(d_on, d_off)
     u3_table(d_on, d_off)

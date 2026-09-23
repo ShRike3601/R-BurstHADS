@@ -446,6 +446,16 @@ it: at DF 0.5 the makespan advantage over Burst-HADS is roughly a wash.
   guard is almost all of the swing: +2.57% with the guard removed alone.
 - It depends on launch headroom: −4.6% with limits, −14.1% without, over
   the same cells [T2b].
+- **It does not survive against a faithful baseline at small bags.** At
+  DF ≥ 1.0 neither U3 nor U12 applies (Phase 3 fires in no run; no violator
+  survives Part 2), so the guard is the only departure left, and at DF 2.0
+  the guard-free baseline also misses nothing — the most faithful comparison
+  available. There R-BurstHADS is −11.0% makespan but **+2.9% cost**,
+  dominating 10 of 20 cells, significantly dearer in 9 and cheaper in 3. It
+  splits by bag size: n ≥ 200 gives −18.7% / −5.4% and 9 of 10 cells
+  dominated; n ≤ 100 gives −3.3% / **+11.2%** and 1 of 10 [T12c]. At DF 1.0
+  the same comparison is −6.4% / +5.0%, but there the guard-free baseline
+  misses in 145 of 600 runs and is not a functioning scheduler.
 - It reverses without hibernation: R-BurstHADS is 3.4% dearer than
   Burst-HADS and 8.9% faster over the 15 cells of the no-hibernation runs
   (`u5_nohib_compare.txt`). That is the expected behaviour of a scheduler

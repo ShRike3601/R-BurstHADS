@@ -24,6 +24,7 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
 import matplotlib
+import matplotlib.ticker
 matplotlib.rcParams["pdf.fonttype"] = 42    # TrueType, not Type 3: IEEE PDF eXpress rejects Type 3
 matplotlib.rcParams["ps.fonttype"] = 42
 from ieee_figs import single, save, grouped_bars, trend, legend_above, INK, S
@@ -63,15 +64,19 @@ def series(metric, groups):
     return {k: [float(T1B[g][COL[metric][k]]) for g in groups] for k in S}
 
 
-def from_zero(ax, vals, headroom=1.06):
+def from_zero(ax, vals, metric, headroom=1.06):
+    """Zero-based y axis, with ticks printed the way the unit is read: money to
+    two decimals, seconds with a thousands separator."""
     ax.set_ylim(0, max(v for vs in vals.values() for v in vs) * headroom)
+    fmt = "${x:,.2f}" if metric == "cost" else "{x:,.0f}"
+    ax.yaxis.set_major_formatter(matplotlib.ticker.StrMethodFormatter(fmt))
 
 
 DFS = [0.25, 0.5, 1.0, 2.0]
 NS = [50, 100, 200, 300]
 SCS = ["sc1", "sc2", "sc3", "sc4", "sc5"]
 KHKR = {"sc1": "(1, 0)", "sc2": "(5, 0)", "sc3": "(1, 5)", "sc4": "(5, 5)", "sc5": "(3, 2.5)"}
-METRICS = {"cost": "Mean cost ($)", "mk": "Mean makespan (s)"}
+METRICS = {"cost": "Mean cost per run", "mk": "Mean makespan (s)"}
 
 # ── Figs. 1, 2: cost / makespan against the deadline factor ─────────────────
 for stem, metric in (("fig1_cost_vs_df", "cost"), ("fig2_makespan_vs_df", "mk")):
@@ -82,7 +87,7 @@ for stem, metric in (("fig1_cost_vs_df", "cost"), ("fig2_makespan_vs_df", "mk"))
     ax.set_xticks(DFS)
     ax.set_xticklabels([str(d) for d in DFS])
     ax.minorticks_off()
-    from_zero(ax, vals)
+    from_zero(ax, vals, metric)
     legend_above(fig, ax)
     made.append(save(fig, stem, outdir=str(OUT)))
 
@@ -92,7 +97,7 @@ for stem, metric in (("fig3_cost_vs_scenario", "cost"), ("fig4_makespan_vs_scena
     vals = series(metric, SCS)
     grouped_bars(ax, [f"{s}\n{KHKR[s]}" for s in SCS], vals, ylabel=METRICS[metric])
     ax.set_xlabel("Scenario (kh, kr)", color=INK)
-    from_zero(ax, vals)
+    from_zero(ax, vals, metric)
     legend_above(fig, ax)
     made.append(save(fig, stem, outdir=str(OUT)))
 
@@ -102,7 +107,7 @@ for stem, metric in (("fig5_cost_vs_n", "cost"), ("fig6_makespan_vs_n", "mk")):
     vals = series(metric, [f"n={n}" for n in NS])
     trend(ax, NS, vals, ylabel=METRICS[metric], xlabel="Tasks in the bag, n")
     ax.set_xticks(NS)
-    from_zero(ax, vals)
+    from_zero(ax, vals, metric)
     legend_above(fig, ax)
     made.append(save(fig, stem, outdir=str(OUT)))
 

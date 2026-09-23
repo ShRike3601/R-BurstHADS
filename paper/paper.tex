@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{longtable}
 \usepackage{textcomp}
 \usepackage{url}
 
@@ -648,8 +649,9 @@ $D = 2700$\,s, it changes nothing at all.
 
 None of the three is repaired here: repairing (i) or (ii) would change the
 baselines after the fact, and we prefer a disclosed, measured departure to a
-silent one. The deviation register accompanying this paper lists all 40 recorded
-deviations with their measured effects. Everything that follows is a controlled
+silent one. Table~\ref{tab:deviations} lists all 40 recorded deviations; the full
+register, with the measured effect behind every row, ships as supplementary
+material. Everything that follows is a controlled
 comparison of our re-implementations, not a reproduction.
 
 \section{Results}
@@ -725,6 +727,49 @@ hibernation switched off, R-BurstHADS is 3.4\% \emph{dearer} than Burst-HADS
 while still 8.9\% faster. That reversal is the expected behaviour of a
 scheduler that provisions in anticipation of interruptions, and we report it as
 a sanity check on the mechanism rather than as a defect.
+
+\textbf{Against an unmodified baseline, the cost advantage does not survive
+at small bags.} At $\mathit{DF} \geq 1.0$ neither of the other two departures
+applies --- the on-demand fallback of Section~\ref{sec:validation}(iii) fires
+in no run there, and no $D_{\mathit{spot}}$ violator survives Part 2, so (ii)
+is inert --- which leaves the guard as the only difference between our
+Burst-HADS and the published one. At $\mathit{DF} = 2.0$ the guard-free
+baseline also misses no deadline, so that regime carries the most faithful
+comparison this study can make: an unmodified Burst-HADS that works.
+
+There, R-BurstHADS is 11.0\% faster but 2.9\% \emph{dearer} on average,
+dominating in 10 of 20 cells and significantly dearer in 9 against
+significantly cheaper in 3 (Table~\ref{tab:faithful}). The result splits
+cleanly by bag size: over the ten cells with $|T| \geq 200$ it is 18.7\%
+faster and 5.4\% cheaper, dominating nine of ten; over the ten with
+$|T| \leq 100$ it is 11.2\% dearer for a makespan gain of 3.3\%, dominating
+one. At $\mathit{DF} = 1.0$, where the guard-free baseline misses a deadline
+in 145 of 600 runs and is therefore not a functioning scheduler, the same
+comparison gives 6.4\% faster and 5.0\% dearer.
+
+We state this plainly because it is the sharpest limit on the contribution:
+the cost advantage we report against our own Burst-HADS rests partly on the
+guard, and against a faithful one it holds only where the bag is large enough
+for elastic provisioning to pay for itself. The makespan advantage holds in
+both configurations.
+
+\begin{table}[t]
+\caption{$\mathit{DF} = 2.0$, where the guard-free baseline is both faithful
+and functioning: R-BurstHADS against Burst-HADS, 20 cells.}
+\label{tab:faithful}
+\centering
+\footnotesize
+\begin{tabular}{lcccc}
+\toprule
+Baseline & Makespan & Cost & Dominates & Cheaper / dearer \\
+\midrule
+our Burst-HADS (guard)   & $-28.5$\% & $-14.3$\% & 19/20 & 11 / 0 \\
+faithful (no guard)      & $-11.0$\% & $+2.9$\%  & 10/20 & 3 / 9 \\
+\quad $|T| \leq 100$     & $-3.3$\%  & $+11.2$\% & 1/10  & 0 / 9 \\
+\quad $|T| \geq 200$     & $-18.7$\% & $-5.4$\%  & 9/10  & 3 / 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 By scenario, the cost advantage is largest where interruptions are rarest:
 $-9.3$\% in sc1 and $-8.2$\% in sc3 ($k_h = 1$), $-4.3$\% in sc5 ($k_h = 3$),
@@ -856,7 +901,13 @@ HADS in 18 of 75 cells and Burst-HADS is cheaper than HADS in 16 of 80; the
 rest of the time the makespan is bought. What the results support is a trade
 priced per cell rather than a free lunch: R-BurstHADS's makespan is 25.7--29.9\%
 below HADS's at every bag size, for a premium that falls from 19.0\% (the price
-Burst-HADS pays) to 11.8\%.
+Burst-HADS pays) to 11.8\%. The trade is sharper against a faithful Burst-HADS:
+at $\mathit{DF} = 2.0$, the one regime where that baseline both follows the
+published algorithm and meets its deadlines, R-BurstHADS buys 11.0\% makespan
+for 2.9\% more money, and only at $|T| \geq 200$ does it win on both axes at
+once. Elastic provisioning has a fixed overhead --- an instance launched for a
+rescue is paid for whether or not the rescue was needed --- and a small bag
+does not amortise it.
 
 \subsection{Limitations}
 
@@ -911,6 +962,9 @@ reordering we deliberately did not make after seeing the measurement. Finally,
 the evaluation should move from a synthetic uniform workload to real BoT
 traces, where the straggler tail dominates makespan and elastic rescue capacity
 is likely to be worth more than reported here.
+
+\appendices
+\input{tables_generated}
 
 \begin{thebibliography}{00}
 \bibitem{hads2021} L. Teylo, L. Arantes, P. Sens, and L. M. de A. Drummond,
