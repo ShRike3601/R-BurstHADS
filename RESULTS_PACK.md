@@ -1029,7 +1029,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 
 | file | SHA-256 (first 16) | last changed in commit |
 |---|---|---|
-| `DEVIATIONS.md` | `d231e596d6e8616a` | `ad18335` |
+| `DEVIATIONS.md` | `7c966dd5cf0d620b` | `bb2b4d2` |
 | `experiments/diag_capped.txt` | `32c9f551bf0275aa` | `0509b29` |
 | `experiments/diag_cost_gap_fix20_capped_c3.json` | `2d6a1193e6b180fb` | `7be365a` |
 | `experiments/diag_cost_gap_fix20_nocap_c3.json` | `02440b12ee2ab44c` | `7be365a` |
@@ -1056,7 +1056,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 | `experiments/diag_launch21_f21b.json` | `6589c60faaf3e04c` | `25a0419` |
 | `experiments/diag_overcredit_boot.json` | `d049bebf5a63d279` | `c11c300` |
 | `experiments/diag_part2.txt` | `87a372e5c39096e9` | `9414054` |
-| `experiments/diag_provisioned.txt` | `4943f67a04167638` | `d7793bd` |
+| `experiments/diag_provisioned.txt` | `4943f67a04167638` | `bb2b4d2` |
 | `experiments/diag_u10.json` | `e53504f0c84f1458` | `3772258` |
 | `experiments/diag_u10_verify.txt` | `c47efe5874fefd33` | `8901181` |
 | `experiments/diag_u10_window.txt` | `0b34e03085f6c4f6` | `7be365a` |

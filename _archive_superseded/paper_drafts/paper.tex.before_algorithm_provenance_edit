@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{longtable}
 \usepackage{textcomp}
 \usepackage{url}
 
@@ -218,32 +219,10 @@ no instance type the baselines cannot also select. The per-task tier falls back
 to a burstable instance when a spot instance cannot be launched within the
 account limits or would breach the spare-time margin of
 Eq.~(\ref{eq:dspot})'s reserve. Every instance either behaviour launches, spot
-or burstable, is usable only after $T_{\mathit{start}}$. Table~\ref{tab:algprov} lists the
-provenance of every algorithm the scheduler executes; all seven are reproduced
-here so that the method can be implemented from this paper alone.
-
-\begin{table}[t]
-\caption{Provenance of the algorithms R-BurstHADS executes}
-\label{tab:algprov}
-\centering
-\footnotesize
-\begin{tabular}{@{}llp{3.0cm}@{}}
-\toprule
-Alg. & Source & Role \\
-\midrule
-\ref{alg:primary} & Burst-HADS~\cite{bursthads} & iterated local search over the static schedule \\
-\ref{alg:greedy}  & Burst-HADS~\cite{bursthads} & initial solution \\
-\ref{alg:ls}      & Burst-HADS~\cite{bursthads} & neighbourhood search \\
-\ref{alg:preempt} & \textbf{this work} & preemptive provisioning (Theorem 1) \\
-\ref{alg:sizing}  & \textbf{this work} & deadline-aware sizing (Theorem 2) \\
-\ref{alg:migrate} & Burst-HADS~\cite{bursthads} & burstable rescue on hibernation \\
-\ref{alg:steal}   & Burst-HADS~\cite{bursthads} & work stealing on idle \\
-\bottomrule
-\end{tabular}
-\end{table}
+or burstable, is usable only after $T_{\mathit{start}}$.
 
 \begin{algorithm}[t]
-\caption{Primary scheduler: iterated local search. Inherited from Burst-HADS~\cite{bursthads}; the guarded move marked in the listing is ours.}
+\caption{R-BurstHADS primary scheduler}
 \label{alg:primary}
 \begin{algorithmic}[1]
 \STATE $D_{\mathit{spot}} \leftarrow$ Eq.~(\ref{eq:dspot})
@@ -259,7 +238,7 @@ Alg. & Source & Role \\
     \STATE $it_r \leftarrow it$
   \ENDIF
   \STATE $S' \leftarrow \textsc{LocalSearch}(S, \mathit{RD}_{\mathit{spot}})$
-  \IF{$\mathit{fitness}(S') < \mathit{fitness}(S_{\mathit{best}})$} \COMMENT{Eq.~(\ref{eq:fitness})}
+  \IF{$\mathit{fitness}(S') < \mathit{fitness}(S_{\mathit{best}})$}
     \STATE $S_{\mathit{best}} \leftarrow S'$;\ \ $it_b \leftarrow it$
   \ENDIF
   \STATE $S \leftarrow S'$
@@ -285,7 +264,7 @@ Alg. & Source & Role \\
 \end{algorithm}
 
 \begin{algorithm}[t]
-\caption{\textsc{GreedyInitial}: initial solution. Inherited from Burst-HADS~\cite{bursthads}.}
+\caption{\textsc{GreedyInitial}: initial solution}
 \label{alg:greedy}
 \begin{algorithmic}[1]
 \STATE sort $T$ by memory requirement, descending
@@ -316,7 +295,7 @@ Alg. & Source & Role \\
 \end{algorithm}
 
 \begin{algorithm}[t]
-\caption{\textsc{LocalSearch}. Inherited from Burst-HADS~\cite{bursthads}.}
+\caption{\textsc{LocalSearch}}
 \label{alg:ls}
 \begin{algorithmic}[1]
 \REQUIRE solution $S$, bound $d$
@@ -350,7 +329,7 @@ ready, and provisions only when the comparison favours it
 (Algorithm~\ref{alg:preempt}).
 
 \begin{algorithm}[t]
-\caption{\textsc{PreemptiveProvision} (Theorem 1). \textbf{This work.}}
+\caption{\textsc{PreemptiveProvision} (Theorem 1)}
 \label{alg:preempt}
 \begin{algorithmic}[1]
 \REQUIRE incumbent $S_{\mathit{best}}$, threshold $\rho$
@@ -388,7 +367,7 @@ per-task placement path adds capacity incrementally under its own deadline
 test, so no safety margin is applied to (\ref{eq:sizing}).
 
 \begin{algorithm}[t]
-\caption{\textsc{DeadlineAwareProvision} (Theorem 2). \textbf{This work.}}
+\caption{\textsc{DeadlineAwareProvision} (Theorem 2)}
 \label{alg:sizing}
 \begin{algorithmic}[1]
 \REQUIRE queued tasks $Q$, current time $t$, active replacements $A$
@@ -407,7 +386,7 @@ test, so no safety margin is applied to (\ref{eq:sizing}).
 \end{algorithm}
 
 \begin{algorithm}[t]
-\caption{Burst migration procedure. Inherited from Burst-HADS~\cite{bursthads} (Algorithm~4).}
+\caption{Burst migration procedure}
 \label{alg:migrate}
 \begin{algorithmic}[1]
 \REQUIRE $Q_l$, $\mathit{IR}$, $\mathit{BR}$, $M^{o}$, $D$
@@ -436,7 +415,7 @@ test, so no safety margin is applied to (\ref{eq:sizing}).
 \end{algorithm}
 
 \begin{algorithm}[t]
-\caption{Work stealing. Inherited from Burst-HADS~\cite{bursthads} (Algorithm~5).}
+\caption{Work stealing}
 \label{alg:steal}
 \begin{algorithmic}[1]
 \REQUIRE newly idle $vm_k$, busy set $\mathit{BR}$, deadline $D$
@@ -512,8 +491,7 @@ $D$ above the migration reserve of (\ref{eq:dspot}), below which the problem is
 infeasible rather than tight; that floor is $339.7$\,s and it binds at
 $|T| = 50$ for $\mathit{DF} \leq 0.5$ and at $|T| = 100$ for
 $\mathit{DF} = 0.25$. It contains no deploy-time term. We sweep
-$\mathit{DF} \in \{0.25, 0.5, 1.0, 2.0\}$ in (\ref{eq:deadline}): since
-$\mathit{DF}$ and $\kappa$
+$\mathit{DF} \in \{0.25, 0.5, 1.0, 2.0\}$: since $\mathit{DF}$ and $\kappa$
 enter only as a product, sweeping $\mathit{DF}$ makes the calibration constant
 non-load-bearing, and results are reported across it.
 
@@ -544,14 +522,7 @@ independent Poisson process with rate $\lambda_h = k_h/D$ and, where resumption
 is modelled, $\lambda_r = k_r/D$. Algorithm parameters are given in
 Table~\ref{tab:params}. Every configuration is run with 30 seeds; all three
 schedulers see a byte-identical task set and interruption stream for a given
-seed, so the comparison is paired at the level of the workload. Hibernation is a stochastic process, so a single run reports the
-behaviour of one interruption pattern rather than of the scheduler. Each
-configuration is therefore summarised by the mean over its 30 seeds, which
-estimates the expected makespan and the expected cost of running the bag, the
-quantities a user who runs it repeatedly actually pays. Every cell mean
-reported below carries a 95\% confidence interval and schedulers are compared
-cell by cell as well as in aggregate, so no result here rests on a small
-number of favourable runs. The
+seed, so the comparison is paired at the level of the workload. The
 evaluation comprises 7{,}200 runs with the reference account limits, and the
 same 7{,}200 without them.
 
@@ -681,10 +652,9 @@ all.
 
 None of the three is repaired here: repairing (i) or (ii) would change the
 baselines after the fact, and we prefer a disclosed, measured departure to a
-silent one. The register records 40 deviations in all. Table~\ref{tab:deviations}
-carries the five that bear on how the numbers below should be read; the full
-register, with the measured effect and the evidence behind every row, ships as
-supplementary material. Everything that follows is a controlled
+silent one. Table~\ref{tab:deviations} lists all 40 recorded deviations; the full
+register, with the measured effect behind every row, ships as supplementary
+material. Everything that follows is a controlled
 comparison of our re-implementations, not a reproduction.
 
 \section{Results}
@@ -908,19 +878,17 @@ self-serving change made after seeing the measurement; the ordering is left as
 pre-registered and the reordering is left to future work.
 
 \begin{table}[t]
-\caption{Headline trade-off, launch limits on, 75 cells. R-BurstHADS
-dominates Burst-HADS on both axes in 49 cells, and is significantly faster in
-42 and significantly slower in 9.}
+\caption{Headline trade-off against HADS, launch limits on, 75 cells.}
 \label{tab:headline}
 \centering
 \footnotesize
-\begin{tabular}{@{}lcc@{}}
+\begin{tabular}{lccc}
 \toprule
-Comparison & Makespan & Cost \\
+ & Makespan & Cost & Dominates Burst-HADS \\
 \midrule
-Burst-HADS vs HADS        & $-19.6$\% & $+19.0$\% \\
-R-BurstHADS vs HADS       & $-27.7$\% & $+11.8$\% \\
-R-BurstHADS vs Burst-HADS & $-12.0$\% & $-4.6$\% \\
+Burst-HADS   & $-19.6$\% & $+19.0$\% & --- \\
+R-BurstHADS  & $-27.7$\% & $+11.8$\% & 49 of 75 cells \\
+R vs Burst-HADS & $-12.0$\% & $-4.6$\% & 42 / 9 faster / slower \\
 \bottomrule
 \end{tabular}
 \end{table}

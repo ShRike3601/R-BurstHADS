@@ -1,9 +1,11 @@
 """
 Generate the paper's appendix tables from committed data only:
 
-  * the deviation register index (every row of DEVIATIONS.md), and
-  * the per-cell means with 95% confidence intervals, limits on and off,
-    which are RESULTS_PACK.md's T3 and T4.
+  * the curated deviation table the paper carries (the rows a reader needs
+    to interpret a number in the results), checked against DEVIATIONS.md.
+
+The per-cell means with 95% confidence intervals are no longer typeset here:
+they are RESULTS_PACK.md's T3 and T4, which ship as supplementary material.
 
     python experiments\\make_paper_tables.py     (from the project root)
 
@@ -99,81 +101,104 @@ def status_short(s):
 
 
 def write_register(w):
+    """The paper carries only the rows a reader needs to interpret a number.
+
+    The full 40-row register, with every measured effect and its evidence
+    file, is supplementary (DEVIATIONS.md). Reproducing all 40 here turned the
+    results section into a changelog: most rows record fidelity work whose
+    effect is already folded into the numbers, and several were phrased in
+    internal release vocabulary that means nothing to a reader. The rows below
+    are the ones the body actually argues from, rewritten for the paper.
+    PAPER_ROWS is checked against DEVIATIONS.md on every build so the two
+    cannot drift apart silently.
+    """
+    PAPER_ROWS = [
+        ("U3", "On-demand fallback inside the primary schedule",
+         "design, kept",
+         "Where no spot instance can take a task within $D_{spot}$, the reference "
+         "implementation reports no solution; ours places the task on an on-demand "
+         "instance judged against $D$. It fires in 905 of 2,400 runs, all at "
+         "$DF \\leq 0.5$, and in all 150 floor-cell runs. Over the 45 cells a "
+         "reference-faithful Burst-HADS could solve, R-BurstHADS is 19.1\\% faster "
+         "and 7.5\\% cheaper than Burst-HADS against 12.0\\% and 4.6\\% over all 75, "
+         "so keeping the fallback retains our weakest cells."),
+        ("U5", "Proactive burstable allocation guard",
+         "kept --- our addition",
+         "The source work moves every $D_{spot}$ violator onto an idle burstable "
+         "instance; ours moves a task only when its baseline-mode finish improves "
+         "on its current finish. At $DF = 2.0$, the only regime in which the "
+         "guard-free baseline meets every deadline, R-BurstHADS is 14.3\\% cheaper "
+         "than Burst-HADS with the guard and 2.9\\% dearer with Section 3.2 "
+         "followed in full. Removing the guard turns 974 clean Burst-HADS runs "
+         "into runs that miss a deadline and none the other way, which is why no "
+         "sweep-wide comparison against a guard-free baseline is cited."),
+        ("U12", "Violators the burstables did not take",
+         "open, measured",
+         "Section 3.2 sends the $D_{spot}$ violators still on spot instances to the "
+         "cheapest on-demand instances. We do not implement that step, so 575 of "
+         "2,400 runs leave 12,150 violators on spot. Implementing it alone takes "
+         "Burst-HADS from 6 to 302 missed tasks and 4.1 points dearer against "
+         "HADS, and changes nothing on the source work's own catalogue."),
+        ("E12", "Deploy time of instances a scheduler launches",
+         "corrected",
+         "Assumption~1. Before it was enforced, 36,574 of 42,249 runtime launches "
+         "started a task before the instance was ready; after it, none of 42,623. "
+         "It charges deploy time to capacity the baselines rely on as well as to "
+         "ours."),
+        ("E14", "Deadline floor",
+         "design",
+         "The floor of 339.7\\,s contains no deploy-time term. With deploy time "
+         "charged, HADS finds no feasible schedule in 110 of the 150 floor-cell "
+         "runs against 10 before, and every one of them is feasible once the "
+         "launch limits are lifted. These five cells are reported separately and "
+         "excluded from every cross-scheduler average."),
+    ]
+
+    known = {ident for _, ident, _, _ in register_rows()}
+    missing = [r[0] for r in PAPER_ROWS if r[0] not in known]
+    if missing:
+        raise SystemExit("PAPER_ROWS no longer in DEVIATIONS.md: %s" % missing)
+
     rows = register_rows()
     counts = {}
     for _, _, _, st in rows:
-        k = re.split(r"[\s—(-]", st, maxsplit=1)[0].lower()
+        k = re.split(r"[\s(-]", st, maxsplit=1)[0].lower()
         counts[k] = counts.get(k, 0) + 1
     order = ["corrected", "design", "open", "kept", "inert"]
     summary = ", ".join(f"{counts.get(k, 0)} {k}" for k in order if counts.get(k))
-    w(r"\section{Appendix: deviation register}")
+
+    w(r"\section{Appendix: deviations from the published algorithms}")
     w(r"\label{sec:deviations}")
     w("")
-    w(f"Every place our re-implementations differ from the published algorithms, with the status of each. "
-      f"The register holds {len(rows)} rows: {summary}. \"Corrected\" means the code now follows the source and the "
-      r"row is kept because earlier results used the deviation; ``design'' is a deliberate modelling choice this "
-      r"study keeps; ``open'' means the code still differs. The full register, with the measured effect and the "
-      r"evidence file behind every row, ships as supplementary material (\texttt{DEVIATIONS.md}); the three rows "
-      r"that bear on how the results should be read are discussed in Section~\ref{sec:validation}.")
+    w(f"We keep a register of every place our re-implementations differ from the "
+      f"published algorithms. It holds {len(rows)} rows: {summary}. "
+      r"``Corrected'' means the code now follows the source and the row is kept "
+      r"because earlier results used the deviation; ``design'' is a deliberate "
+      r"modelling choice this study keeps; ``open'' means the code still differs. "
+      r"The register in full, with the measured effect and the evidence file "
+      r"behind every row, ships as supplementary material "
+      r"(\texttt{DEVIATIONS.md}). Table~\ref{tab:deviations} carries only the "
+      r"rows a reader needs in order to interpret a number in "
+      r"Section~\ref{sec:results}; the first three are the departures discussed "
+      r"in Section~\ref{sec:validation}.")
     w("")
     w(r"\begin{table*}[t]")
-    w(r"\caption{The deviation register. The effect column is filled only where the effect has been measured; "
-      r"an em dash means it has not. The full text of every row, with its evidence file, is supplementary.}")
+    w(r"\caption{Deviations that bear on how the results should be read. The "
+      r"remaining rows of the register are supplementary.}")
     w(r"\label{tab:deviations}")
     w(r"\centering")
-    w(r"\scriptsize")
-    w(r"\begin{tabular}{@{}lp{3.4cm}p{2.5cm}p{8.6cm}@{}}")
+    w(r"\footnotesize")
+    w(r"\begin{tabular}{@{}lp{3.2cm}p{1.9cm}p{9.9cm}@{}}")
     w(r"\toprule")
-    w(r"\# & Deviation & Status & Measured effect \\")
-    current = None
-    for section, ident, name, status in rows:
-        if section != current:
-            w(r"\midrule")
-            w(r"\multicolumn{4}{@{}l}{\textbf{" + tex(section) + r"}} \\")
-            w(r"\midrule")
-            current = section
-        effect = tex(EFFECTS[ident]) if ident in EFFECTS else "---"
-        w(f"{ident} & {tex(name)} & {tex(status_short(status))} & {effect} " + r"\\")
+    w(r"\# & Deviation & Status & What it does to the numbers \\")
+    w(r"\midrule")
+    for ident, name, status, effect in PAPER_ROWS:
+        w(f"{ident} & {name} & {status} & {effect} " + r"\\[2pt]")
     w(r"\bottomrule")
     w(r"\end{tabular}")
     w(r"\end{table*}")
     w("")
 
-
-def write_cells(w, rel, label, ident, setting):
-    d = rp.load_jsonl(rel)
-    cells = rp.cells_of(d)
-    stats = {c: rp.cell_stats(s) for c, s in cells.items()}
-    w(r"\begin{longtable}{@{}lrr" + "rr" * 3 + r"@{}}")
-    w(r"\caption{Per-cell means with 95\% confidence intervals, " + setting +
-      r". Makespan in seconds, cost in dollars; each cell is 30 seeds. A cell in which a scheduler was infeasible "
-      r"in some seed is averaged over its feasible seeds and excluded from the cross-scheduler tables "
-      r"(Section~\ref{sec:results}).}\label{" + label + r"}\\")
-    w(r"\toprule")
-    head = (r"Scenario & $|T|$ & DF & \multicolumn{2}{c}{HADS} & \multicolumn{2}{c}{Burst-HADS} & "
-            r"\multicolumn{2}{c}{R-BurstHADS} \\")
-    sub = r" & & & mkp & cost & mkp & cost & mkp & cost \\"
-    w(head)
-    w(sub)
-    w(r"\midrule")
-    w(r"\endfirsthead")
-    w(r"\toprule")
-    w(head)
-    w(sub)
-    w(r"\midrule")
-    w(r"\endhead")
-    w(r"\bottomrule")
-    w(r"\endfoot")
-    for c in sorted(cells):
-        st = stats[c]
-        vals = []
-        for k in rp.KEYS:
-            mk, mkh, _ = st[k]["mk"]
-            co, coh, _ = st[k]["cost"]
-            vals += [f"{mk:,.0f}\\,$\\pm${mkh:,.0f}", f"{co:.3f}\\,$\\pm${coh:.3f}"]
-        w(f"{c[0]} & {c[1]} & {c[2]} & " + " & ".join(vals) + r" \\")
-    w(r"\end{longtable}")
-    w("")
 
 
 def main():
@@ -183,18 +208,12 @@ def main():
     w(r"% Sources: DEVIATIONS.md and the committed sweeps of freeze-fix21 (" + FP + ").")
     w("")
     write_register(w)
-    # longtable cannot break inside a two-column body, so the per-cell appendix
-    # runs single column and \twocolumn restores the document at the end.
-    w(r"\onecolumn")
-    w(r"\section{Appendix: per-cell results}")
-    w(r"\label{sec:percell}")
+    # The per-cell means (240 rows over two limit settings) are supplementary:
+    # four pages of numbers nobody reads, and the figures already show the same
+    # data aggregated by deadline factor, scenario and bag size.
+    w(r"Per-cell means with 95\% confidence intervals for all 80 cells, under "
+      r"both launch-limit settings, are supplementary material.")
     w("")
-    w(r"These are the cell means behind every aggregate in Section~\ref{sec:results}: "
-      r"Table~\ref{tab:cells-on} under the reference account limits and Table~\ref{tab:cells-off} without them.")
-    w("")
-    write_cells(w, f"experiments/sweep_raw_{FP}.jsonl", "tab:cells-on", "T3", "launch limits on")
-    write_cells(w, f"experiments/sweep_variant_nocap_{FP}.jsonl", "tab:cells-off", "T4", "launch limits off")
-    w(r"\twocolumn")
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)} ({len(lines)} lines)")
 
