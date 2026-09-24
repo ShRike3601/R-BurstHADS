@@ -38,7 +38,7 @@ full sweep, and 11.0\% below an unmodified Burst-HADS in the one regime where
 that baseline needs no repair from us. That speed costs 2.9\% more money, and
 the penalty is concentrated in small bags: 12.7\% dearer at 50 tasks and 9.6\%
 at 100, in the same direction at every deadline factor and both launch-limit
-settings we measured. On the broader sweep, against our
+settings we measured, and on the smallest bag it is no faster either. On the broader sweep, against our
 own Burst-HADS, it is 4.6\% cheaper and dominates in 49 of 75 cells, but that
 baseline carries three departures from the published algorithm which we
 disclose and quantify, so we report a controlled comparison with a documented
@@ -53,7 +53,7 @@ hibernation, bag-of-tasks, deadline constraints
 \section{Introduction}
 
 Infrastructure-as-a-Service providers sell surplus capacity at a steep discount
-under names such as Amazon EC2 Spot. The discount is paid for in reliability:
+under names such as Amazon EC2 Spot~\cite{aws}. The discount is paid for in reliability:
 the provider may reclaim the instance at short notice. Amazon EC2 additionally
 offers \emph{hibernation}, in which the instance's memory and context are
 written to its EBS root volume and execution is suspended rather than
@@ -71,7 +71,7 @@ Teylo et al. addressed this setting in two stages. HADS~\cite{hads2021}
 schedules a BoT application across spot and non-burstable on-demand instances
 and, when a spot VM hibernates, migrates its unfinished tasks to other running
 instances or to newly launched on-demand ones. Burst-HADS~\cite{bursthads}
-extends this with \emph{burstable} instances, which accumulate CPU credits
+extends this with \emph{burstable} instances~\cite{t3}, which accumulate CPU credits
 while idle and can then be driven at full processing power in burst mode; a
 hibernation is answered first by migrating a task to an idle burstable VM,
 and only then by falling back to on-demand capacity.
@@ -121,7 +121,8 @@ The line we build on schedules explicitly against a hibernation process.
 
 \subsection{HADS and Burst-HADS}
 
-HADS~\cite{hads2021} formulates BoT scheduling on spot and on-demand instances
+HADS~\cite{hads2021}, developed from an earlier conference version~\cite{hadsconf},
+formulates BoT scheduling on spot and on-demand instances
 as a cost-minimisation problem under a deadline $D$, building a static map with
 a greedy single-pass construction and migrating tasks away from hibernated
 instances at runtime. Burst-HADS~\cite{bursthads} replaces the greedy
@@ -473,9 +474,18 @@ declared rates in Table~\ref{tab:vms} are read only by Theorem 1's trigger, so
 no result here can be attributed to per-type risk awareness.
 
 Tasks are drawn independently with execution time
-$\mathcal{U}[100,350]$\,s and memory $\mathcal{U}[2.85,13.19]$\,MB, matching the
-ranges reported for the reference jobs, with
-$|T| \in \{50,100,200,300\}$.
+$\mathcal{U}[100,350]$\,s and memory $\mathcal{U}[2.85,13.19]$\,MB, spanning
+the synthetic jobs of the source work's Table~6 from the smallest per-job
+minimum to the largest per-job maximum, with $|T| \in \{50,100,200,300\}$.
+
+Memory does no work in these results. Task footprints are three orders of
+magnitude below instance capacity, so the memory term of
+$\textsc{Feasible}$ cannot bind: even if every task of the largest bag were
+assigned to the smallest instance in the catalogue,
+$300 \times 13.19$\,MB $=3.96$\,GB fits within its 4\,GB. We keep the term
+because the published algorithm has it and because the source work's real
+application, whose tasks are 153--178\,MB each, is a workload in which it does
+bind.
 
 \begin{table}[t]
 \caption{VM catalogue. Three instances of each spot type; $s_j$ is per core, so whole-instance throughput is $s_j\cdot\mathit{nvc}_j$. A burstable holds one task at a time.}
@@ -548,10 +558,10 @@ seed, so the comparison is paired at the level of the workload. Hibernation is a
 behaviour of one interruption pattern rather than of the scheduler. Each
 configuration is therefore summarised by the mean over its 30 seeds, which
 estimates the expected makespan and the expected cost of running the bag, the
-quantities a user who runs it repeatedly actually pays. Every cell mean
-reported below carries a 95\% confidence interval and schedulers are compared
-cell by cell as well as in aggregate, so no result here rests on a small
-number of favourable runs. The
+quantities a user who runs it repeatedly actually pays. Every cell mean carries a
+95\% confidence interval in the supplementary per-cell tables, and schedulers
+are compared cell by cell as well as in aggregate, so no result here rests on a
+small number of favourable runs. The
 evaluation comprises 7{,}200 runs with the reference account limits, and the
 same 7{,}200 without them.
 
@@ -611,8 +621,8 @@ against 25.87\%, and its hibernation premium over its own no-hibernation cost
 $+43$\% against $+25$\% (HADS: $+110$\% against $+95$\%).
 
 We ruled out three explanations by measurement: the aggregation rule, the
-billing rule and EBS charges while hibernated each move the 20-cell cost change
-by a few points at most. What remains tracks hibernation exposure, which
+billing rule and EBS charges while hibernated each move the cost change over the
+validation catalogue's 20 cells by a few points at most. What remains tracks hibernation exposure, which
 follows the spot pool size --- a quantity the source work does not state, and
 for which no value reproduces its no-hibernation and hibernation tables
 together.
@@ -661,9 +671,10 @@ guard removed" alone, which is neither our behaviour nor the published one, but
 the reference-faithful configuration with both parts of Section 3.2 in place.
 Following Section 3.2 in full --- the guard removed \emph{and} the leftover
 violators sent to on-demand instances --- produces a baseline that does not
-work at most of our deadlines: it misses a deadline in 91\% of runs at
-$\mathit{DF} = 0.25$, 48\% at 0.5 and 24\% at 1.0, and only at
-$\mathit{DF} = 2.0$ does it meet every deadline. We therefore report no
+work at most of our deadlines. Its miss shares are those of (i) alone to within
+a single run --- 91\% of runs at $\mathit{DF} = 0.25$, 48\% at 0.5, 24\% at 1.0
+and none at 2.0 --- which is itself evidence that the guard, not step 2, accounts
+for the difference between the two baselines. We therefore report no
 sweep-wide comparison against it. Averaging cost over regimes in which the
 comparator fails most of its deadlines is not a comparison, and it would
 flatter us: the sweep-wide figure is milder than the one at
@@ -748,17 +759,18 @@ $\mathit{DF} = 0.5$ the makespan advantage over Burst-HADS is a wash
 ($-1.0$\%), with 7 cells in which R-BurstHADS is significantly slower against 6
 in which it is significantly faster. The advantage lives where there is slack
 to use: $-14.7$\% at $\mathit{DF} = 1.0$ and $-28.5$\% at $\mathit{DF} = 2.0$
-(Figs.~\ref{fig:mk-df} and~\ref{fig:mk-n}).
+(Figs.~\ref{fig:mk-df} and~\ref{fig:mk-n}). It also disappears on the smallest
+bag against the faithful baseline, where R-BurstHADS is 0.6\% slower
+(Table~\ref{tab:faithful}). Those two are the only places we measured in which
+it does not hold.
 
 \textbf{The cost result is scale-dependent, and we anchor it on the faithful
 baseline.} Against our own Burst-HADS, R-BurstHADS's cost premium over HADS is
 11.8\% against 19.0\%, and it is 4.6\% cheaper than Burst-HADS
 (Figs.~\ref{fig:cost-df} and~\ref{fig:cost-n}). That baseline carries the U5
-guard and lacks Section 3.2's on-demand step, so we take the anchor from the
-regime that needs neither: at $\mathit{DF} = 2.0$ the unmodified baseline both
-follows the published algorithm and meets every deadline
-(Table~\ref{tab:faithful}). There R-BurstHADS is 2.9\% dearer on average, and
-dearer on every small bag we measured.
+guard and lacks Section 3.2's on-demand step, so the anchor is taken from the one
+regime that needs neither, $\mathit{DF} = 2.0$, where the sign of the result
+reverses. That comparison is set out two paragraphs below.
 
 Three further conditions travel with any cost number here. It depends on the
 retained guard and the unimplemented step of Section~\ref{sec:validation}; it
@@ -789,8 +801,8 @@ dearer.
 \textbf{What replicates is the small-bag penalty.} Against the faithful
 baseline R-BurstHADS is dearer at $|T| = 50$ and $|T| = 100$ in every
 configuration we measured: $+12.7$\% and $+9.6$\% at $\mathit{DF} = 2.0$,
-$+9.3$\% and $+13.4$\% at $\mathit{DF} = 1.0$, and $+13.6$\% and $+12.6$\% at
-$\mathit{DF} = 2.0$ with the launch limits lifted. This is a negative result
+$+9.3$\% and $+13.4$\% at $\mathit{DF} = 1.0$, and $+13.6$\% and $+12.6$\% with
+the launch limits lifted. This is a negative result
 about our own method and we state it as ours: on a small bag, elastic
 provisioning costs more than it returns.
 
@@ -836,7 +848,9 @@ configurations.
 \caption{$\mathit{DF} = 2.0$, where the unmodified baseline is both faithful
 and functioning: R-BurstHADS against Burst-HADS over 20 cells, and the
 utilisation of the capacity R-BurstHADS provisions. The bag-size rows are a
-post-hoc subgroup of five cells each.}
+post-hoc subgroup of five cells each. \emph{Dominates} counts cells on the point
+estimates of both means; \emph{cheaper / dearer} counts only cells where the
+difference is significant, so the two columns need not agree.}
 \label{tab:faithful}
 \centering
 \footnotesize
@@ -989,9 +1003,10 @@ off & $-19.5$\% & $+20.3$\% & $-32.0$\% & $+1.9$\%  & $-14.1$\% \\
 
 \subsection{Cost--makespan trade}
 
-Neither extension dominates HADS on cost. R-BurstHADS is no more expensive than
-HADS in 18 of 75 cells and Burst-HADS is cheaper than HADS in 16 of 80; the
-rest of the time the makespan is bought. What the results support is a trade
+Neither extension dominates HADS on cost. Over the 75 cells feasible under
+launch limits, R-BurstHADS is no more expensive than HADS in 18 and Burst-HADS
+in 16; the rest of the time
+the makespan is bought. What the results support is a trade
 priced per cell rather than a free lunch: R-BurstHADS's makespan is 25.7--29.9\%
 below HADS's at every bag size, for a premium that falls from 19.0\% (the price
 Burst-HADS pays) to 11.8\%. The trade is sharper against a faithful Burst-HADS:
@@ -1043,11 +1058,14 @@ list as much as of the algorithm.
 We presented R-BurstHADS, which extends Burst-HADS with elastic spot
 provisioning sized against the remaining deadline by a work-conservation
 argument, drawing from the same instance catalogue available to the baselines.
-Across 7{,}200 runs per launch-limit setting, the makespan result holds
-without qualification: 27.7\% below HADS and 12.0\% below Burst-HADS on the
+Across 7{,}200 runs per launch-limit setting, the makespan result holds in
+every aggregate we measured: 27.7\% below HADS and 12.0\% below Burst-HADS on the
 full sweep, 11.0\% below an unmodified Burst-HADS at $\mathit{DF} = 2.0$, and
 shorter in every other configuration measured --- limits lifted, burstable tier
-disabled, hibernation switched off. The cost result does not hold in general. Against
+disabled, hibernation switched off. Two qualifications travel with it: at
+$\mathit{DF} = 0.5$ the advantage over Burst-HADS is a wash, and on the smallest
+bag against an unmodified baseline it disappears. The cost result does not hold
+in general. Against
 the unmodified baseline R-BurstHADS is 2.9\% dearer on average, and dearer on
 small bags in every configuration measured --- 12.7\% at 50 tasks and 9.6\% at
 100 --- which we report as a limit of the method rather than of the
@@ -1079,7 +1097,8 @@ environments,'' \emph{Cluster Computing}, vol.~24, no.~2, pp.~1051--1073, 2021.
 
 \bibitem{bursthads} L. Teylo, L. Arantes, P. Sens, and L. M. de A. Drummond,
 ``Scheduling bag-of-tasks in clouds using spot and burstable virtual
-machines,'' \emph{IEEE Transactions on Cloud Computing}, 2023.
+machines,'' \emph{IEEE Trans. Cloud Comput.}, vol.~11, no.~1, pp.~984--996,
+Jan.--Mar. 2023, doi: 10.1109/TCC.2021.3125426.
 
 \bibitem{hadsconf} L. Teylo, L. Arantes, P. Sens, and L. M. de A. Drummond,
 ``A hibernation aware dynamic scheduler for cloud environments,'' in

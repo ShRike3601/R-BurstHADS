@@ -163,6 +163,17 @@ folder. Start sessions in this folder.
   of those cells and in 905 of 2,400 runs overall (`u3_exposure.txt`).
 - `PER_CORE_SPEED` in `main.py` is the single source for speeds. Do not
   hardcode a speed anywhere.
+- **Memory never binds in the sweep.** Task footprints are MB
+  (`Task.memory_req`, U[2.85, 13.19]); instance capacity is MB too
+  (`VM.memory_mb = memory_gb * 1024`), so the units are consistent. The
+  largest bag on the smallest instance is 300 × 13.19 MB = 3,957 MB against
+  4,096 MB, so the memory term of `_check_schedule` / `can_fit_task` cannot
+  bind at any n in this grid. The sweep's range is not a mis-transcription of
+  TCC23's 2.81 MB: Table 6 gives per-job ranges (J60 2.85–12.20, J80
+  2.91–13.19, J100 2.81–10.86, ED200 153.74–177.77) and the sweep spans the
+  smallest minimum to the largest maximum of the synthetic jobs.
+  `paper_reproduction.py` reproduces each job's own range, and for ED200
+  memory does bind.
 - Deadline: `D = DF * DEADLINE_SLACK * ideal_makespan(n)`, floored at
   `min_feasible_deadline()` (339.7 s). `DEADLINE_SLACK = 3.0`. Since DF
   and DEADLINE_SLACK only ever appear as a product, sweeping DF makes the
@@ -402,9 +413,10 @@ sc5 −24.4% / +4.0%.
   +20.3% cost. With limits off Burst-HADS and R-BurstHADS still miss 5
   tasks between them, in the same floor cells [T5]. **Report both; lead
   with limits on.**
-- Burst-HADS is cheaper than HADS in 16 of 80 cells. R-BurstHADS ranges
-  from −23.5% (sc4 n=300 DF=2.0) to +41.6% (sc4 n=50 DF=1.0) and is no
-  more expensive than HADS in 18 of 75 cells [T3].
+- Over the 75 cells, R-BurstHADS is no more expensive than HADS in 18 and
+  Burst-HADS in 16 (same cell set; the all-80 count for Burst-HADS is also
+  16). R-BurstHADS ranges from −23.5% (sc4 n=300 DF=2.0) to +41.6% (sc4 n=50
+  DF=1.0) [T3].
 - HADS's makespan is 63–100% of D (cell means; 47–100% per run); it never
   exceeds D.
 

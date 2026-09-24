@@ -1029,7 +1029,7 @@ Every number above is computed by `experiments/results_pack.py` from these commi
 
 | file | SHA-256 (first 16) | last changed in commit |
 |---|---|---|
-| `DEVIATIONS.md` | `7c966dd5cf0d620b` | `bb2b4d2` |
+| `DEVIATIONS.md` | `c590ad1143f330d6` | `da8e169` |
 | `experiments/diag_capped.txt` | `32c9f551bf0275aa` | `0509b29` |
 | `experiments/diag_cost_gap_fix20_capped_c3.json` | `2d6a1193e6b180fb` | `7be365a` |
 | `experiments/diag_cost_gap_fix20_nocap_c3.json` | `02440b12ee2ab44c` | `7be365a` |
