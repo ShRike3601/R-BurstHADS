@@ -179,9 +179,13 @@ folder. Start sessions in this folder.
   and DEADLINE_SLACK only ever appear as a product, sweeping DF makes the
   constant non-load-bearing — **report across DF, do not recalibrate.**
   In the sweep grid the floor binds at n=50 for DF ≤ 0.5 (so those two
-  DF points are the same cell) and at n=100 for DF = 0.25. The floor has
-  no deploy-time term; since fix 21 it binds HADS's feasibility in the
-  n = 100, DF = 0.25 cells (DEVIATIONS E14).
+  DF points are the same cell) and at n=100 for DF = 0.25. **Fifteen cells
+  sit on the floor** (three (n, DF) points x five scenarios, all at
+  D = 339.7 s, `floored=True` in the sweep rows); **five are excluded** from
+  the cross-scheduler tables, the n = 100, DF = 0.25 ones, because HADS is
+  infeasible there. Do not conflate the two counts. The floor has
+  no deploy-time term; since fix 21 it binds HADS's feasibility in those
+  five cells (DEVIATIONS E14).
 - Billing is one rule: launch to genuine shutdown (TCC23 §3.1). A VM's
   meter opens when a scheduler launches it (`LaunchCounter.commit`, fix
   13), used or not, and stops on hibernation or termination.

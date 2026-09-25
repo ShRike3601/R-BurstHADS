@@ -175,6 +175,7 @@ $\alpha$ & cost/makespan weight in the fitness function \\
 $\mathit{burst\_rate}$ & burstable fleet size as a fraction of $|S|$ \\
 $Q_l$ & unfinished tasks of a hibernated instance $vm_l$ \\
 $\mathit{IR}$, $\mathit{BR}$ & sets of idle and busy instances \\
+$M^{s}$ & pool of spot instances the schedulers may select \\
 $M^{o}$, $M^{b}$ & elastic on-demand and burstable pools \\
 $A$ & active replacement instances provisioned at runtime \\
 $W$ & remaining work of the tasks awaiting placement \\
@@ -348,7 +349,13 @@ execution of an average task, derived from its rate $\lambda_h$. For each $v$
 with $p_v$ above a threshold $\rho$, R-BurstHADS compares the expected cost of
 rescuing $v$'s tasks reactively against the cost of holding a replacement
 ready, and provisions only when the comparison favours it
-(Algorithm~\ref{alg:preempt}).
+(Algorithm~\ref{alg:preempt}). The reactive term prices every displaced task
+at the on-demand rate, which is the last tier a rescue reaches: in practice a
+rescue often lands on a standing burstable or on a replacement already
+provisioned, both cheaper. $C_{\mathit{react}}$ is therefore an upper bound on
+the cost of reacting, and the trigger fires somewhat more readily than a
+tier-aware estimate would. We keep the bound as specified rather than tune it,
+and note that it moves against the cost results we report.
 
 \begin{algorithm}[t]
 \caption{\textsc{PreemptiveProvision} (Theorem 1). \textbf{This work.}}
@@ -386,7 +393,26 @@ new instance. If the surviving fleet can already retire the queue before $D$
 the deficit is non-positive and nothing is provisioned; the scheduler then
 behaves exactly as Burst-HADS. Should the estimate prove optimistic, the
 per-task placement path adds capacity incrementally under its own deadline
-test, so no safety margin is applied to (\ref{eq:sizing}).
+test.
+
+(\ref{eq:sizing}) carries no explicit safety factor, but it does carry an
+implicit margin, and in our favour we should say so rather than claim it does
+not. The horizon $T$ excludes $T_{\mathit{start}}$ because a \emph{new}
+instance cannot work during its boot, yet $\Theta(A)$ is the throughput of
+replacements that are \emph{already running} and can work for the full
+$D - t$. Crediting them only over $T$ under-counts their contribution by
+$\Theta(A)\,T_{\mathit{start}}$ work units, so the deficit is overstated and
+the sizing provisions about
+$\Theta(A)\,T_{\mathit{start}} / (\theta\,T)$ instances more than the
+work-conservation argument requires. The margin grows as the deadline
+tightens, because $T$ shrinks. With the two active replacements our runs
+average and the pool's \texttt{c5.xlarge} ($\theta = 8$ work units per
+second), it is $90/T$ instances: under 0.05 at the loosest deadlines in the
+grid and about 0.5 at the floor, and because $n_{\mathit{extra}}$ is a ceiling
+it costs an instance only when the true deficit falls within it of an integer.
+The margin over-provisions, so it works against the cost results we report; we
+leave the sizing exactly as it was pre-registered rather than tightening it
+after seeing the numbers.
 
 \begin{algorithm}[t]
 \caption{\textsc{DeadlineAwareProvision} (Theorem 2). \textbf{This work.}}
@@ -426,13 +452,17 @@ test, so no safety margin is applied to (\ref{eq:sizing}).
   \STATE \textbf{Attempt 3} (R-BurstHADS): provision one instance for $t_i$:
          spot if it passes the finish, spare-time and launch-limit tests, else a
          burstable if it finishes by $D$; ready at $t + T_{\mathit{start}}$
-         \COMMENT{\textsc{DeadlineAwareProvision}, Alg.~\ref{alg:sizing}, runs
-         after a hibernation, not per task}
   \STATE \textbf{Attempt 4}: an on-demand instance with launch room
          (Burst-HADS first takes any on-demand pool instance, launched or not;
          Sec.~\ref{sec:validation}), else a new $vm_j \in M^{o}$, cheapest type
          first, if $t + T_{\mathit{start}} + e_{ij}(1+\omega) \leq D$
+  \STATE the first attempt that succeeds places $t_i$; the remaining attempts
+         are not tried
 \ENDFOR
+\STATE \textbf{once per hibernation event, after the loop} (R-BurstHADS):
+       $A \leftarrow A\ \cup$ \textsc{DeadlineAwareProvision}($Q$, $t$, $A$)
+       \COMMENT{Alg.~\ref{alg:sizing}; $Q$ is the work still queued on
+       replacements, not one task}
 \end{algorithmic}
 \end{algorithm}
 
@@ -470,8 +500,17 @@ launches per instance type and twenty per market, with burstables counting
 against the on-demand allowance. Prices are us-east-1 rates. Under the source
 work's scenarios every spot instance, of every type and including replacements
 launched at runtime, is hibernated at $\lambda_h = k_h/D$; the per-type
-declared rates in Table~\ref{tab:vms} are read only by Theorem 1's trigger, so
-no result here can be attributed to per-type risk awareness.
+declared rates in Table~\ref{tab:vms} have two consumers: Theorem 1's trigger,
+and the survival filter that ranks candidate replacement types, which is what
+excludes \texttt{m5.xlarge}. Neither changes an outcome here. The filter never
+alters the choice, because \texttt{c5.xlarge} leads on capacity per dollar with
+or without it (130.7 against 97.1) at every deadline in the study, and the
+trigger fires on a rate the scenarios never instantiate. No result here can be
+attributed to per-type risk awareness. The rate itself is deliberate and not a
+transcription error: \texttt{m5.xlarge} carries the source work's own sc2
+parameterisation ($k_h = 5$ over $D = 2700$\,s) as an illustrative high-risk
+anchor, against nominal hourly rates for the \texttt{c5} types, which is why
+the two differ by more than two orders of magnitude.
 
 Tasks are drawn independently with execution time
 $\mathcal{U}[100,350]$\,s and memory $\mathcal{U}[2.85,13.19]$\,MB, spanning
@@ -714,15 +753,18 @@ the tables.
 
 \subsection{Feasibility and deadline satisfaction}
 
-Under launch limits HADS misses no task in its 2{,}290 feasible runs, but finds
-no feasible primary schedule in 110 runs, all in the five cells with
-$|T| = 100$ and $\mathit{DF} = 0.25$, where the deadline sits on its floor of
-339.7\,s. Burst-HADS misses 6 tasks and R-BurstHADS 5, all in those same cells;
+The floor of 339.7\,s binds in fifteen of the eighty cells --- $|T| = 50$ at
+$\mathit{DF} = 0.25$ and $0.5$, and $|T| = 100$ at $\mathit{DF} = 0.25$, in
+each of the five scenarios --- so those cells all share one deadline. Under
+launch limits HADS misses no task in its 2{,}290 feasible runs, but finds no
+feasible primary schedule in 110 of them, and every one falls in the five
+floored cells with $|T| = 100$ and $\mathit{DF} = 0.25$: the ten other floored
+cells are solved by every scheduler. Burst-HADS misses 6 tasks and R-BurstHADS 5, all in those same cells;
 without limits they miss 2 and 3. Every missed task is a hibernation rescue
 that no on-demand instance the fallback was allowed to launch could finish
 before $D$ once deploy time is charged.
 
-The floor cells are the tightest-deadline regime in the study, and the
+Those five cells are the tightest-deadline regime in the study, and the
 schedulers separate there on feasibility rather than on cost: in their 150
 runs HADS is infeasible in 110 (against 10 before deploy time was charged),
 while Burst-HADS and R-BurstHADS complete all 150 and meet the deadline in 144
@@ -1043,9 +1085,11 @@ rate, so the per-instance-type risk differentiation that Theorem 1's trigger
 reads is never exercised. No result here may be attributed to risk awareness.
 
 Fourth, the deadline floor of 339.7\,s contains no deploy-time term, so the
-five cells that sit on it generate deadlines that a scheduler charged for
-instance start-up cannot always meet. They are reported separately rather than
-averaged.
+fifteen cells that sit on it generate deadlines that a scheduler charged for
+instance start-up cannot always meet. In ten of them every scheduler still
+finds a schedule; in the five with $|T| = 100$ and $\mathit{DF} = 0.25$ HADS
+does not, and those five are reported separately rather than averaged into any
+cross-scheduler figure.
 
 Fifth, the burstable tier's contribution is negative in this catalogue
 (Section~\ref{sec:results}): at current on-demand prices the instance it
